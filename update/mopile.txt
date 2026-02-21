@@ -1,7 +1,10 @@
 {
-  "latest_version": "1.2.1",
-  "version_code": 3,
-  "download_url": "https://raw.githubusercontent.com/gtgtgtcd/sunnah_app/main/12.zip",
-  "release_notes": "تحديث الواجهة وإضافة ميزات جديدة 🚀"
+  "latest_version": "1.1.0",
+  "version_code": 2,
+  "release_notes": "تحديث ذكي للملفات بدون ضغط 🚀",
+  "files_to_sync": [
+    "index.html",
+    "style.css",
+    "Dashboard/index.html"
+  ]
 }
-
