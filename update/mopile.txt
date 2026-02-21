@@ -1,0 +1,6 @@
+{
+  "latest_version": "1.1.0",
+  "version_code": 2,
+  "download_url": "https://sourceforge.net/projects/sunnah-data/files/updates/sunnah-pro-v1.1.apk/download",
+  "release_notes": "تم إضافة تفسير الجلالين\nإصلاح مشكلة البحث السريع\nتحسين أداء التطبيق."
+}
