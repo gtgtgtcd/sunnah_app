@@ -1,0 +1,430 @@
+/* ================= SIDEBAR & NAV LOGIC ================= */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+
+    height: 100dvh;
+    height: calc(100vh - var(--header-height));
+
+    z-index: 2100;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    padding-bottom: 0;
+    overflow: hidden;
+}
+
+.nav-links {
+    flex: 1;
+    padding: 10px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--sidebar-bg);
+
+    padding-bottom: 20px;
+}
+
+.nav-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin: 20px 10px 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s ease 0.1s;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    border-bottom: none;
+    box-shadow: none;
+    text-decoration: none;
+}
+
+.nav-item:visited,
+.nav-item:hover,
+.nav-item:focus {
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.nav-item span {
+    opacity: 1;
+    margin-right: 10px;
+    transition: opacity 0.3s ease 0.1s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.nav-item.active {
+    border-right: 3px solid var(--primary);
+    background: linear-gradient(90deg, rgba(79, 240, 183, 0.1) 0%, transparent 100%);
+    font-weight: bold;
+}
+
+/* Updated Icon Styling for SVG Images */
+.nav-item img {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    margin-left: 10px;
+    flex-shrink: 0;
+    transition: filter 0.3s ease;
+    filter: invert(1) grayscale(1) brightness(2);
+}
+
+.nav-item:hover img,
+.nav-item.active img {
+    filter: invert(1) grayscale(1) brightness(2) contrast(1.2);
+}
+
+.user-profile {
+    padding: 20px 15px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    overflow: hidden;
+    white-space: nowrap;
+
+    flex-shrink: 0;
+
+    background: var(--sidebar-bg);
+    z-index: 10;
+    position: relative;
+
+    padding-bottom: calc(25px + env(safe-area-inset-bottom));
+    margin-bottom: env(safe-area-inset-bottom);
+}
+
+.user-profile div {
+    transition: opacity 0.3s ease 0.1s;
+    opacity: 1;
+}
+
+/* ================= Collapsed State (مشترك) ================= */
+/* 
+   القاعدة الذهبية: أي حاجة عايزة تتقفل (collapsed) 
+   هنستخدم class واحد: .collapsed
+   سواء ديسكتوب أو تابلت - نفس الشكل بالظبط
+*/
+.sidebar.collapsed {
+    width: 72px;
+    padding: 0;
+}
+
+.sidebar.collapsed .nav-label {
+    display: none;
+}
+
+.sidebar.collapsed .nav-item span,
+.sidebar.collapsed .user-profile div:not(:first-child),
+.sidebar.collapsed .user-profile button {
+    display: none !important;
+}
+
+.sidebar.collapsed .user-profile {
+    justify-content: center !important;
+    padding: 15px 0 !important;
+}
+
+.sidebar.collapsed .user-profile img,
+.sidebar.collapsed .user-profile .profile-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    margin: 0 auto !important;
+}
+
+.sidebar.collapsed .nav-item {
+    justify-content: center;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    margin: 8px auto;
+    border-radius: 12px;
+}
+
+.sidebar.collapsed .nav-item img {
+    margin: 0;
+    width: 28px;
+    height: 28px;
+    filter: invert(1) grayscale(1) brightness(2);
+}
+
+.sidebar.collapsed .nav-links {
+    padding: 10px 0;
+}
+
+/* Scrollbar Styling */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+.nav-links::-webkit-scrollbar {
+    width: 8px;
+}
+
+.nav-links::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.nav-links::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+html.no-scroll,
+body.no-scroll {
+    overflow: hidden;
+    height: 100%;
+}
+
+/* =======================================================
+   BREAKPOINT 1: ديسكتوب كبير (أكبر من 1200px)
+   الساب بار مفتوحة - والـ toggle بيعمل collapse
+======================================================= */
+@media (min-width: 1201px) {
+    .sidebar {
+        transform: translateX(0);
+    }
+
+    .sidebar.collapsed+.mobile-overlay+.main-content,
+    .main-content.expanded {
+        margin-right: 90px !important;
+    }
+
+    .sidebar:not(.collapsed)+.mobile-overlay+.main-content {
+        margin-right: var(--sidebar-width) !important;
+    }
+}
+
+/* =======================================================
+   BREAKPOINT 2: تابلت كبير / لابتوب صغير (769px - 1200px)
+   
+   المنطق الجديد:
+   - الساب بار بتبدأ collapsed (أيقونات بس)
+   - الـ toggle بيفتحها كاملة كـ overlay (زي الموبايل)
+   - الـ main-content دايماً margin-right: 72px
+======================================================= */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .sidebar {
+        /* تبدأ collapsed بشكل افتراضي */
+        width: 72px;
+        padding: 0;
+        transform: translateX(0);
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* إخفاء النصوص والعناوين في الحالة الافتراضية */
+    .sidebar .nav-label {
+        display: none;
+    }
+
+    .sidebar .nav-item span,
+    .sidebar .user-profile div:not(:first-child),
+    .sidebar .user-profile button {
+        display: none !important;
+    }
+
+    .sidebar .user-profile {
+        justify-content: center !important;
+        padding: 15px 0 !important;
+    }
+
+    .sidebar .user-profile img,
+    .sidebar .user-profile .profile-avatar {
+        width: 40px !important;
+        height: 40px !important;
+        margin: 0 auto !important;
+    }
+
+    .sidebar .nav-item {
+        justify-content: center;
+        padding: 0;
+        width: 50px;
+        height: 50px;
+        margin: 8px auto;
+        border-radius: 12px;
+    }
+
+    .sidebar .nav-item img {
+        margin: 0;
+        width: 28px;
+        height: 28px;
+        filter: invert(1) grayscale(1) brightness(2);
+    }
+
+    .sidebar .nav-links {
+        padding: 10px 0;
+    }
+
+    /* ===== لما يفتح الساب بار (active) ===== */
+    .sidebar.active {
+        width: var(--sidebar-width);
+        padding: 0;
+        z-index: 1600;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4);
+    }
+
+    /* إعادة إظهار كل حاجة لما يكون active */
+    .sidebar.active .nav-label {
+        display: block;
+    }
+
+    .sidebar.active .nav-item span {
+        display: inline !important;
+        opacity: 1;
+    }
+
+    .sidebar.active .user-profile div:not(:first-child) {
+        display: block !important;
+    }
+
+    .sidebar.active .user-profile button {
+        display: flex !important;
+    }
+
+    .sidebar.active .user-profile {
+        justify-content: flex-start !important;
+        padding: 20px 15px !important;
+    }
+
+    .sidebar.active .user-profile img,
+    .sidebar.active .user-profile .profile-avatar {
+        width: 35px !important;
+        height: 35px !important;
+        margin: 0 !important;
+    }
+
+    .sidebar.active .nav-item {
+        justify-content: flex-start;
+        padding: 12px 15px;
+        width: auto;
+        height: auto;
+        margin: 0 0 5px 0;
+        border-radius: 8px;
+    }
+
+    .sidebar.active .nav-item img {
+        margin-left: 10px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .sidebar.active .nav-links {
+        padding: 10px;
+    }
+
+    /* الـ Main Content دايماً بيحترم الـ 72px */
+    .main-content {
+        margin-right: 72px !important;
+    }
+
+    /* الـ Overlay بيظهر لما الساب بار يفتح */
+    .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        height: calc(100vh - var(--header-height));
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1500 !important;
+        backdrop-filter: blur(3px);
+        touch-action: none;
+        overscroll-behavior: contain;
+    }
+
+    .mobile-overlay.active {
+        display: block;
+    }
+}
+
+/* =======================================================
+   BREAKPOINT 3: موبايل وميني تابلت (768px وأقل)
+   الساب بار مخفية تماماً - بتطلع كـ drawer من اليمين
+======================================================= */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(100%);
+        width: 80%;
+        max-width: 300px;
+        z-index: 1600 !important;
+
+        top: var(--header-height) !important;
+
+        height: calc(100dvh - var(--header-height)) !important;
+        height: calc(100vh - var(--header-height)) !important;
+
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .user-profile {
+        padding-bottom: 80px !important;
+        padding-bottom: calc(30px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .nav-links {
+        padding-top: 0;
+        padding-bottom: 40px !important;
+    }
+
+    .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        height: calc(100vh - var(--header-height));
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 30 !important;
+        backdrop-filter: blur(3px);
+        touch-action: none;
+        overscroll-behavior: contain;
+    }
+
+    .mobile-overlay.active {
+        display: block;
+    }
+}

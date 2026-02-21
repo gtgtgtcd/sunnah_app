@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <script>
+        // كود الطوارئ لضبط المسارات
+        (function () {
+            if (window.location.protocol !== 'file:' &&
+                !window.location.href.endsWith('/') &&
+                !window.location.pathname.split('/').pop().includes('.')) {
+                window.location.href = window.location.href + '/';
+            }
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>إذاعة القرآن الكريم - Sunnah Pro</title>
+
+    <meta name="description" content="استمع لأفضل إذاعات القرآن الكريم العالمية والقراء المشاهير بث مباشر">
+    <meta name="theme-color" content="#020a0a">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Reem Kufi';
+            src: url('../assets/fonts/fonts/reem-kufi/ReemKufi-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Outfit';
+            src: url('../assets/fonts/fonts/amiri/ibm/IBMPlexSansArabic-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../assets/css/pages/radio/radio.css">
+    <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+    <link rel="stylesheet" href="../assets/css/pages/dashboard/dashboard.css">
+</head>
+
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <div class="top-navbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="app-logo" style="display: flex; align-items: center; gap: 5px;">
+                <i class="fas fa-kaaba" style="color: var(--primary); font-size: 24px;"></i>
+                <span
+                    style="font-family: 'Reem Kufi'; font-size: 18px; font-weight: 800; color: #fff; line-height: 1;">إذاعة
+                    القرآن</span>
+            </div>
+        </div>
+
+        <div class="header-right-actions" style="display: flex; align-items: center; gap: 20px;">
+            <div class="search-bar-btn" onclick="openSearchModal()">
+                <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                    <i class="fas fa-search" style="color: var(--royal-gold);"></i>
+                    <span style="font-family: 'Amiri'; font-size: 14px; color: #aaa; font-weight: normal;">ابحث عن إذاعة
+                        أو قارئ...</span>
+                </div>
+            </div>
+            <div class="nav-actions"></div>
+        </div>
+    </div>
+
+    <div id="sidebar-container"></div>
+
+    <div class="main-content" id="mainContent">
+
+        <div class="radio-hero-section" id="mainPlayerCard">
+            <div class="player-art-container">
+                <div class="vinyl-record" id="vinylRecord">
+                    <img src="" class="vinyl-img-element" id="stationImageElement">
+                    <div class="center-hole"></div>
+                </div>
+            </div>
+
+            <div class="player-controls-wrapper">
+                <div class="now-playing-tag" id="playingTag">
+                    <div class="pulse-dot"></div> بث مباشر الآن
+                </div>
+                <h2 class="station-title" id="currentStationName">إذاعة القرآن الكريم</h2>
+                <p class="station-desc" id="currentStationDesc">من القاهرة - بث مباشر 24 ساعة</p>
+
+                <div class="waveform" id="visualizer">
+                </div>
+
+                <div class="control-buttons">
+                    <div class="btn-control" id="btnRandom"><i class="fas fa-random"></i></div>
+                    <div class="btn-control" id="btnList" onclick="openEpisodesModal()" style="display: none;"><i
+                            class="fas fa-list-ul"></i></div>
+                    <div class="btn-control" onclick="playNextEp()"><i class="fas fa-step-backward"></i></div>
+                    <div class="btn-play-large" onclick="toggleRadio()"><i class="fas fa-play" id="playIcon"></i></div>
+                    <div class="btn-control" onclick="playPrevEp()"><i class="fas fa-step-forward"></i></div>
+                    <div class="btn-control volume-wrapper" onclick="toggleVolumeSlider(event)">
+                        <i class="fas fa-volume-up" id="btnVolumeIcon"></i>
+                        <div class="volume-slider-box" id="volumeSlider" onclick="event.stopPropagation()">
+                            <div class="volume-track-container" id="volumeTrackContainer">
+                                <div class="volume-track-bg"></div>
+                                <div class="volume-track-fill" id="volumeFill"></div>
+                                <div class="volume-thumb" id="volumeThumb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <audio id="radioPlayer" preload="none"></audio>
+        </div>
+
+        <div class="section-header">
+            <div class="sec-title"><i class="fas fa-globe"></i> إذاعات القرآن العالمية</div>
+            <a href="#" style="color: var(--primary); font-size: 14px;">عرض الكل</a>
+        </div>
+
+        <div class="stations-grid">
+            <div class="station-card"
+                onclick="playStation('https://backup.qurango.net/radio/radio_ar', 'إذاعة MP3 Quran', 'بث منوع وشامل', '../assets/img/radio/reciters/mp3quran.png', this, false)">
+                <img src="../assets/img/radio/reciters/mp3quran.png" class="station-img"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>إذاعة MP3 Quran</h4>
+                    <p>بث منوع وشامل</p>
+                </div>
+            </div>
+
+            <div class="station-card active"
+                onclick="playStation('https://n02.radiojar.com/8s5u5tpdtwzuv?rj-ttl=5&rj-tok=AAABj6Yy_34A7-2i_vJ2aT_4wQ', 'إذاعة القاهرة', 'من ماسبيرو - بث مباشر', 'https://flagcdn.com/w320/eg.png', this, false)">
+                <img src="https://flagcdn.com/w320/eg.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة القاهرة <span class="live-dot"></span></h4>
+                    <p>من ماسبيرو</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://stream.radiojar.com/4wqre23fytzuv', 'إذاعة السعودية', 'من الرياض', 'https://flagcdn.com/w320/sa.png', this, false)">
+                <img src="https://flagcdn.com/w320/sa.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة السعودية</h4>
+                    <p>من الرياض</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://node33.obviousapproach.com:9000/stream', 'إذاعة الكويت', 'تلاوة 24 ساعة', 'https://flagcdn.com/w320/kw.png', this, false)">
+                <img src="https://flagcdn.com/w320/kw.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة الكويت</h4>
+                    <p>تلاوة 24 ساعة</p>
+                </div>
+            </div>
+
+
+            <div class="station-card"
+                onclick="playStation('https://n09.radiojar.com/0tpy1h0kxtzuv?rj-ttl=5&rj-tok=AAABj6Yy_34A7-2i_vJ2aT_4wQ', 'إذاعة البحرين', 'المنامة', 'https://flagcdn.com/w320/bh.png', this, false)">
+                <img src="https://flagcdn.com/w320/bh.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة البحرين</h4>
+                    <p>المنامة</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://l3.itworkscdn.net/smcquranlive/quranradiolive/icecast.audio', 'إذاعة الشارقة', 'قرآن وسنة', 'https://flagcdn.com/w320/ae.png', this, false)">
+                <img src="https://flagcdn.com/w320/ae.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة الشارقة</h4>
+                    <p>قرآن وسنة</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://play.thestreamtech.com:7067/stream', 'إذاعة أبوظبي', 'تلاوات خاشعة', 'https://flagcdn.com/w320/ae.png', this, false)">
+                <img src="https://flagcdn.com/w320/ae.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة أبوظبي</h4>
+                    <p>تلاوات خاشعة</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://partrdo.mangomolo.com/quranrdo.mp3', 'إذاعة مسقط', 'سلطنة عمان', 'https://flagcdn.com/w320/om.png', this, false)">
+                <img src="https://flagcdn.com/w320/om.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة مسقط</h4>
+                    <p>مسقط</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://quran-radio.org:8080/;', 'إذاعة نابلس', 'صوت فلسطين', 'https://flagcdn.com/w320/ps.png', this, false)">
+                <img src="https://flagcdn.com/w320/ps.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة نابلس</h4>
+                    <p>صوت فلسطين</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://audio.osina.cloud:7987/stream', 'إذاعة لبنان', 'بيروت', 'https://flagcdn.com/w320/lb.png', this, false)">
+                <img src="https://flagcdn.com/w320/lb.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة لبنان</h4>
+                    <p>بيروت</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation('https://whmsonic.radio.gov.pk:7002/stream/;', 'إذاعة باكستان', 'إسلام آباد', 'https://flagcdn.com/w320/pk.png', this, false)">
+                <img src="https://flagcdn.com/w320/pk.png" class="station-img">
+                <div class="station-info">
+                    <h4>إذاعة باكستان</h4>
+                    <p>إسلام آباد</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <div class="sec-title"><i class="fas fa-microphone-alt"></i> قنوات القراء (24 ساعة)</div>
+        </div>
+
+        <div class="stations-grid">
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/abdulbasit_abdulsamad_mojawwad', 'https://qurango.net/radio/abdulbasit_abdulsamad_mojawwad', 'https://server7.mp3quran.net/basit_mjwd/'], 'عبدالباسط عبدالصمد', 'المصحف المجود', '../assets/img/listen/covers/abdul_basit.webp', this, false)">
+                <img src="../assets/img/listen/covers/abdul_basit.webp" class="station-img"
+                    style="object-position: top;" onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>الشيخ عبدالباسط</h4>
+                    <p>تلاوات نادرة</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/mohammed_siddiq_alminshawi_mojawwad', 'https://qurango.net/radio/mohammed_siddiq_alminshawi_mojawwad', 'https://server8.mp3quran.net/minsh_mjwd/'], 'محمد صديق المنشاوي', 'المصحف المجود', '../assets/img/listen/covers/minshawi.webp', this, false)">
+                <img src="../assets/img/listen/covers/minshawi.webp" class="station-img" style="object-position: top;"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>المنشاوي</h4>
+                    <p>المصحف المجود</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/mahmoud_khalil_alhussary_mojawwad', 'https://qurango.net/radio/mahmoud_khalil_alhussary_mojawwad', 'https://server8.mp3quran.net/hsr_mjwd/'], 'محمود خليل الحصري', 'المصحف المجود', '../assets/img/listen/covers/al_hussary.webp', this, false)">
+                <img src="../assets/img/listen/covers/al_hussary.webp" class="station-img"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>الشيخ الحصري</h4>
+                    <p>المعلم الأول</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/mishary_alafasy', 'https://qurango.net/radio/mishary_alafasy', 'https://server8.mp3quran.net/afs/'], 'مشاري العفاسي', 'المصحف المرتل', '../assets/img/listen/covers/alafasy.webp', this, false)">
+                <img src="../assets/img/listen/covers/alafasy.webp" class="station-img" style="object-position: top;"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>مشاري العفاسي</h4>
+                    <p>المصحف المرتل</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/abdulrahman_alsudaes', 'https://qurango.net/radio/abdulrahman_alsudaes', 'https://server11.mp3quran.net/sds/'], 'عبدالرحمن السديس', 'إمام الحرم', '../assets/img/listen/covers/al_sudais.webp', this, false)">
+                <img src="../assets/img/listen/covers/al_sudais.webp" class="station-img"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>الشيخ السديس</h4>
+                    <p>إمام الحرم</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/saud_alshuraim', 'https://qurango.net/radio/saud_alshuraim', 'https://server7.mp3quran.net/shur/'], 'سعود الشريم', 'المسجد الحرام', '../assets/img/listen/covers/saud_al_shuraim.webp', this, false)">
+                <img src="../assets/img/listen/covers/saud_al_shuraim.webp" class="station-img"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>الشيخ الشريم</h4>
+                    <p>ريحانة الحرم</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/maher_almuaiqly', 'https://qurango.net/radio/maher_almuaiqly', 'https://server12.mp3quran.net/maher/'], 'ماهر المعيقلي', 'المسجد الحرام', '../assets/img/listen/covers/maher_al_muaiqly.webp', this, false)">
+                <img src="../assets/img/listen/covers/maher_al_muaiqly.webp" class="station-img"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>ماهر المعيقلي</h4>
+                    <p>تلاوات خاشعة</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/ahmad_alajmy', 'https://qurango.net/radio/ahmad_alajmy', 'https://server8.mp3quran.net/ajm/'], 'أحمد العجمي', 'المصحف المرتل', '../assets/img/listen/covers/ahmed_al_ajamy.webp', this, false)">
+                <img src="../assets/img/listen/covers/ahmed_al_ajamy.webp" class="station-img"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>أحمد العجمي</h4>
+                    <p>صوت شجي</p>
+                </div>
+            </div>
+
+            <div class="station-card"
+                onclick="playStation(['https://backup.qurango.net/radio/yasser_aldosari', 'https://qurango.net/radio/yasser_aldosari', 'https://server11.mp3quran.net/yasser/'], 'ياسر الدوسري', 'المصحف المرتل', '../assets/img/listen/covers/yasser_al_dosari.webp', this, false)">
+                <img src="../assets/img/listen/covers/yasser_al_dosari.webp" class="station-img"
+                    onerror="this.src='https://via.placeholder.com/60'">
+                <div class="station-info">
+                    <h4>ياسر الدوسري</h4>
+                    <p>روائع التلاوة</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <div class="sec-title"><i class="fas fa-podcast"></i> بودكاست ومختارات</div>
+        </div>
+        <div class="podcast-scroll">
+            <div class="podcast-card" onclick="initPodcast('prophets')">
+                <div class="pod-img" style="background-image: url('../assets/img/radio/podcasts/prophets.png');"></div>
+                <div class="pod-title">قصص الأنبياء</div>
+                <div class="pod-meta"><span>نبيل العوضي</span><span><i class="fas fa-play"></i> قصة آدم</span></div>
+            </div>
+
+            <div class="podcast-card" onclick="initPodcast('seera')">
+                <div class="pod-img" style="background-image: url('../assets/img/radio/podcasts/seera.png');"></div>
+                <div class="pod-title">السيرة النبوية</div>
+                <div class="pod-meta"><span>راغب السرجاني</span><span><i class="fas fa-play"></i> مولده ﷺ</span></div>
+            </div>
+
+            <div class="podcast-card"
+                onclick="playStation('https://archive.org/download/Roqya_Al_Afasy/Roqya_Al_Afasy.mp3', 'الرقية الشرعية', 'مشاري العفاسي', '../assets/img/radio/podcasts/roqya.png', this, true)">
+                <div class="pod-img" style="background-image: url('../assets/img/radio/podcasts/roqya.png');"></div>
+                <div class="pod-title">تحصين النفس</div>
+                <div class="pod-meta"><span>الرقية الشرعية</span><span><i class="fas fa-play"></i> كاملة</span></div>
+            </div>
+
+            <div class="podcast-card"
+                onclick="playStation('https://archive.org/download/Adhkar_Sabah_Masa/Adhkar_Sabah.mp3', 'أذكار الصباح', 'بداية اليوم', '../assets/img/radio/podcasts/morning.png', this, true)">
+                <div class="pod-img" style="background-image: url('../assets/img/radio/podcasts/morning.png');"></div>
+                <div class="pod-title">أذكار الصباح</div>
+                <div class="pod-meta"><span>صوت هادئ</span><span><i class="fas fa-play"></i> 15m</span></div>
+            </div>
+
+            <div class="podcast-card"
+                onclick="playStation('https://archive.org/download/Adhkar_Sabah_Masa/Adhkar_Masa.mp3', 'أذكار المساء', 'سكينة الليل', '../assets/img/radio/podcasts/evening.png', this, true)">
+                <div class="pod-img" style="background-image: url('../assets/img/radio/podcasts/evening.png');"></div>
+                <div class="pod-title">أذكار المساء</div>
+                <div class="pod-meta"><span>صوت هادئ</span><span><i class="fas fa-play"></i> 15m</span></div>
+            </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 20px;">
+            <div class="sec-title"><i class="fas fa-calendar-alt"></i> جدول البرامج</div>
+        </div>
+        <div class="schedule-card">
+            <div class="schedule-item">
+                <span class="time-badge">08:00 ص</span>
+                <div style="flex:1;">
+                    <h5 style="color:#fff; margin-bottom:2px;">تلاوة الصباح</h5>
+                    <span style="font-size:12px; color:var(--text-muted);">الشيخ الحصري</span>
+                </div>
+                <i class="fas fa-check-circle" style="color:var(--text-muted);"></i>
+            </div>
+            <div class="schedule-item">
+                <span class="time-badge">10:00 ص</span>
+                <div style="flex:1;">
+                    <h5 style="color:#fff; margin-bottom:2px;">برنامج فتاوى</h5>
+                    <span style="font-size:12px; color:var(--primary);">مباشر الآن <div class="live-dot"></div></span>
+                </div>
+                <i class="fas fa-broadcast-tower" style="color:var(--primary);"></i>
+            </div>
+            <div class="schedule-item">
+                <span class="time-badge">01:00 م</span>
+                <div style="flex:1;">
+                    <h5 style="color:#fff; margin-bottom:2px;">قرآن الظهيرة</h5>
+                    <span style="font-size:12px; color:var(--text-muted);">تلاوات مختارة</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="mobile-nav">
+        <div class="nav-btn-mobile" onclick="window.location.href='../Dashboard/index.html'">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </div>
+        <div class="nav-btn-mobile" onclick="window.location.href='../quran/index.html'">
+            <i class="fas fa-quran"></i>
+            <span>المصحف</span>
+        </div>
+        <div class="nav-btn-mobile active" onclick="window.location.href='index.html'">
+            <i class="fas fa-headphones-alt"></i>
+            <span>الراديو</span>
+        </div>
+        <div class="nav-btn-mobile" onclick="window.location.href='../azkar/index.html'">
+            <i class="fas fa-praying-hands"></i>
+            <span>الأذكار</span>
+        </div>
+    </div>
+
+    <div id="episodesModal" class="episodes-modal-overlay" onclick="closeEpisodesModal()">
+        <div class="episodes-modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modalTitle" style="color: var(--gold); margin: 0; font-family: 'Reem Kufi';">قائمة الحلقات</h3>
+                <div class="close-btn" onclick="closeEpisodesModal()"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="episodes-list" id="episodesList"></div>
+        </div>
+    </div>
+
+    <div id="searchModal" class="search-modal" style="display: none;"
+        onclick="if(event.target == this) closeSearchModal()">
+        <div class="search-header-modal">
+            <div class="modal-title-row">
+                <h3>بحث في الإذاعات والقراء</h3>
+                <i class="fas fa-times search-close" onclick="closeSearchModal()"></i>
+            </div>
+            <div class="search-input-group">
+                <input type="text" class="search-input-modal" id="modalSearchInput"
+                    placeholder="ابحث عن إذاعة أو قارئ (مثال: القاهرة، العفاسي، الصباح)..." autocomplete="off">
+                <button class="search-action-btn" id="searchActionBtn"
+                    onclick="radioSearch?.selectResult(radioSearch.currentResults[0]?.id)">ابحث</button>
+            </div>
+        </div>
+        <div class="search-results-modal" id="modalResultsBody">
+            <div style="text-align:center; color:var(--text-muted); margin-top:50px; font-family:'Amiri';">
+                <i class="fas fa-search"
+                    style="font-size: 2rem; opacity: 0.5; margin-bottom: 10px; display:block; margin-left: auto; margin-right: auto;"></i>
+                ابدأ بكتابة اسم إذاعة أو قارئ للبحث عنه
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/app-core.js"></script>
+    <script src="../assets/js/pages/radio.js"></script>
+    <script src="../assets/js/pages/radio-search.js"></script>
+    <script>
+        // Function to open search modal (تم تحسين الاستقرار)
+        function openSearchModal() {
+            if (typeof openRadioSearchModal === 'function') {
+                openRadioSearchModal();
+            } else {
+                const modal = document.getElementById('searchModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    setTimeout(() => modal.classList.add('visible'), 10);
+                }
+            }
+        }
+
+        // Function to close search modal (تم تحسين الاستقرار)
+        function closeSearchModal() {
+            if (typeof closeRadioSearchModal === 'function') {
+                closeRadioSearchModal();
+            } else {
+                const modal = document.getElementById('searchModal');
+                if (modal) {
+                    modal.classList.remove('visible');
+                    setTimeout(() => modal.style.display = 'none', 300);
+                }
+            }
+        }
+    </script>
+    <script type="module">
+        import { initSupabase, onAuthStateChange, renderUserProfile, renderLoginButton } from '../assets/js/auth.js';
+        import { initProfileSystem } from '../assets/js/components/profile-manager.js';
+
+        const SUPABASE_URL = 'https://kstknnfyesrthyjlrlle.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdGtubmZ5ZXNydGh5amxybGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NzUyMDksImV4cCI6MjA3OTQ1MTIwOX0.PQRPsv0l9-b7wwwKnnHBJGY6PO0JarcVpihULMOhAeE';
+
+        const supabaseClient = initSupabase(SUPABASE_URL, SUPABASE_KEY);
+        window.supabase = { createClient: () => supabaseClient };
+
+        async function initAuthSystem() {
+            // تحديث الهيدر والقائمة الجانبية معاً عند تغير حالة تسجيل الدخول
+            onAuthStateChange((user) => {
+                if (user) {
+                    renderUserProfile(user, 'sidebarProfile');
+                    initProfileSystem(user);
+                } else {
+                    renderLoginButton('sidebarProfile');
+                    initProfileSystem(null);
+                }
+            });
+
+            // التحقق المبدئي عند تحميل الصفحة
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                renderUserProfile(session.user, 'sidebarProfile');
+                initProfileSystem(session.user);
+            } else {
+                renderLoginButton('sidebarProfile');
+                initProfileSystem(null);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initAuthSystem);
+    </script>
+    <script type="module">
+        import { initSidebar } from '../assets/js/components/sidebar.js';
+
+        // Initialize Sidebar with active page 'radio'
+        document.addEventListener('DOMContentLoaded', () => {
+            initSidebar('radio');
+        });
+    </script>
+</body>
+
+</html>

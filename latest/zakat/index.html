@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#020a0a">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com;">
+    
+    <title>زكاتي - Premium Zakat</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+    <meta name="theme-color" content="#020a0a">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;600;800&family=Reem+Kufi:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;500;700&family=Cairo:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+    <link rel="stylesheet" href="../assets/css/pages/dashboard/dashboard.css">
+
+    <script>
+        (function () {
+            var path = window.location.pathname;
+            if (!path.endsWith('/') && !path.includes('.')) {
+                window.location.replace(path + '/' + window.location.search + window.location.hash);
+            }
+        })();
+    </script>
+    <script type="module">
+        import { initSidebar } from '../assets/js/components/sidebar.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            initSidebar('zakat');
+        });
+    </script>
+    <script type="module">
+        import { initSupabase, onAuthStateChange, renderUserProfile, renderLoginButton } from '../assets/js/auth.js';
+        import { initProfileSystem } from '../assets/js/components/profile-manager.js';
+        
+        const SUPABASE_URL = 'https://kstknnfyesrthyjlrlle.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdGtubmZ5ZXNydGh5amxybGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NzUyMDksImV4cCI6MjA3OTQ1MTIwOX0.PQRPsv0l9-b7wwwKnnHBJGY6PO0JarcVpihULMOhAeE';
+        
+        const supabaseClient = initSupabase(SUPABASE_URL, SUPABASE_KEY);
+        window.supabase = { createClient: () => supabaseClient };
+
+        async function initAuthSystem() {
+            // تحديث الهيدر والقائمة الجانبية معاً عند تغير حالة تسجيل الدخول
+            onAuthStateChange((user) => {
+                if (user) {
+                    renderUserProfile(user, 'sidebarProfile');
+                    initProfileSystem(user);
+                } else {
+                    renderLoginButton('sidebarProfile');
+                    initProfileSystem(null);
+                }
+            });
+
+            // التحقق المبدئي عند تحميل الصفحة
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                renderUserProfile(session.user, 'sidebarProfile');
+                initProfileSystem(session.user);
+            } else {
+                renderLoginButton('sidebarProfile');
+                initProfileSystem(null);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initAuthSystem);
+    </script>
+</head>
+
+<body>
+    <noscript>
+        <style>
+            body {
+                visibility: hidden;
+                overflow: hidden;
+            }
+
+            .noscript-overlay {
+                visibility: visible;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                color: #ff3d00;
+                z-index: 9999999;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+        </style>
+        <div class="noscript-overlay">
+            <h1 style="font-family: sans-serif; font-size: 30px;">⚠️ تم اكتشاف تلاعب أمني</h1>
+            <p style="font-family: sans-serif; font-size: 18px; color: #fff;">يجب تفعيل JavaScript لضمان أمان بيانات
+                الزكاة.</p>
+        </div>
+    </noscript>
+
+    <div class="bg-pattern"></div>
+
+    <!-- Maintenance Message -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: flex; align-items: center; justify-content: center;">
+        <div style="background: #1a1a1a; border: 2px solid #d4af37; border-radius: 15px; padding: 30px; max-width: 500px; text-align: center; box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);">
+            <i class="fas fa-tools" style="font-size: 50px; color: #d4af37; margin-bottom: 20px;"></i>
+            <h2 style="color: #d4af37; margin-bottom: 15px; font-family: 'Reem Kufi', sans-serif;">تحديث صيانة</h2>
+            <p style="color: #ccc; font-size: 16px; line-height: 1.6; margin-bottom: 25px; font-family: 'Amiri', serif;">
+                حاسبة الزكاة قيد الصيانة والتطوير حالياً. سنعود قريباً بإصدار محسّن ومطوّر.
+            </p>
+            <button onclick="window.location.href='../Dashboard/index.html'" 
+                    style="background: #d4af37; color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-family: 'Amiri', serif; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                <i class="fas fa-home" style="margin-left: 8px;"></i> العودة للرئيسية
+            </button>
+        </div>
+    </div>
+
+    <div id="sidebar-container"></div>
+
+    <header class="compact-header">
+        <div class="header-left-section">
+            <div class="menu-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="app-brand">
+                <i class="fas fa-kaaba"></i>
+                <div class="brand-text">
+                    <span class="brand-main">زكاتي</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-right-section">
+            <div class="currency-pill">
+                <i class="fas fa-globe currency-icon"></i>
+                <select id="global_currency" onchange="changeGlobalCountry()" class="custom-select">
+                    <option value="EGP" data-symbol="ج.م">مصر (EGP)</option>
+                    <option value="SAR" data-symbol="ر.س">السعودية (SAR)</option>
+                    <option value="AED" data-symbol="د.إ">الإمارات (AED)</option>
+                    <option value="QAR" data-symbol="ر.ق">قطر (QAR)</option>
+                    <option value="KWD" data-symbol="د.ك">الكويت (KWD)</option>
+                    <option value="USD" data-symbol="$">عالمي (USD)</option>
+                </select>
+                <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <div class="nav-actions"></div>
+        </div>
+    </header>
+
+
+    <div class="scroll-content main-content">
+
+        <div id="calculator-view">
+            <div class="controls-row">
+                <button class="history-btn-main" onclick="openHistoryModal()">
+                    <i class="fas fa-history"></i><span>سجل التقارير</span>
+                </button>
+                <div class="year-type-toggle">
+                    <span class="toggle-label" id="year-label">حول هجري (2.5%)</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="calendar-toggle" onchange="toggleCalendar()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="glass-card prices-widget">
+                    <div class="prices-card-header">
+                        <div class="p-widget-title"><i class="fas fa-chart-line" style="color:var(--primary)"></i>أسعار
+                            السوق</div>
+                        <div class="card-live-badge"><span class="live-dot"></span>مباشر</div>
+                    </div>
+                    <div class="price-row">
+                        <span class="p-name"><i class="fas fa-circle" style="color:#FFD700; font-size:8px;"></i> ذهب
+                            24</span>
+                        <span class="p-val" id="gold-price">00.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="p-name"><i class="fas fa-circle" style="color:#C0C0C0; font-size:8px;"></i>
+                            فضة</span>
+                        <span class="p-val" id="silver-price">0.00</span>
+                    </div>
+                </div>
+
+                <div class="glass-card nisab-widget">
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring" width="100%" height="100%" viewBox="0 0 80 80">
+                            <circle stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" r="32" cx="40"
+                                cy="40" />
+                            <circle id="progress-circle" stroke="var(--primary)" stroke-width="6" fill="transparent"
+                                r="32" cx="40" cy="40" stroke-dasharray="201" stroke-dashoffset="201"
+                                style="transition: 1s;" />
+                        </svg>
+                        <div class="ring-icon-center"><i class="fas fa-scale-balanced" id="status-icon"></i></div>
+                    </div>
+                    <div class="widget-label">حد النصاب (ذهب)</div>
+                    <div class="widget-val" id="nisab-val">--</div>
+                </div>
+            </div>
+
+            <div class="wealth-card" id="wealth-card">
+                <div class="wc-header"><span>إجمالي وعاء الزكاة (الأصول)</span><i class="fas fa-wallet"></i></div>
+                <div class="wc-amount-box"><span class="currency">ج.م</span><span class="amount"
+                        id="display-total-wealth">0</span></div>
+                <div class="wc-footer">
+                    <div class="wc-status-badge" id="wc-status"><span class="dot"></span><span class="text"
+                            id="wc-text">لم تبلغ النصاب</span></div>
+                    <div style="display:none;" id="wc-percent"></div>
+                </div>
+            </div>
+
+            <div class="filter-scroll">
+                <div class="filter-chip active" onclick="setTab(0, this)"><i class="fas fa-coins"></i> الذهب والفضة
+                </div>
+                <div class="filter-chip" onclick="setTab(1, this)"><i class="fas fa-money-bill-wave"></i> الأموال
+                    النقدية</div>
+                <div class="filter-chip" onclick="setTab(2, this)"><i class="fas fa-chart-pie"></i> التجارة والأسهم
+                </div>
+                <div class="filter-chip" onclick="setTab(3, this)"><i class="fas fa-seedling"></i> الزروع والثمار</div>
+                <div class="filter-chip" onclick="setTab(4, this)"><i class="fas fa-building"></i> المستغلات</div>
+                <div class="filter-chip" onclick="setTab(5, this)"><i class="fas fa-paw"></i> الأنعام</div>
+                <div class="filter-chip" onclick="setTab(6, this)"><i class="fas fa-user-friends"></i> زكاة الفطر</div>
+            </div>
+
+            <div class="inputs-container active" id="tab-0">
+                <div class="input-box"
+                    style="display:flex; align-items:center; justify-content:space-between; padding:15px;">
+                    <label for="is_zinah" style="font-size:13px; color:var(--text); cursor:pointer;"><i
+                            class="fas fa-gem" style="color:var(--gold); margin-left:8px;"></i>الذهب للزينة الشخصية (لا
+                        زكاة فيه عند الجمهور)</label>
+                    <input type="checkbox" id="is_zinah" onchange="calc()"
+                        style="accent-color:var(--primary); transform:scale(1.2); cursor:pointer;">
+                </div>
+                <div class="input-box" onclick="document.getElementById('g24').focus()">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label class="lbl"><i class="fas fa-question fiqh-btn" onclick="openFiqh('gold_cash')"></i>ذهب
+                            عيار 24</label>
+                        <span id="lbl-price-24"
+                            style="color:var(--gold); font-size:14px; font-weight:bold;">(...)</span>
+                    </div>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="g24"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">جرام</span></div>
+                </div>
+                <div class="input-box" onclick="document.getElementById('g21').focus()">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label class="lbl">ذهب عيار 21</label><span id="lbl-price-21"
+                            style="color:var(--gold); font-size:14px; font-weight:bold;">(...)</span>
+                    </div>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="g21"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">جرام</span></div>
+                </div>
+                <div class="input-box" onclick="document.getElementById('g18').focus()">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label class="lbl">ذهب عيار 18</label><span id="lbl-price-18"
+                            style="color:var(--gold); font-size:14px; font-weight:bold;">(...)</span>
+                    </div>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="g18"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">جرام</span></div>
+                </div>
+                <div class="input-box" onclick="document.getElementById('sil').focus()">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <label class="lbl">الفضة الخالصة</label><span id="lbl-price-sil"
+                            style="color:#C0C0C0; font-size:14px; font-weight:bold;">(...)</span>
+                    </div>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="sil"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">جرام</span></div>
+                </div>
+            </div>
+
+            <div class="inputs-container" id="tab-1">
+                <div class="input-box" onclick="document.getElementById('cash_hand').focus()">
+                    <label class="lbl"><i class="fas fa-question fiqh-btn" onclick="openFiqh('gold_cash')"></i>سيولة
+                        نقدية / محافظ إلكترونية</label>
+                    <div style="display:flex; justify-content: space-between; align-items: center; gap: 10px;">
+                        <div style="flex: 1;"><input type="search" class="inp-field" placeholder="المبلغ" id="cash_hand"
+                                oninput="calc()" inputmode="decimal"></div>
+                        <select id="currency_select" onchange="updateCashCurrency()" class="inp-field"
+                            style="width: auto; padding-left: 30px;" onclick="event.stopPropagation()">
+                            <option value="EGP">EGP</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="SAR">SAR</option>
+                        </select>
+                    </div>
+                    <div id="fx_rate_display"
+                        style="font-size:11px; color:var(--primary); margin-top:5px; display:none;"><i
+                            class="fas fa-exchange-alt"></i> 1 <span id="fx_curr"></span> = <span id="fx_val"></span>
+                        ج.م</div>
+                </div>
+                <div class="input-box" onclick="document.getElementById('cash_bank').focus()">
+                    <label class="lbl">أرصدة بنكية / شهادات استثمار</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="المبلغ بالمصري"
+                            id="cash_bank" oninput="calc()" inputmode="decimal"><span class="inp-unit">ج.م</span></div>
+                </div>
+                <div class="input-box" onclick="document.getElementById('cash_owed_to_user').focus()">
+                    <label class="lbl" style="color: var(--primary);"><i class="fas fa-arrow-up"></i> ديون لك (مرجوة
+                        السداد)</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="سلف، جمعيات"
+                            id="cash_owed_to_user" oninput="calc()" inputmode="decimal"><span class="inp-unit"
+                            style="color:var(--primary); border-color:rgba(79, 240, 183, 0.3)">إضافة</span></div>
+                </div>
+            </div>
+
+            <div class="inputs-container" id="tab-2">
+                <div class="input-box" onclick="document.getElementById('trade_val').focus()">
+                    <label class="lbl"><i class="fas fa-question fiqh-btn" onclick="openFiqh('trade')"></i>قيمة البضائع
+                        (سعر السوق)</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="trade_val"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">عملة</span></div>
+                </div>
+                <div class="input-box">
+                    <label class="lbl" style="color:var(--primary)"><i class="fas fa-question fiqh-btn"
+                            onclick="openFiqh('trade')"></i><i class="fas fa-bitcoin"></i> العملات الرقمية
+                        والأسهم</label>
+                    <div style="margin-bottom:10px;">
+                        <select id="crypto_select" class="inp-field" onchange="fetchCryptoLivePrice()">
+                            <option value="manual">أخرى / أسهم (إدخال القيمة يدوياً)</option>
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="USDT">USDT (Tether)</option>
+                            <option value="BNB">BNB (Binance Coin)</option>
+                            <option value="SOL">Solana (SOL)</option>
+                        </select>
+                    </div>
+                    <div class="inp-flex" style="gap:10px;">
+                        <div style="flex:1;" onclick="document.getElementById('crypto_count').focus()"><label
+                                style="font-size:11px; color:var(--text-muted);">العدد</label><input type="search"
+                                id="crypto_count" class="inp-field" placeholder="مثلاً 0.5"
+                                oninput="calculateCryptoValue()" inputmode="decimal"></div>
+                        <div style="flex:1;"><label style="font-size:11px; color:var(--text-muted);">سعر الواحدة</label>
+                            <div class="inp-flex"
+                                style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0 10px;">
+                                <input type="text" id="crypto_unit_price" class="inp-field" value="0" readonly
+                                    style="border:none; background:transparent; padding:12px 0; color:var(--gold) !important; font-weight:700;"><span
+                                    id="crypto_currency_symbol" style="color:var(--primary); font-size:12px;">ج.م</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;" onclick="document.getElementById('stock_trade').focus()">
+                        <label class="lbl">إجمالي القيمة السوقية</label>
+                        <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="stock_trade"
+                                oninput="calc()" inputmode="decimal"><span class="inp-unit">ج.م</span></div>
+                        <div id="crypto_status"
+                            style="font-size:14px; font-weight:bold; color: #fff; margin-top:8px; display:none;"><i
+                                class="fas fa-wifi"></i> تم جلب السعر اللحظي</div>
+                    </div>
+                </div>
+                <div class="input-box danger-box" onclick="document.getElementById('trade_debt').focus()">
+                    <label class="lbl" style="color: var(--danger)"><i class="fas fa-arrow-down"></i> ديون مستحقة عليك
+                        (تخصم)</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="قروض، أقساط"
+                            id="trade_debt" oninput="calc()" style="color: var(--danger)" inputmode="decimal"><span
+                            class="inp-unit">خصم</span></div>
+                </div>
+            </div>
+
+            <div class="inputs-container" id="tab-3">
+                <div class="input-box" style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                    <i class="fas fa-info-circle" style="color: var(--text); margin-left: 5px;"></i>
+                    نصاب الزروع 5 أوسق (حوالي 653 كجم). لن تحسب الزكاة إلا إذا تجاوزت هذا الوزن.
+                </div>
+
+                <div class="input-box" onclick="document.getElementById('crop_weight').focus()">
+                    <label class="lbl">
+                        <i class="fas fa-question fiqh-btn" onclick="openFiqh('crops')"></i>
+                        وزن المحصول (للنصاب)
+                    </label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="crop_weight"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">كجم</span></div>
+                </div>
+
+                <div class="input-box">
+                    <label class="lbl">نوع المحصول</label>
+                    <select id="crop_type" class="inp-field" onchange="calc()">
+                        <option value="manual">محصول آخر (إدخال يدوي للقيمة)</option>
+                        <option value="wheat">قمح (يحسب آلياً على سعر الأردب)</option>
+                        <option value="rice">أرز (يحسب آلياً على سعر الطن)</option>
+                    </select>
+                </div>
+
+                <div class="input-box" onclick="document.getElementById('crop_val').focus()">
+                    <label class="lbl">قيمة المحصول الإجمالية</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="crop_val"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">عملة</span></div>
+                    <div id="auto_calc_note"
+                        style="font-size:10px; color:var(--primary); display:none; margin-top:5px;">
+                        * تم الحساب تلقائياً بناءً على سعر السوق المسجل
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label class="lbl">طريقة الري</label>
+                    <select id="irrigation_type" class="inp-field" onchange="calc()">
+                        <option value="0.10">بدون تكلفة (مطر/عيون) - 10%</option>
+                        <option value="0.05">بتكلفة (آلات/شراء مياه) - 5%</option>
+                        <option value="0.075">مختلط (نصف ونصف) - 7.5%</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="inputs-container" id="tab-4">
+                <div class="input-box" style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                    <i class="fas fa-building" style="color: var(--text); margin-left: 5px;"></i>
+                    المستغلات (عقارات، سيارات، مصانع) لا زكاة في ثمنها، بل في <span style="color: var(--primary);">صافي
+                        ربحها</span> (2.5%).
+                </div>
+
+                <div class="input-box" onclick="document.getElementById('re_income').focus()">
+                    <label class="lbl">
+                        <i class="fas fa-question fiqh-btn" onclick="openFiqh('real_estate')"></i>
+                        إجمالي الإيراد السنوي
+                    </label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="re_income"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">ج.م</span></div>
+                </div>
+
+                <div class="input-box danger-box" onclick="document.getElementById('re_expense').focus()">
+                    <label class="lbl">مصاريف صيانة وضرائب (تخصم)</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="re_expense"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">خصم</span></div>
+                </div>
+            </div>
+
+            <div class="inputs-container" id="tab-5">
+                <div class="input-box">
+                    <label class="lbl">نوع الأنعام</label>
+                    <select id="cattle_type" class="inp-field" onchange="updateCattlePriceInput(); calc();">
+                        <option value="sheep">غنم (ضأن/ماعز) - نصاب 40</option>
+                        <option value="cow">بقر/جاموس - نصاب 30</option>
+                        <option value="camel">إبل - نصاب 5</option>
+                    </select>
+                </div>
+
+                <div class="input-box" onclick="document.getElementById('cattle_count').focus()">
+                    <label class="lbl">
+                        <i class="fas fa-question fiqh-btn" onclick="openFiqh('cattle')"></i>
+                        عدد الرؤوس المملوكة
+                    </label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="0" id="cattle_count"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">رأس</span></div>
+                </div>
+
+                <div class="input-box" onclick="document.getElementById('cattle_price').focus()">
+                    <label class="lbl">متوسط سعر الحيوان (للتحويل النقدي)</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="مثلاً: 5000"
+                            id="cattle_price" oninput="calc()" inputmode="decimal"><span class="inp-unit">عملة</span>
+                    </div>
+                </div>
+
+                <div class="input-box" style="border-color: var(--primary);">
+                    <div style="font-size:13px; color:var(--text); margin-bottom:5px;">
+                        <i class="fas fa-hand-holding-heart" style="color:var(--primary); margin-left:5px;"></i>
+                        نوع الزكاة المستحقة (عدد الرؤوس):
+                    </div>
+                    <div id="cattle_result_text"
+                        style="color:var(--primary); font-size:16px; font-weight:800; text-shadow:0 0 10px var(--primary-glow);">
+                        لا يوجد زكاة</div>
+                </div>
+            </div>
+
+            <div class="inputs-container" id="tab-6">
+                <div class="input-box" onclick="document.getElementById('fitr_count').focus()">
+                    <label class="lbl"><i class="fas fa-question fiqh-btn" onclick="openFiqh('fitr')"></i>عدد أفراد
+                        الأسرة</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" placeholder="1" id="fitr_count"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">فرد</span></div>
+                </div>
+                <div class="input-box" onclick="document.getElementById('fitr_val').focus()">
+                    <label class="lbl">قيمة الزكاة للفرد</label>
+                    <div class="inp-flex"><input type="search" class="inp-field" value="35" id="fitr_val"
+                            oninput="calc()" inputmode="decimal"><span class="inp-unit">عملة</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="history-view" style="display: none; padding: 20px;">
+
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:15px;">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div
+                        style="width:45px; height:45px; background:rgba(212, 175, 55, 0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; border:1px solid var(--gold);">
+                        <i class="fas fa-history" style="color:var(--gold); font-size:20px;"></i>
+                    </div>
+                    <div>
+                        <h2 style="color:#fff; font-family:'Reem Kufi'; margin:0; font-size:20px;">أرشيف التقارير</h2>
+                        <p style="color:var(--text-muted); font-size:12px; margin:2px 0 0;">بحث واسترجاع الملفات السابقة
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeHistoryView()"
+                    style="background:transparent; border:1px solid var(--border); color:#fff; padding:8px 15px; border-radius:10px; cursor:pointer; font-family:'Amiri'; font-weight:bold; transition:0.3s;">
+                    <i class="fas fa-times" style="margin-left:5px;"></i> إغلاق
+                </button>
+            </div>
+
+            <div style="margin-bottom: 25px; position:relative;">
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="search-ref-input" placeholder="أدخل رقم الوصل (مثال: 1764160314)"
+                        style="width:100%; background:#151515; border:1px solid #333; color:#fff; padding:12px 15px; border-radius:12px; font-family:'Outfit'; font-size:16px; outline:none; transition:0.3s;"
+                        onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#333'">
+
+                    <button onclick="searchByRefNum()"
+                        style="background:var(--primary); color:#000; border:none; padding:0 20px; border-radius:12px; font-weight:bold; cursor:pointer; min-width:100px;">
+                        <i class="fas fa-search"></i> بحث
+                    </button>
+                </div>
+            </div>
+            <div id="turnstile-search-container"
+                style="margin-top: 15px; display: flex; justify-content: center; min-height: 65px;"></div>
+
+            <div id="history-loading" style="text-align:center; padding:50px; display:none;">
+                <i class="fas fa-circle-notch fa-spin" style="font-size:40px; color:var(--primary);"></i>
+                <div style="margin-top:20px; color:#fff;">جاري البحث في قاعدة البيانات...</div>
+            </div>
+
+            <div id="history-empty" style="text-align:center; padding:40px; display:none;">
+                <i class="fas fa-box-open" style="font-size:50px; color:#333; margin-bottom:15px;"></i>
+                <h3 style="color:#fff; font-size:16px;">لا توجد سجلات محفوظة</h3>
+                <p style="color:#777; font-size:12px;">أدخل رقم وصل للبحث أو سجل دخولك لعرض ملفاتك.</p>
+            </div>
+
+            <div id="history-grid"
+                style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:15px;"></div>
+        </div>
+
+    </div>
+
+    <div class="sticky-total">
+        <div class="total-info">
+            <h6>إجمالي المبلغ الواجب دفعه</h6>
+            <div class="total-num" id="total-due">0.00 <span>ج.م</span></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <button class="export-btn" onclick="resetAllData()"
+                style="background:rgba(255,61,0,0.1); border-color:var(--danger); padding:0 15px;"><i
+                    class="fas fa-trash-alt" style="color:var(--danger); font-size:16px;"></i></button>
+            <button class="export-btn" onclick="openExportModal()"><i class="fas fa-file-invoice"></i><span>حفظ
+                    التقرير</span></button>
+        </div>
+    </div>
+
+    <div id="zakat-report-studio">
+        <div class="rep-frame">
+            <div class="rep-header">
+                <div class="rep-logo"><i class="fas fa-kaaba" style="font-size:70px;"></i>
+                    <div style="display:flex; flex-direction:column; gap:5px;"><span>زكـاتي</span><span
+                            style="font-size:20px; color:#666; font-weight:normal;">Zakat Premium Report</span></div>
+                </div>
+                <div class="rep-meta">
+                    <div class="rep-title">تقرير الزكاة التفصيلي</div>
+                    <div class="rep-date" id="rep-date-now">--/--/----</div>
+                </div>
+            </div>
+            <div class="rep-grid">
+                <div style="display:flex; flex-direction:column; gap:30px;">
+                    <div class="rep-card">
+                        <div class="rep-card-header">
+                            <div class="rep-card-title"><i class="fas fa-coins" style="color:var(--gold)"></i> الذهب
+                                والفضة</div>
+                            <div class="rep-card-total" id="r-gold-total">0</div>
+                        </div>
+                        <div class="rep-card-body" id="r-gold-details"></div>
+                    </div>
+                    <div class="rep-card">
+                        <div class="rep-card-header">
+                            <div class="rep-card-title"><i class="fas fa-wallet"></i> السيولة والتجارة</div>
+                            <div class="rep-card-total" id="r-money-total">0</div>
+                        </div>
+                        <div class="rep-card-body" id="r-money-details"></div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:30px;">
+                    <div class="rep-card">
+                        <div class="rep-card-header">
+                            <div class="rep-card-title"><i class="fas fa-leaf" style="color:#4ff0b7"></i> الزروع
+                                والأنعام</div>
+                        </div>
+                        <div class="rep-card-body">
+                            <div id="r-crop-section"></div>
+                            <div id="r-cattle-section"
+                                style="margin-top:20px; padding-top:20px; border-top:2px dashed #333;"></div>
+                        </div>
+                    </div>
+                    <div class="rep-card">
+                        <div class="rep-card-header">
+                            <div class="rep-card-title"><i class="fas fa-building"></i> بنود أخرى</div>
+                        </div>
+                        <div class="rep-card-body">
+                            <div class="rep-item"><span class="rep-label">زكاة المستغلات</span><span class="rep-val"
+                                    id="r-z-re">0</span></div>
+                            <div class="rep-item"
+                                style="margin-top:20px; padding-top:20px; border-top:1px dashed #333;">
+                                <div><span class="rep-label">زكاة الفطر</span><span class="rep-sub-val"
+                                        id="r-fitr-desc">--</span></div><span class="rep-val" id="r-z-fitr">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="rep-footer-box">
+                <div>
+                    <div class="rep-total-label">السيولة النقدية والذهب</div>
+                    <div class="rep-total-value" style="color:#aaa; font-size:50px;" id="r-total-w">0</div>
+                </div>
+                <div style="text-align:left;">
+                    <div class="rep-total-label">صافي الزكاة المستحقة</div>
+                    <div class="rep-total-value" style="color:var(--primary);" id="r-final-z">0</div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:40px; padding-top:20px; border-top:1px solid #333;">
+                <div
+                    style="font-size:26px; color:#fff; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:10px;">
+                    <i class="fas fa-certificate" style="color:var(--gold);"></i>
+                    تم الاحتساب دقيقاً وفقاً لأحدث أسعار السوق والمعايير الشرعية.
+                </div>
+                <div style="font-size:18px; color:#888; margin-top:5px;">تطبيق زكاتي - الإصدار الموثق</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fiqh-modal-overlay" id="exportModal" onclick="closeExportModal()">
+        <div class="fiqh-card" style="max-width:400px; text-align:center;" onclick="event.stopPropagation()">
+            <div class="fiqh-header" style="justify-content:center;">
+                <div class="fiqh-title"><i class="fas fa-file-export"></i> اختر صيغة التقرير</div>
+            </div>
+            <div class="fiqh-body">
+                <p>بناءً على كمية البيانات المدخلة، قمنا بتحديد الصيغة الأنسب لك:</p>
+
+                <div style="display:flex; gap:15px; margin-top:20px; justify-content:center;">
+                    <div id="btn-img-choice" onclick="startExport('image')"
+                        style="border:1px solid #333; padding:15px; border-radius:12px; cursor:pointer; width:140px; position:relative; transition:0.3s;"
+                        onmouseover="this.style.borderColor='var(--primary)'"
+                        onmouseout="this.style.borderColor='#333'">
+                        <i class="fas fa-image" style="font-size:30px; color:#aaa; margin-bottom:10px;"></i>
+                        <div style="font-weight:bold; color:#fff;">صورة (Dark)</div>
+
+                        <div id="rec-img"
+                            style="display:none; position:absolute; top:-10px; right:-10px; background:var(--primary); color:#000; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:bold;">
+                            موصى به</div>
+                    </div>
+
+                    <div id="btn-pdf-choice" onclick="startExport('pdf')"
+                        style="border:1px solid #333; padding:15px; border-radius:12px; cursor:pointer; width:140px; position:relative; transition:0.3s;"
+                        onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#333'">
+                        <i class="fas fa-file-pdf" style="font-size:30px; color:#aaa; margin-bottom:10px;"></i>
+                        <div style="font-weight:bold; color:#fff;">ملف (PDF)</div>
+
+                        <div id="rec-pdf"
+                            style="display:none; position:absolute; top:-10px; right:-10px; background:var(--gold); color:#000; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:bold;">
+                            موصى به</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fiqh-modal-overlay" id="fiqhModal" onclick="closeFiqh()">
+        <div class="fiqh-card" onclick="event.stopPropagation()">
+            <div class="fiqh-header">
+                <div class="fiqh-title"><i class="fas fa-book-open"></i> المساعد الفقهي الذكي</div>
+                <button class="close-fiqh" onclick="closeFiqh()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="fiqh-body" id="fiqhBody"></div>
+        </div>
+    </div>
+
+    <div class="fiqh-modal-overlay" id="securityModal" style="z-index: 99999;">
+        <div class="security-card">
+
+            <div class="shield-icon-container">
+                <i class="fas fa-shield-halved shield-icon"></i>
+            </div>
+
+            <h3 class="sec-title">حماية ملف زكاتك</h3>
+            <p class="sec-desc">
+                لاحظنا أنك بدأت في إدخال بيانات حقيقية. هل ترغب في حفظ هذه البيانات بأمان لكي لا تفقدها؟
+            </p>
+
+            <div style="padding: 0 25px 25px;">
+
+                <button onclick="saveMethod('google')" class="sec-btn google">
+                    <i class="fab fa-google" style="font-size:18px;"></i>
+                    <span>ربط سريع (Google)</span>
+                </button>
+
+                <button onclick="saveMethod('pin')" class="sec-btn">
+                    <i class="fas fa-fingerprint" style="color:var(--primary); font-size:18px;"></i>
+                    <span>إنشاء رمز سري خاص</span>
+                </button>
+
+                <button onclick="saveMethod('receipt')" class="sec-btn">
+                    <i class="fas fa-ticket-alt" style="color:var(--gold); font-size:18px;"></i>
+                    <span>حفظ برقم الوصل (مجهول)</span>
+                </button>
+
+                <button onclick="dismissSecurity()" class="ignore-btn">
+                    أكمل الحساب بدون حفظ
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="fiqh-modal-overlay" id="namingModal" style="z-index: 99999;">
+        <div class="security-card">
+            <div class="shield-icon-container" style="height: 100px;">
+                <i class="fas fa-file-signature shield-icon" style="font-size: 50px;"></i>
+            </div>
+
+            <h3 class="sec-title">تسمية التقرير</h3>
+            <p class="sec-desc">أدخل اسماً مميزاً للتقرير لتسهيل استرجاعه لاحقاً</p>
+
+            <div style="padding: 0 25px 25px;">
+
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="report-title-input" class="inp-field" placeholder="مثلاً: زكاة رمضان 2025"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid #444; text-align: center; color: #fff; font-size: 18px;">
+                </div>
+
+                <div id="turnstile-container"></div>
+
+                <button class="sec-btn" onclick="uploadData()"
+                    style="background: var(--primary); color: #000; border: none; justify-content: center;">
+                    <i class="fas fa-save" style="font-size:18px;"></i>
+                    <span>تأكيد وحفظ الملف</span>
+                </button>
+
+                <button class="ignore-btn" onclick="dismissSecurity()"
+                    style="padding: 10px; margin-top: 10px; font-size: 13px;">إلغاء الأمر</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fiqh-modal-overlay" id="historyModal">
+        <div class="fiqh-card" style="max-width: 600px; width: 95%;" onclick="event.stopPropagation()">
+            <div class="fiqh-header">
+                <div class="fiqh-title"><i class="fas fa-history"></i> سجل حسابات الزكاة</div>
+                <button class="close-fiqh"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="fiqh-body" style="padding: 0;">
+                <div id="history-list" style="max-height: 400px; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fiqh-modal-overlay" id="customConfirmModal">
+        <div class="cyber-modal-card">
+            <div class="cyber-bg-glow"></div>
+            <div class="cyber-icon-wrap">
+                <div class="icon-circle"><i class="fas fa-shield-halved"></i></div>
+            </div>
+            <h3 class="cyber-title">استبدال البيانات الحالية؟</h3>
+            <div class="cyber-body">
+                <p id="confirm-msg-text" class="cyber-desc">هل أنت متأكد؟ <span
+                        style="color:var(--danger); display:block; margin-top:5px;">(سيتم فقدان الأرقام الحالية)</span>
+                </p>
+            </div>
+            <div class="cyber-actions">
+                <button id="btn-confirm-yes" class="btn-cyber-primary"><i class="fas fa-check-circle"></i><span>نعم،
+                        استبدل</span></button>
+                <button id="btn-confirm-no" class="btn-cyber-secondary"><span>إلغاء</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ban-overlay-cyber" id="banModal">
+        <div class="ban-card-cyber">
+            <div class="ban-bg-glow"></div>
+
+            <div class="ban-icon-cyber">
+                <div class="ban-icon-circle">
+                    <i class="fas fa-shield-halved" style="font-size: 40px; color: #ff9800;"></i>
+                </div>
+            </div>
+
+            <h3 class="ban-title-cyber">استراحة قصيرة</h3>
+
+            <p class="ban-desc-cyber">
+                لاحظنا إرسال طلبات متكررة في وقت قصير.<br>
+                يرجى الانتظار قليلاً قبل المحاولة مرة أخرى.
+            </p>
+
+            <div class="ban-timer-cyber">
+                <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                    <lottie-player id="ban-lottie-player" src="../assets/lottie/wait.json" background="transparent"
+                        speed="1" style="width: 150px; height: 150px;" loop autoplay>
+                    </lottie-player>
+                </div>
+                <div class="ban-timer-label" style="color:#888; font-size:12px; margin-bottom:5px;">يمكنك المحاولة بعد
+                </div>
+                <div class="ban-timer-value" id="ban-timer">00:00</div>
+            </div>
+
+            <div class="ban-btn-cyber" onclick="window.location.href='../azkar/index.html'">
+                حسناً
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-toast" class="toast-notification">
+        <div class="toast-icon"><i class="fas fa-check"></i></div>
+        <div class="toast-content">
+            <div class="toast-title">تم بنجاح</div>
+            <div class="toast-msg">تم الحفظ</div>
+        </div>
+    </div>
+
+    <script src="../assets/js/app-core.js"></script>
+    <script type="module" src="js/init.js"></script>
+</body>
+
+</html>

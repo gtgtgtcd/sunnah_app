@@ -1,0 +1,1965 @@
+@import url('https://fonts.googleapis.com/css2?family=Kufam:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap');
+/* ================= 1. THEME VARIABLES & RESET ================= */
+:root {
+    --bg-deep: #020a0a;
+    --bg-surface: #0a1414;
+    --sidebar-bg: #050f0f;
+    --primary: #4ff0b7;
+    --primary-glow: rgba(79, 240, 183, 0.4);
+    --gold: #d4af37;
+    --text: #e2e8f0;
+    --text-muted: #8899a6;
+    --border: rgba(255, 255, 255, 0.08);
+    --danger: #FF3D00;
+    --header-height: 75px;
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 90px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ✅ 1. استعادة سكرول الصفحة الرئيسي (هيرجع لليمين) */
+html,
+body {
+    height: auto;
+    /* إلغاء التثبيت */
+    width: auto;
+    margin: 0;
+    padding: 0;
+    overflow: auto !important;
+    /* السماح للسكرول الأساسي بالظهور */
+    background-color: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Outfit', 'IBM Plex Sans Arabic', sans-serif;
+}
+
+/* ونرجع الـ padding-top للـ body الأصلي */
+body {
+    padding-top: 0; /* Remove conflicting padding since we use margin-top on content */
+}
+
+/* ✅ 2. إلغاء السكرول الداخلي من المحتوى */
+.scroll-content {
+    /* ... (نفس خصائصك القديمة) ... */
+    flex: 1;
+    display: block;
+    position: relative;
+    z-index: 1;
+    margin-right: var(--sidebar-width);
+    margin-left: 0;
+    padding: 20px 20px 100px 20px;
+    margin-top: var(--header-height); /* Add top margin to avoid header overlap */
+    transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* 👇 إلغاء السكرول الداخلي تماماً 👇 */
+    height: auto !important;
+    overflow-y: visible !important;
+    direction: rtl;
+    /* نرجع اتجاه النصوص عربي سليم */
+    /* 👆👆👆 ----------------------- 👆👆👆 */
+}
+
+/* تنسيق شريط الكروم (اختياري لزيادة الجمال) */
+.scroll-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scroll-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll-content::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 20px;
+}
+
+.scroll-content::-webkit-scrollbar-thumb:hover {
+    background: #666;
+    /* لون الشريط عند التمرير */
+}
+
+.bg-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse 10s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.03;
+    }
+
+    100% {
+        opacity: 0.05;
+    }
+}
+
+/* ================= 2. LAYOUT (HEADER & SIDEBAR) ================= */
+/* Header */
+.compact-header {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    background: rgba(5, 10, 10, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(79, 240, 183, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2000;
+    transition: all 0.3s ease;
+}
+
+.header-left-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-right-section {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* This creates proper spacing between currency and profile */
+}
+
+.menu-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu-btn:hover {
+    background: rgba(0, 230, 118, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: scale(1.05);
+}
+
+.menu-btn i {
+    font-size: 18px;
+}
+
+h1, h2, h3, .page-info, .title, .section-title, .card-title, .header-title {
+    font-family: 'Kufam', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: normal;
+}
+
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.app-brand i {
+    font-size: 26px;
+    color: var(--primary);
+    filter: drop-shadow(0 0 8px rgba(0, 230, 118, 0.4));
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.brand-main {
+    font-family: 'Reem Kufi', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.brand-sub {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+/* Currency Selector */
+.currency-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 6px 12px 6px 10px;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+.currency-pill:hover {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.currency-icon {
+    color: var(--gold);
+    font-size: 14px;
+}
+
+.custom-select {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 15px;
+    z-index: 2;
+}
+
+.custom-select option {
+    background: #111;
+    color: #fff;
+    padding: 10px;
+}
+
+.select-arrow {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: #666;
+    pointer-events: none;
+}
+
+/* Main Content Area */
+.scroll-content {
+    flex: 1;
+    display: block;
+    position: relative;
+    z-index: 1;
+    margin-right: var(--sidebar-width);
+    margin-left: 0;
+    padding: 20px 20px 100px 20px;
+    transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* 👇 التعديل هنا: السكرول لليمين والمحتوى يبدأ من اليسار (مؤقتاً) */
+    direction: ltr !important;
+
+    /* خصائص السكرول الداخلي */
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+/* ✅ تصميم السكرول الرمادي الانيق */
+.scroll-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scroll-content::-webkit-scrollbar-track {
+    background: #333;
+    /* خلفية الشريط */
+    border-radius: 10px;
+}
+
+.scroll-content::-webkit-scrollbar-thumb {
+    background: #555;
+    /* لون الشريط الرئيسي */
+    border-radius: 10px;
+}
+
+.scroll-content::-webkit-scrollbar-thumb:hover {
+    background: #666;
+    /* لون الشريط عند التمرير */
+}
+
+.scroll-content.expanded {
+    margin-right: 90px;
+}
+
+/* ✅ 3. استعادة اتجاه المحتوى العربي (RTL) داخل السكرولر */
+.scroll-content>div {
+    direction: rtl !important;
+}
+
+
+/* Widgets & Cards */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.glass-card,
+.wealth-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.glass-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+/* Prices Widget */
+.prices-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.p-widget-title {
+    font-size: 14px;
+    color: #fff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Amiri';
+}
+
+.card-live-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 23, 68, 0.1);
+    border: 1px solid rgba(255, 23, 68, 0.3);
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    color: #ff1744;
+    font-weight: bold;
+}
+
+.live-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #ff1744;
+    border-radius: 50%;
+    animation: pulseRed 1.5s infinite;
+    box-shadow: 0 0 5px #ff1744;
+}
+
+@keyframes pulseRed {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.price-row:last-child {
+    border: none;
+}
+
+.p-name {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.p-val {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Outfit';
+}
+
+/* Nisab Widget */
+.nisab-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5px;
+}
+
+.progress-ring-container {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ring-icon-center {
+    font-size: 24px;
+    color: var(--text-muted);
+    transition: 0.3s;
+    position: absolute;
+}
+
+.ring-icon-center.active {
+    color: var(--primary);
+    text-shadow: 0 0 15px var(--primary);
+}
+
+.widget-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.widget-val {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--gold);
+    font-family: 'Outfit';
+    margin-top: 5px;
+}
+
+/* Wealth Card */
+.wealth-card {
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #0f3a3a 0%, #020a0a 100%);
+    border-color: var(--border);
+}
+
+.wealth-card.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 30px rgba(79, 240, 183, 0.1);
+}
+
+.wc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 15px;
+    font-family: 'Amiri';
+}
+
+.wc-amount-box {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+    direction: ltr;
+}
+
+.wc-amount-box .amount {
+    font-size: 48px;
+    font-weight: bold;
+    color: #fff;
+    font-family: 'Outfit';
+    text-shadow: 0 0 20px var(--primary-glow);
+}
+
+.wc-amount-box .currency {
+    font-size: 16px;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.wc-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wc-status-badge {
+    font-size: 14px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wc-status-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #555;
+}
+
+.wealth-card.active .wc-status-badge .dot {
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.wealth-card.active .wc-status-badge {
+    color: #fff;
+}
+
+/* Filter Tabs */
+.filter-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #555 transparent;
+}
+
+.filter-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.filter-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
+
+.filter-chip {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: 0.3s;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-chip:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.filter-chip.active {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(0, 0, 0, 0));
+    border-color: var(--gold);
+    color: #fff !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Inputs */
+.inputs-container {
+    display: none;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inputs-container.active {
+    display: block;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.input-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 12px;
+    transition: 0.3s;
+}
+
+.input-box:focus-within {
+    border-color: var(--border);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.lbl {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: block;
+    font-family: 'Amiri';
+}
+
+.inp-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.inp-field {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Outfit';
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.inp-field:focus {
+    border-color: var(--primary);
+    border-bottom-color: var(--primary);
+    box-shadow: 0 0 20px rgba(79, 240, 183, 0.1);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.inp-field::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 400;
+}
+
+.inp-unit {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    padding: 8px 15px;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.input-box.danger-box {
+    background: rgba(255, 61, 0, 0.03);
+    border-color: rgba(255, 61, 0, 0.15);
+}
+
+.input-box.danger-box .lbl {
+    color: #ff8a65;
+}
+
+.input-box.danger-box .inp-unit {
+    color: #ff8a65;
+    background: rgba(255, 61, 0, 0.1);
+    border-color: rgba(255, 61, 0, 0.2);
+}
+
+select.inp-field {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ff0b7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 15px center;
+    background-size: 16px;
+}
+
+/* Sticky Footer */
+.sticky-total {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    right: var(--sidebar-width);
+    height: 80px;
+    background: rgba(2, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1400;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sticky-total.expanded,
+.scroll-content.expanded+.sticky-total {
+    right: 90px;
+}
+
+.sticky-total.visible {
+    transform: translateY(0);
+}
+
+.total-info h6 {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    font-family: 'Amiri';
+}
+
+.total-num {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    font-family: 'Outfit';
+    line-height: 1;
+    text-shadow: 0 0 20px var(--primary-glow);
+}
+
+.total-num span {
+    font-size: 18px;
+    color: #fff;
+    margin-right: 5px;
+    font-weight: 600;
+}
+
+.export-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0 25px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Amiri';
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.export-btn:hover {
+    background: rgba(79, 240, 183, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 20px rgba(79, 240, 183, 0.15);
+}
+
+/* Controls Row */
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.history-btn-main {
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 6px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Amiri';
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.05);
+}
+
+.history-btn-main:hover {
+    background: var(--gold);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.history-btn-main i {
+    font-size: 14px;
+}
+
+.year-type-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-family: 'Amiri';
+}
+
+.toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 20px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: .4s;
+    border-radius: 34px;
+    border: 1px solid var(--border);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--text-muted);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: rgba(212, 175, 55, 0.2);
+    border-color: var(--gold);
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
+    background-color: var(--gold);
+}
+
+/* Fiqh Button */
+.fiqh-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-size: 12px;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.fiqh-btn:hover {
+    background: var(--gold);
+    color: #000;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px var(--gold);
+}
+
+/* ================= 4. MODALS & OVERLAYS ================= */
+.fiqh-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.fiqh-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.fiqh-card {
+    background: #050505;
+    border: 1px solid #333;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    transform: scale(0.9);
+    transition: 0.3s ease;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+.fiqh-modal-overlay.active .fiqh-card {
+    transform: scale(1);
+}
+
+.fiqh-header {
+    padding: 20px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0a0f0f;
+}
+
+.fiqh-title {
+    font-family: 'Reem Kufi', sans-serif;
+    font-size: 18px;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-fiqh {
+    background: #111;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    color: #fff;
+    border: 1px solid #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.close-fiqh:hover {
+    background: var(--danger);
+    border-color: var(--danger);
+}
+
+.fiqh-body {
+    padding: 25px;
+    font-family: 'IBM Plex Sans Arabic';
+    line-height: 1.8;
+    color: #fff;
+    font-size: 15px;
+}
+
+.fiqh-stat-box {
+    background: #111;
+    border: 1px solid #333;
+    border-right: 4px solid var(--gold);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fiqh-stat-box span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.fiqh-highlight {
+    color: #fff;
+    font-weight: bold;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+}
+
+.fiqh-verdict {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-shadow: none;
+}
+
+.verdict-yes {
+    background: rgba(0, 230, 118, 0.1);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.1) inset;
+}
+
+.verdict-no {
+    background: rgba(255, 61, 0, 0.1);
+    border: 1px solid var(--danger);
+    color: #ff8a80;
+    box-shadow: 0 0 15px rgba(255, 61, 0, 0.1) inset;
+}
+
+/* Security Card (Smart Guardian) */
+.security-card {
+    background: linear-gradient(145deg, #0a1515, #020505);
+    border: 2px solid rgba(79, 240, 183, 0.3);
+    box-shadow: 0 0 80px rgba(79, 240, 183, 0.2);
+    border-radius: 28px;
+    width: 95%;
+    max-width: 550px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    transform: scale(0.9);
+    transition: 0.3s ease;
+}
+
+.fiqh-modal-overlay.active .security-card {
+    transform: scale(1);
+}
+
+.shield-icon-container {
+    height: 130px;
+    background: radial-gradient(circle at center, rgba(79, 240, 183, 0.15) 0%, transparent 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.shield-icon {
+    font-size: 65px;
+    color: var(--primary);
+    filter: drop-shadow(0 0 20px var(--primary));
+    animation: floatShield 3s ease-in-out infinite;
+}
+
+.sec-title {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    margin: 10px 0 10px;
+    text-align: center;
+}
+
+.sec-desc {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #b0bec5;
+    text-align: center;
+    padding: 0 40px;
+    line-height: 1.7;
+    margin-bottom: 35px;
+}
+
+/* ================= 5. RESPONSIVE COMPACT SCALES ================= */
+@media (max-width: 768px) {
+    .compact-header {
+        height: 60px;
+        padding: 0 16px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+    }
+    .menu-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+    }
+    .app-brand i {
+        font-size: 22px;
+    }
+    .brand-main {
+        font-size: 16px;
+    }
+    .currency-pill {
+        gap: 6px;
+        padding: 4px 10px 4px 8px;
+    }
+    .custom-select {
+        font-size: 12px;
+        padding-right: 12px;
+    }
+    .select-arrow {
+        left: 8px;
+        font-size: 9px;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .glass-card,
+    .wealth-card {
+        border-radius: 14px;
+        padding: 14px;
+    }
+    .p-widget-title {
+        font-size: 13px;
+    }
+    .card-live-badge {
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-size: 9px;
+    }
+    .price-row {
+        padding: 6px 0;
+    }
+    .p-name {
+        font-size: 11px;
+    }
+    .p-val {
+        font-size: 14px;
+    }
+    .progress-ring-container {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 8px;
+    }
+    .ring-icon-center {
+        font-size: 20px;
+    }
+    .widget-label {
+        font-size: 11px;
+    }
+    .widget-val {
+        font-size: 16px;
+    }
+    .wc-header {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+    .wc-amount-box {
+        gap: 6px;
+        margin-bottom: 14px;
+    }
+    .wc-amount-box .amount {
+        font-size: 28px;
+    }
+    .wc-amount-box .currency {
+        font-size: 13px;
+    }
+    .wc-footer {
+        padding-top: 10px;
+    }
+    .wc-status-badge {
+        font-size: 12px;
+        gap: 6px;
+    }
+    .filter-scroll {
+        gap: 8px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+    }
+    .filter-chip {
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 12px;
+        gap: 6px;
+    }
+    .inputs-container {
+        animation-duration: 0.3s;
+    }
+    .input-box {
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    .lbl {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    .inp-flex {
+        gap: 8px;
+    }
+    .inp-field {
+        font-size: 16px;
+        padding: 10px 12px;
+        border-radius: 6px;
+    }
+    .inp-unit {
+        font-size: 11px;
+        padding: 6px 12px;
+        border-radius: 6px;
+    }
+    .sticky-total {
+        height: 64px;
+        padding: 8px 16px;
+    }
+    .total-info h6 {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+    .total-num {
+        font-size: 24px;
+    }
+    .total-num span {
+        font-size: 14px;
+    }
+    .export-btn {
+        height: 40px;
+        font-size: 14px;
+        gap: 8px;
+        padding: 0 18px;
+        border-radius: 10px;
+    }
+    .fiqh-title {
+        font-size: 16px;
+    }
+    .sec-title {
+        font-size: 22px;
+    }
+    .sec-desc {
+        font-size: 14px;
+        padding: 0 20px;
+        margin-bottom: 24px;
+    }
+}
+
+.sec-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 18px 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+}
+
+.sec-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.sec-btn.google {
+    background: #fff;
+    color: #000;
+    border: none;
+}
+
+.sec-btn.google:hover {
+    background: #f0f0f0;
+}
+
+.ignore-btn {
+    width: 100%;
+    padding: 18px;
+    background: transparent;
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    color: #ccc;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 16px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.ignore-btn:hover {
+    color: #fff;
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Cyber Modal (Confirm) */
+.cyber-modal-card {
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 4px solid var(--primary);
+    border-radius: 24px;
+    padding: 45px 35px;
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    transform: scale(0.95);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fiqh-modal-overlay.active .cyber-modal-card {
+    transform: scale(1);
+}
+
+.cyber-bg-glow {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(79, 240, 183, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cyber-icon-wrap {
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    background: rgba(79, 240, 183, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(79, 240, 183, 0.2);
+    box-shadow: 0 0 30px rgba(79, 240, 183, 0.15);
+}
+
+.icon-circle i {
+    font-size: 32px;
+    color: var(--primary);
+}
+
+.cyber-title {
+    font-family: 'Reem Kufi', sans-serif;
+    font-size: 28px;
+    color: #fff;
+    margin: 0 0 15px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.cyber-body {
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.cyber-desc {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #b0bec5;
+    margin: 0;
+    padding: 0 10px;
+}
+
+.cyber-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-cyber-primary {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-family: 'Amiri', serif;
+    font-weight: bold;
+    font-size: 22px;
+    /* ✅ حجم الخط الجديد */
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.btn-cyber-primary:hover {
+    background: #00e676;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 230, 118, 0.2);
+}
+
+.btn-cyber-secondary {
+    background: transparent;
+    color: #777;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px;
+    border-radius: 14px;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.btn-cyber-secondary:hover {
+    color: #fff;
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ستايل الإشعار (Nuclear Fix) */
+.toast-notification {
+    position: fixed;
+    top: 120px;
+    /* نزلناه أكتر عشان يبعد عن الهيدر تماماً */
+    left: 50%;
+    transform: translateX(-50%) translateY(-50px);
+    /* يبدأ من فوق شوية */
+
+    background: #111;
+    border: 1px solid #333;
+    border-right: 4px solid var(--primary);
+    padding: 15px 25px;
+    /* كبرنا الحشو شوية */
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+    /* ظل قوي جداً */
+
+    /* أهم سطر: طبقة أعلى من أي كائن في المتصفح */
+    z-index: 2147483647 !important;
+
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* حركة مطاطية */
+    min-width: 320px;
+    pointer-events: none;
+}
+
+.toast-notification.active {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* تحسين شكل الخط */
+.toast-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.toast-msg {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ================= 5. HIDDEN REPORT STUDIO ================= */
+#zakat-report-studio {
+    position: fixed;
+    top: 0;
+    left: -9999px;
+    z-index: -9999;
+    width: 1920px;
+    min-height: 1080px;
+    background-color: #050505;
+    padding: 60px;
+    color: #fff;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.rep-frame {
+    border: 6px solid var(--gold);
+    border-radius: 40px;
+    padding: 50px;
+    background: #0a0f0f;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.rep-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #333;
+    padding-bottom: 30px;
+    margin-bottom: 40px;
+}
+
+.rep-logo {
+    font-size: 50px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Reem Kufi', sans-serif;
+}
+
+.rep-meta {
+    text-align: left;
+}
+
+.rep-title {
+    font-size: 40px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.rep-date {
+    font-size: 24px;
+    color: #888;
+    font-family: monospace;
+}
+
+.rep-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    flex: 1;
+}
+
+.rep-card {
+    background: #151a1a;
+    border: 2px solid #333;
+    border-radius: 25px;
+    overflow: hidden;
+    height: fit-content;
+}
+
+.rep-card-header {
+    background: #202525;
+    padding: 25px 30px;
+    border-bottom: 2px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rep-card-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.rep-card-total {
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    font-family: 'Outfit';
+}
+
+.rep-card-body {
+    padding: 30px;
+}
+
+.rep-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 15px;
+}
+
+.rep-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.rep-label {
+    font-size: 28px;
+    color: #ccc;
+    font-weight: 500;
+}
+
+.rep-val {
+    font-size: 30px;
+    color: #fff;
+    font-weight: 700;
+    font-family: 'Amiri';
+}
+
+.rep-sub-val {
+    font-size: 22px;
+    color: #777;
+    display: block;
+    margin-top: 5px;
+}
+
+.rep-footer-box {
+    margin-top: 40px;
+    background: linear-gradient(90deg, #052e16 0%, #020a0a 100%);
+    border: 3px solid var(--primary);
+    border-radius: 30px;
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.rep-total-label {
+    font-size: 36px;
+    color: #88eda8;
+    margin-bottom: 10px;
+}
+
+.rep-total-value {
+    font-size: 80px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    font-family: 'Outfit';
+}
+
+/* Super Size Fix for Report Studio */
+#zakat-report-studio .rep-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 45px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin-bottom: 30px !important;
+    font-family: 'Amiri', serif !important;
+    border-bottom: 2px solid #222;
+    padding-bottom: 15px;
+    white-space: nowrap;
+}
+
+#zakat-report-studio .rep-detail-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0 !important;
+}
+
+#zakat-report-studio .rep-detail-item span {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#zakat-report-studio .rep-detail-item i {
+    font-size: 35px !important;
+    color: var(--gold) !important;
+}
+
+/* ================= 6. MEDIA QUERIES ================= */
+@media (max-width: 1200px) {
+    .sticky-total {
+        right: 90px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 0;
+    }
+
+    .compact-header {
+        position: fixed !important;
+        top: 0;
+        width: 100%;
+        z-index: 2000 !important;
+        border-radius: 0 0 15px 15px;
+        padding: 5px 15px;
+    }
+
+    .sidebar {
+        position: fixed;
+        right: 0;
+        transform: translateX(100%);
+        width: 280px;
+        top: 0 !important;
+        height: 100vh !important;
+        padding-top: 85px !important;
+        z-index: 1600 !important;
+        overscroll-behavior: contain;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1500 !important;
+        display: none;
+        backdrop-filter: blur(5px);
+        opacity: 0;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .scroll-content {
+        margin-right: 0 !important;
+        padding: 80px 15px 110px 15px;
+        width: 100%;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .wealth-card .wc-amount-box .amount {
+        font-size: 36px;
+    }
+
+    .sticky-total {
+        width: 100%;
+        right: 0;
+        padding: 10px 15px;
+        height: auto;
+        flex-direction: row;
+        gap: 10px;
+        padding-bottom: calc(15px + env(safe-area-inset-bottom));
+    }
+
+    .export-btn span {
+        display: none;
+    }
+
+    .export-btn {
+        padding: 0 15px;
+    }
+
+    .security-card,
+    .cyber-modal-card {
+        width: 92%;
+        max-width: none;
+    }
+}
+
+
+/* History & Restore Styles */
+.btn-premium-restore {
+    background: linear-gradient(135deg, #0a1f1f 0%, #020a0a 100%);
+    border: 1px solid rgba(79, 240, 183, 0.3);
+    color: #fff !important;
+    font-size: 17px;
+    font-weight: 800;
+    font-family: 'Amiri';
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex: 1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.btn-premium-restore:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #124040 0%, #050f0f 100%);
+    box-shadow: 0 5px 15px rgba(79, 240, 183, 0.15);
+    border-color: var(--primary);
+}
+
+/* ================= تصميم نافذة الحظر (Yellow Break Style) ================= */
+.ban-overlay-cyber {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 2147483647;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.ban-overlay-cyber.active {
+    display: flex;
+    opacity: 1;
+}
+
+.ban-card-cyber {
+    background: #050505;
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    /* حدود برتقالي */
+    border-top: 4px solid #ff9800;
+    /* خط علوي برتقالي */
+    border-radius: 24px;
+    padding: 45px 35px;
+    width: 95%;
+    max-width: 450px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 25px 60px -10px rgba(255, 152, 0, 0.15);
+    transform: scale(0.95);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ban-overlay-cyber.active .ban-card-cyber {
+    transform: scale(1);
+}
+
+.ban-bg-glow {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 152, 0, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ban-icon-circle {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 152, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 152, 0, 0.3);
+    box-shadow: 0 0 30px rgba(255, 152, 0, 0.2);
+    margin-bottom: 25px;
+}
+
+.ban-icon-circle i {
+    font-size: 36px;
+    color: #ff9800;
+}
+
+.ban-title-cyber {
+    font-family: 'Reem Kufi', sans-serif;
+    font-size: 26px;
+    color: #fff;
+    margin: 0 0 15px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.ban-desc-cyber {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #b0bec5;
+    margin: 0 0 30px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.ban-timer-cyber {
+    background: rgba(255, 152, 0, 0.05);
+    border: 1px solid rgba(255, 152, 0, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.ban-timer-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: #ff9800;
+    /* أرقام برتقالي */
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(255, 152, 0, 0.3);
+}
+
+.ban-btn-cyber {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}

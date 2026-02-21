@@ -1,0 +1,445 @@
+@import url('https://fonts.googleapis.com/css2?family=Kufam:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap');
+/* ================= NEW FEATURES STYLES ================= */
+
+/* 1. Focus Mode - وضع القراءة النظيفة */
+body.focus-mode .top-navbar,
+body.focus-mode .sidebar,
+body.focus-mode #menu-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+body.focus-mode .main-content {
+    padding-top: 0;
+}
+
+body.focus-mode #quran-scroll-area {
+    padding: 40px 20px;
+}
+
+/* 2. Translation Text - نص الترجمة */
+.translation-text {
+    display: block;
+    margin-top: 8px;
+    padding: 12px 16px;
+    background: rgba(79, 240, 183, 0.08);
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    font-family: 'Reem Kufi', sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #a0c4b8;
+    direction: ltr;
+    text-align: left;
+    animation: fadeInTranslation 0.4s ease;
+}
+
+@keyframes fadeInTranslation {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تحسين مظهر الآيات عند عرض الترجمة */
+.ayah-text:has(.translation-text) {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+/* Responsive: للموبايل */
+@media (max-width: 768px) {
+    .translation-text {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+}
+
+/* 3. Translation Modal & Grid */
+.lang-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.lang-card {
+    background: rgba(30, 30, 30, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.lang-card:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--royal-gold);
+    transform: translateY(-3px);
+}
+
+.lang-flag-container {
+    width: 80px;
+    height: 50px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lang-flag-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.lang-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    display: block;
+}
+
+.lang-native {
+    font-size: 13px;
+    color: #888;
+    font-family: 'Reem Kufi', sans-serif;
+    display: block;
+    margin-top: 4px;
+}
+
+/* ================= CLEAN ICON STYLING (YOUTUBE STYLE) ================= */
+iconify-icon {
+    display: inline-block;
+    color: #efefef;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.setting-btn:hover iconify-icon {
+    transform: scale(1.1);
+    color: #fff;
+}
+
+.setting-btn.highlight iconify-icon {
+    color: var(--primary);
+}
+
+h1,
+h2,
+h3,
+.page-info,
+.title,
+.section-title,
+.card-title,
+.translation-text,
+.lang-native {
+    font-family: 'Kufam', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: normal;
+}
+
+.setting-btn span {
+    color: #aaa;
+    transition: 0.2s ease;
+}
+
+.setting-btn:hover span {
+    color: #fff;
+}
+
+/* ================= SHEET TAB SYSTEM ================= */
+
+/* Tab Bar - Royal Segmented Control */
+.sheet-tab-bar {
+    display: flex;
+    gap: 0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+    border-radius: 16px;
+    margin-bottom: 18px;
+    padding: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.sheet-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 12px 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: #666;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    white-space: nowrap;
+}
+
+.sheet-tab i {
+    font-size: 18px;
+    transition: all 0.3s ease;
+    color: #555;
+}
+
+.sheet-tab span {
+    transition: color 0.3s ease;
+}
+
+.sheet-tab:hover {
+    color: #aaa;
+}
+
+.sheet-tab:hover i {
+    color: #aaa;
+}
+
+.sheet-tab.active {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--royal-gold, #d4af37);
+    border-color: rgba(212, 175, 55, 0.25);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.08);
+}
+
+.sheet-tab.active i {
+    color: var(--royal-gold, #d4af37);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+.sheet-tab.active span {
+    color: var(--royal-gold, #d4af37);
+}
+
+/* Tab Content */
+.sheet-tab-content {
+    display: none;
+    animation: tabFadeIn 0.3s ease;
+}
+
+.sheet-tab-content.active {
+    display: block;
+}
+
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .sheet-tab-bar {
+        padding: 3px;
+        border-radius: 14px;
+        margin-bottom: 14px;
+    }
+
+    .sheet-tab {
+        padding: 10px 8px;
+        font-size: 12px;
+        gap: 4px;
+        border-radius: 11px;
+    }
+
+    .sheet-tab i {
+        font-size: 16px;
+    }
+
+    /* Mobile Grid Adjustments */
+    .tools-grid-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .tool-grid-item {
+        padding: 16px;
+    }
+
+    .tool-grid-item .sheet-item-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .tool-grid-item .sheet-item-label {
+        font-size: 15px;
+    }
+
+    .tool-grid-item .sheet-item-desc {
+        font-size: 12px;
+    }
+}
+
+/* ================= DESKTOP ================= */
+@media (min-width: 769px) {
+    .tools-grid-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 15px 15px 5px 15px;
+    }
+
+    .tool-grid-item {
+        padding: 16px;
+    }
+}
+
+/* Grid Container for Smart Tools */
+.tools-grid-container {
+    display: grid;
+    gap: 12px;
+    padding: 15px 15px 5px 15px;
+}
+
+.sheet-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Grid Item Specific Styles */
+.tool-grid-item {
+    border-bottom: none;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.tool-grid-item:hover {
+    background: rgba(212, 175, 55, 0.08);
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3),
+                0 0 15px rgba(212, 175, 55, 0.1);
+}
+
+.tool-grid-item:active {
+    transform: translateY(-1px);
+    background: rgba(212, 175, 55, 0.12);
+}
+
+.sheet-item-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #999;
+    flex-shrink: 0;
+}
+
+.tool-grid-item .sheet-item-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--royal-gold, #d4af37);
+}
+
+.sheet-item-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.sheet-item-label {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #eee;
+}
+
+.tool-grid-item .sheet-item-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.sheet-item-desc {
+    font-size: 11px;
+    color: #555;
+    margin-top: 2px;
+}
+
+.tool-grid-item .sheet-item-desc {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.sheet-item-arrow {
+    font-size: 11px;
+    color: #333;
+    flex-shrink: 0;
+}
+
+.tool-grid-item .sheet-item-arrow {
+    color: rgba(212, 175, 55, 0.5);
+    font-size: 12px;
+}
+
+/* ================= EMPTY RECITER BUTTON ================= */
+
+.empty-reciter-btn {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: #888;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.empty-reciter-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ccc;
+}

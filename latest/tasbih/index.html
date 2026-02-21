@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>السبحة الملكية - Sunnah Pro</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+    
+    <link rel="stylesheet" href="../assets/css/pages/tasbih/tasbih.css">
+
+    <script>
+        // Exit focus mode handler
+        document.addEventListener('click', function (e) {
+            if (document.body.classList.contains('focus-mode') && e.target === document.body) {
+                // Check if clicking pseudo element area (approximation)
+                if (e.clientX < 150 && e.clientY < 60) {
+                    window.toggleFocusMode();
+                }
+            }
+        });
+    </script>
+</head>
+
+<body class="night-mode-active">
+
+    <div class="bg-pattern"></div>
+    <div class="stars-container" id="starsContainer"></div>
+
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <!-- Achievement system removed for lightweight version -->
+
+    <div class="completion-overlay" id="completionOverlay" onclick="hideCompletionModal(event)">
+        <div class="completion-card" onclick="event.stopPropagation()">
+            <div class="icon">🏆</div>
+            <h3 id="completionTitle">مبروك!</h3>
+            <p id="completionDesc">أتممت الأذكار بنجاح.</p>
+            <div class="quote" id="completionQuote"></div>
+            <button class="done-btn" onclick="hideCompletionModal()">الحمد لله</button>
+        </div>
+    </div>
+
+    <div class="top-navbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="app-logo">
+                <i class="fas fa-dharmachakra" style="color: var(--primary); font-size: 24px;"></i>
+                <span style="font-family: 'Reem Kufi'; font-size: 18px; font-weight: 800; color: #fff;">السبحة الملكية</span>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <div class="action-btn" onclick="openShareSheet()">
+                <i class="fas fa-share-alt"></i>
+            </div>
+            <div class="action-btn" onclick="openModesSheet()">
+                <i class="fas fa-sliders-h"></i>
+            </div>
+            <div class="action-btn" onclick="openCustomizeSheet()">
+                <i class="fas fa-palette"></i>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="nav-links">
+            <div class="dropdown-toggle-btn" id="globalNavToggle" onclick="toggleGlobalNav()">
+                <span><i class="fas fa-compass" style="margin-left: 8px;"></i> القوائم الرئيسية</span>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="global-nav-links collapsed" id="globalNavLinks">
+                <a href="../Dashboard/index.html" class="nav-item" data-title="الرئيسية">
+                    <img src="../assets/icon/sidebar/home.svg" style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);" alt="الرئيسية">
+                    <span>الرئيسية</span>
+                </a>
+                <a href="../quran/index.html" class="nav-item" data-title="القرآن الكريم">
+                    <img src="../assets/icon/sidebar/quran.svg" style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);" alt="القرآن الكريم">
+                    <span>القرآن الكريم</span>
+                </a>
+                <a href="../hadith/index.html" class="nav-item" data-title="الحديث النبوي">
+                    <img src="../assets/icon/sidebar/hadith.svg" style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);" alt="الحديث النبوي">
+                    <span>الحديث النبوي</span>
+                </a>
+                <a href="../azkar/index.html" class="nav-item" data-title="الأذكار">
+                    <img src="../assets/icon/sidebar/azkar.svg" style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);" alt="الأذكار">
+                    <span>الأذكار</span>
+                </a>
+                <a href="../tafsir/index.html" class="nav-item" data-title="التفسير">
+                    <img src="../assets/icon/sidebar/tafsir.svg" style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);" alt="التفسير">
+                    <span>التفسير</span>
+                </a>
+                <a href="../radio/index.html" class="nav-item" data-title="الراديو">
+                    <img src="../assets/icon/sidebar/radio.svg" style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);" alt="الراديو">
+                    <span>الراديو</span>
+                </a>
+            </div>
+
+            <div class="settings-panel">
+                <div class="settings-title collapsible" onclick="togglePanel('settingsContent')">
+                    <div>
+                        <i class="fas fa-sliders"></i>
+                        <span>الإعدادات</span>
+                    </div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="panel-content" id="settingsContent">
+                    <div class="setting-item" onclick="toggleSound()">
+                        <div class="setting-label">
+                            <i class="fas fa-volume-up"></i>
+                            <span>الصوت</span>
+                        </div>
+                        <div class="toggle-switch active" id="soundToggle"></div>
+                    </div>
+                    <div class="setting-item" onclick="toggleVibrate()">
+                        <div class="setting-label">
+                            <i class="fas fa-mobile-screen-button"></i>
+                            <span>الاهتزاز</span>
+                        </div>
+                        <div class="toggle-switch active" id="vibrateToggle"></div>
+                    </div>
+                    <div class="setting-item" onclick="toggleAutoAdvance()">
+                        <div class="setting-label">
+                            <i class="fas fa-forward"></i>
+                            <span>الانتقال التلقائي</span>
+                        </div>
+                        <div class="toggle-switch active" id="autoAdvanceToggle"></div>
+                    </div>
+                    <button class="reset-btn" onclick="resetCounter()">
+                        <i class="fas fa-rotate-right"></i>
+                        <span>تصفير العداد</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="settings-panel">
+                <div class="settings-title collapsible" onclick="togglePanel('notificationsContent')">
+                    <div>
+                        <i class="fas fa-bell"></i>
+                        <span>التذكيرات</span>
+                    </div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="panel-content" id="notificationsContent">
+                    <div class="setting-item" onclick="requestNotificationPermission()">
+                        <div class="setting-label">
+                            <i class="fas fa-shield-halved"></i>
+                            <span>تفعيل الإشعارات</span>
+                        </div>
+                        <div class="toggle-switch" id="notificationPermissionToggle"></div>
+                    </div>
+                    <div class="setting-item" onclick="toggleMorningReminder()">
+                        <div class="setting-label">
+                            <i class="fas fa-sun"></i>
+                            <span>أذكار الصباح</span>
+                        </div>
+                        <div class="toggle-switch" id="morningReminderToggle"></div>
+                    </div>
+                    <div class="setting-item" onclick="toggleEveningReminder()">
+                        <div class="setting-label">
+                            <i class="fas fa-cloud-sun"></i>
+                            <span>أذكار المساء</span>
+                        </div>
+                        <div class="toggle-switch" id="eveningReminderToggle"></div>
+                    </div>
+                    <div class="setting-item" onclick="toggleSleepReminder()">
+                        <div class="setting-label">
+                            <i class="fas fa-moon"></i>
+                            <span>أذكار النوم</span>
+                        </div>
+                        <div class="toggle-switch" id="sleepReminderToggle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown-toggle-btn" onclick="this.nextElementSibling.classList.toggle('collapsed'); this.querySelector('.toggle-icon').classList.toggle('fa-chevron-up')">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-database" style="color: var(--primary);"></i>
+                    <span>إدارة البيانات</span>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="panel-content collapsed" id="dataManagementContent" style="padding: 5px 0;">
+                <div class="setting-item" onclick="exportData()" style="cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                    <div class="setting-label">
+                        <i class="fas fa-file-export" style="color: #10b981;"></i>
+                        <span>تصدير نسخة احتياطية</span>
+                    </div>
+                    <i class="fas fa-chevron-left" style="font-size: 12px; opacity: 0.5;"></i>
+                </div>
+                <div class="setting-item" onclick="triggerImport()" style="cursor: pointer;">
+                    <div class="setting-label">
+                        <i class="fas fa-file-import" style="color: #3b82f6;"></i>
+                        <span>استيراد بيانات سابقة</span>
+                    </div>
+                    <i class="fas fa-chevron-left" style="font-size: 12px; opacity: 0.5;"></i>
+                </div>
+                <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="handleImportFile(this)">
+            </div>
+
+            <div class="nav-label">الأذكار والتسبيحات</div>
+
+            <button class="add-custom-dhikr-btn" onclick="openCustomDhikrModal()">
+                <i class="fas fa-plus-circle"></i>
+                <span>إضافة ذكر مخصص</span>
+            </button>
+
+            <div id="categoriesContainer"></div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+
+        <div class="tasbih-hero">
+            <button class="copy-pill" id="heroCopyBtn" onclick="copyHeroDhikr()">
+                <div class="pill-icon-wrap">
+                    <svg class="pill-copy-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="11" height="11" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    <svg class="pill-check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ff0b7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path class="check-path" d="M5 12l5 5L20 7"/>
+                    </svg>
+                </div>
+                <div class="pill-text">
+                    <span class="text-copy">نسخ</span>
+                    <span class="text-copied" style="color: #4ff0b7;">تم النسخ</span>
+                </div>
+            </button>
+
+            <div class="hero-content">
+                <div class="hero-label">الذكر الحالي</div>
+                <h1 class="hero-dhikr" id="currentDhikr">سُبْحَانَ اللهِ وَبِحَمْدِهِ</h1>
+                <p class="hero-benefit" id="currentBenefit">
+                    من قال سبحان الله وبحمده في يوم مائة مرة حُطت خطاياه وإن كانت مثل زبد البحر
+                </p>
+                <div class="hero-source-badge" id="currentSource">
+                    <i class="fas fa-book"></i> <span>رواه البخاري ومسلم</span>
+                </div>
+                <div class="hero-category-tag" id="currentCategory">تسبيحات عامة</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-value" id="totalToday">0</div>
+                <div class="stat-label">اليوم</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="stat-value" id="remainingCount">100</div>
+                <div class="stat-label">المتبقي</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--gold-dim); color: var(--gold);">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-value" id="streak">0</div>
+                <div class="stat-label">أيام متتالية</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(129, 140, 248, 0.1); color: #818cf8;">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <div class="stat-value" id="totalAll">0</div>
+                <div class="stat-label">إجمالي التسبيحات</div>
+            </div>
+        </div>
+
+        <div class="reactor-zone">
+            <div class="reactor-container">
+                <div class="reactor-ring ring-1"></div>
+                <div class="reactor-ring ring-2"></div>
+                <svg class="progress-svg" viewBox="0 0 260 260">
+                    <circle class="progress-circle" cx="130" cy="130" r="120" id="progressRing"></circle>
+                </svg>
+                <button class="tasbih-btn" id="tasbihBtn">
+                    <span class="counter-val" id="counter">0</span>
+                    <span class="counter-label">الهدف: <span id="targetDisplay">100</span></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="bottom-controls" id="bottomControls">
+            <div class="dhikr-mini">
+                <div class="label">الذكر الحالي</div>
+                <div class="text" id="bottomDhikrText">—</div>
+            </div>
+            <div class="controls">
+                <button class="control-btn" id="speakDhikrBtn" onclick="speakCurrentDhikr()" title="نطق الذكر" aria-label="نطق الذكر">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="control-btn" id="resetQuickBtn" onclick="resetCounter()" title="تصفير" aria-label="تصفير">
+                    <i class="fas fa-rotate-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="customDhikrModal" onclick="closeCustomDhikrModal(event)">
+        <div class="custom-modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3><i class="fas fa-pen-fancy"></i> إضافة ذكر مخصص</h3>
+                <button class="modal-close-btn" onclick="closeCustomDhikrModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="customDhikrText">نص الذكر</label>
+                    <textarea id="customDhikrText" rows="3" placeholder="مثال: اللهم صل على محمد وعلى آل محمد"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="customDhikrTarget">عدد المرات</label>
+                    <input type="number" id="customDhikrTarget" min="1" value="100" placeholder="100">
+                </div>
+                <div class="form-group">
+                    <label for="customDhikrBenefit">الفضل (اختياري)</label>
+                    <textarea id="customDhikrBenefit" rows="2" placeholder="فضل هذا الذكر..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel-btn" onclick="closeCustomDhikrModal()">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button class="modal-btn save-btn" onclick="saveCustomDhikr()">
+                    <i class="fas fa-check"></i> حفظ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-nav">
+        <div class="nav-btn-mobile" onclick="window.location.href='../Dashboard/index.html'">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </div>
+        <div class="nav-btn-mobile active">
+            <i class="fas fa-dharmachakra"></i>
+            <span>التسبيح</span>
+        </div>
+        <div class="nav-btn-mobile" onclick="window.location.href='../quran/index.html'">
+            <i class="fas fa-quran"></i>
+            <span>المصحف</span>
+        </div>
+        <div class="nav-btn-mobile" onclick="window.location.href='../azkar/index.html'">
+            <i class="fas fa-praying-hands"></i>
+            <span>الأذكار</span>
+        </div>
+    </div>
+
+    <div class="sheet-overlay" id="modesSheetOverlay" onclick="closeModesSheet()">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-handle-wrapper"><div class="sheet-handle"></div></div>
+            <div class="sheet-islamic-header">
+                <div class="sheet-corner-ornament top-left"></div>
+                <div class="sheet-corner-ornament top-right"></div>
+                <div class="sheet-islamic-icon"><span class="bismillah-text">﷽</span></div>
+            </div>
+            <div class="sheet-body">
+                <div class="sheet-section-label"><i class="fas fa-sliders-h"></i> أوضاع العرض والسمات</div>
+                <div class="dropdown-item item-theme" onclick="toggleQiyamModeFromSheet(); event.stopPropagation();">
+                    <div class="item-icon"><i class="fas fa-moon"></i></div>
+                    <div class="item-text-group">
+                        <span class="item-label">وضع قيام الليل</span>
+                        <span class="item-desc">سمة ذهبية هادئة مريحة للعين في الظلام</span>
+                    </div>
+                    <label class="sheet-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" id="qiyamModeToggle" onclick="toggleQiyamModeFromSheet(); event.stopPropagation();">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="dropdown-item item-notifications" onclick="toggleFocusModeFromSheet(); event.stopPropagation();">
+                    <div class="item-icon"><i class="fas fa-bullseye"></i></div>
+                    <div class="item-text-group">
+                        <span class="item-label">وضع التركيز العميق</span>
+                        <span class="item-desc">إخفاء كل المشتتات والتركيز على الذكر فقط</span>
+                    </div>
+                    <label class="sheet-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" id="focusModeToggle" onclick="toggleFocusModeFromSheet(); event.stopPropagation();">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="dropdown-item item-language" onclick="toggleOledModeFromSheet(); event.stopPropagation();">
+                    <div class="item-icon"><i class="fas fa-battery-half"></i></div>
+                    <div class="item-text-group">
+                        <span class="item-label">وضع OLED الأسود</span>
+                        <span class="item-desc">خلفية سوداء بالكامل لتوفير البطارية</span>
+                    </div>
+                    <label class="sheet-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" id="oledModeToggle" onclick="toggleOledModeFromSheet(); event.stopPropagation();">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-footer">
+                    <div class="footer-brand-row">
+                        <div class="footer-brand"><i class="fas fa-mosque footer-brand-icon"></i><span class="footer-brand-name">SUNNAH PRO</span></div>
+                        <div class="footer-version">v1.2.0 (Beta)</div>
+                    </div>
+                    <div class="footer-dua">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sheet-overlay" id="shareSheetOverlay" onclick="closeShareSheet()">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-handle-wrapper"><div class="sheet-handle"></div></div>
+            <div class="sheet-islamic-header">
+                <div class="sheet-corner-ornament top-left"></div>
+                <div class="sheet-corner-ornament top-right"></div>
+                <div class="sheet-islamic-icon"><span class="bismillah-text">﷽</span></div>
+            </div>
+            <div class="sheet-body">
+                <div class="sheet-section-label">
+                    <i class="fas fa-copy"></i>
+                    نسخ البيانات والمشاركة
+                </div>
+                
+                <div class="dropdown-item">
+                    <div class="item-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+                    <div class="item-text-group">
+                        <span class="item-label">الذكر الحالي</span>
+                        <span class="item-desc">نسخ نص الذكر والفضل والمصدر</span>
+                    </div>
+                    <button class="copy-btn bordered" onclick="handleSmartCopy('current', this)">
+                        <svg class="icon-copy" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="11" height="11" rx="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <svg class="icon-check bounce" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path class="check-path" d="M5 12l5 5L20 7"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="dropdown-item">
+                    <div class="item-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="item-text-group">
+                        <span class="item-label">إنجازاتي</span>
+                        <span class="item-desc">نسخ تقرير التقدم والأرقام</span>
+                    </div>
+                    <button class="copy-btn bordered" onclick="handleSmartCopy('stats', this)">
+                        <svg class="icon-copy" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="11" height="11" rx="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <svg class="icon-check bounce" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path class="check-path" d="M5 12l5 5L20 7"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="dropdown-item">
+                    <div class="item-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="item-text-group">
+                        <span class="item-label">رابط التطبيق</span>
+                        <span class="item-desc">نسخ الرابط لدعوة الأصدقاء</span>
+                    </div>
+                    <button class="copy-btn bordered" onclick="handleSmartCopy('app', this)">
+                        <svg class="icon-copy" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="11" height="11" rx="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <svg class="icon-check bounce" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path class="check-path" d="M5 12l5 5L20 7"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="dropdown-item">
+                    <div class="item-icon" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
+                    <div class="item-text-group">
+                        <span class="item-label">أذكاري الخاصة</span>
+                        <span class="item-desc">نسخ قائمتك المخصصة</span>
+                    </div>
+                    <button class="copy-btn bordered" onclick="handleSmartCopy('custom', this)">
+                        <svg class="icon-copy" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="11" height="11" rx="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <svg class="icon-check bounce" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path class="check-path" d="M5 12l5 5L20 7"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-footer">
+                    <div class="footer-brand-row">
+                        <div class="footer-brand"><i class="fas fa-mosque footer-brand-icon"></i><span class="footer-brand-name">SUNNAH PRO</span></div>
+                        <div class="footer-version">v1.2.0 (Beta)</div>
+                    </div>
+                    <div class="footer-dua">مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sheet-overlay" id="customizeSheetOverlay" onclick="closeCustomizeSheet()">
+        <div class="bottom-sheet large-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-handle-wrapper"><div class="sheet-handle"></div></div>
+            <div class="sheet-islamic-header">
+                <div class="sheet-corner-ornament top-left"></div>
+                <div class="sheet-corner-ornament top-right"></div>
+                <div class="sheet-islamic-icon"><span class="bismillah-text">﷽</span></div>
+            </div>
+            <div class="sheet-body">
+                <div class="sheet-section-label"><i class="fas fa-palette"></i> استوديو التصميم</div>
+                <div class="sheet-content">
+                    <div class="section-title"><span>جماليات الخط العربي</span></div>
+                    <div class="fonts-grid">
+                        <div class="font-card" onclick="changeFont('Amiri')" data-font="Amiri"><div class="font-preview-text" style="font-family: 'Amiri';">بسم الله</div><div class="font-name">خط النسخ الأميري</div></div>
+                        <div class="font-card" onclick="changeFont('Reem Kufi')" data-font="Reem Kufi"><div class="font-preview-text" style="font-family: 'Reem Kufi';">بسم الله</div><div class="font-name">كوفي ريم</div></div>
+                        <div class="font-card" onclick="changeFont('Lateef')" data-font="Lateef"><div class="font-preview-text" style="font-family: 'Lateef';">بسم الله</div><div class="font-name">لطيف (ديواني)</div></div>
+                        <div class="font-card" onclick="changeFont('Rakkas')" data-font="Rakkas"><div class="font-preview-text" style="font-family: 'Rakkas';">بسم الله</div><div class="font-name">رقاص (عنوان)</div></div>
+                        <div class="font-card" onclick="changeFont('Cairo')" data-font="Cairo"><div class="font-preview-text" style="font-family: 'Cairo';">بسم الله</div><div class="font-name">القاهرة (عصري)</div></div>
+                        <div class="font-card" onclick="changeFont('Tajawal')" data-font="Tajawal"><div class="font-preview-text" style="font-family: 'Tajawal';">بسم الله</div><div class="font-name">تجوال (قراءة)</div></div>
+                    </div>
+                    <div class="section-title"><span>ألوان الروحانية</span></div>
+                    <div class="colors-grid">
+                        <div class="palette-card" onclick="changeTheme('original')" data-theme="original"><div class="palette-preview" style="background: linear-gradient(135deg, #020a0a, #0f1c1c);"><div class="palette-circle" style="background: #4ff0b7;"></div></div><span class="palette-name">الأصلي</span></div>
+                        <div class="palette-card" onclick="changeTheme('emerald')" data-theme="emerald"><div class="palette-preview" style="background: linear-gradient(135deg, #1a2f26, #0f1419);"><div class="palette-circle" style="background: #4ff0b7;"></div></div><span class="palette-name">زمرد</span></div>
+                        <div class="palette-card" onclick="changeTheme('gold')" data-theme="gold"><div class="palette-preview" style="background: linear-gradient(135deg, #2e2408, #0f1419);"><div class="palette-circle" style="background: #ffd700;"></div></div><span class="palette-name">ذهبي</span></div>
+                        <div class="palette-card" onclick="changeTheme('purple')" data-theme="purple"><div class="palette-preview" style="background: linear-gradient(135deg, #1e1b2e, #0f1419);"><div class="palette-circle" style="background: #a78bfa;"></div></div><span class="palette-name">بنفسجي</span></div>
+                        <div class="palette-card" onclick="changeTheme('blue')" data-theme="blue"><div class="palette-preview" style="background: linear-gradient(135deg, #121e2e, #0f1419);"><div class="palette-circle" style="background: #60a5fa;"></div></div><span class="palette-name">ياقوت</span></div>
+                        <div class="palette-card" onclick="changeTheme('rose')" data-theme="rose"><div class="palette-preview" style="background: linear-gradient(135deg, #2e121e, #0f1419);"><div class="palette-circle" style="background: #f472b6;"></div></div><span class="palette-name">زُهري</span></div>
+                        <div class="palette-card" onclick="changeTheme('cyan')" data-theme="cyan"><div class="palette-preview" style="background: linear-gradient(135deg, #0e2b33, #0f1419);"><div class="palette-circle" style="background: #22d3ee;"></div></div><span class="palette-name">سماوي</span></div>
+                        <div class="palette-card" onclick="changeTheme('sunset')" data-theme="sunset"><div class="palette-preview" style="background: linear-gradient(135deg, #2e1a12, #0f1419);"><div class="palette-circle" style="background: #fb923c;"></div></div><span class="palette-name">غروب</span></div>
+                        <div class="palette-card" onclick="changeTheme('midnight')" data-theme="midnight"><div class="palette-preview" style="background: linear-gradient(to bottom, #0f172a, #000000);"><div class="palette-circle" style="background: #94a3b8;"></div></div><span class="palette-name">منتصف الليل</span></div>
+                    </div>
+                </div>
+                <div class="dropdown-footer">
+                    <div class="footer-brand-row">
+                        <div class="footer-brand"><i class="fas fa-mosque footer-brand-icon"></i><span class="footer-brand-name">SUNNAH PRO</span></div>
+                        <div class="footer-version">v1.2.0 (Beta)</div>
+                    </div>
+                    <div class="footer-dua">اللهم اجعلني ممن يتلون القرآن ظاهره وباطنه</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== ROYAL VERSION JS (UI HANDLERS) ====================
+        
+        // --- SHEET FUNCTIONS ---
+        function preventScroll(e) {
+            e.preventDefault();
+        }
+
+        function openSheet(id) {
+            const overlay = document.getElementById(id);
+            if (!overlay) return;
+            overlay.style.display = 'flex';
+            // Force reflow
+            void overlay.offsetWidth;
+            overlay.classList.add('active');
+            const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
+            document.body.dataset.scrollLockY = String(scrollY);
+            document.addEventListener('wheel', preventScroll, { passive: false });
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+
+            if (id === 'modesSheetOverlay') updateModesUI();
+            if (id === 'customizeSheetOverlay') updateCustomizeUI();
+        }
+
+        function closeSheet(id) {
+            const overlay = document.getElementById(id);
+            if (!overlay) return;
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+            const prevY = parseInt(document.body.dataset.scrollLockY || '0', 10);
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+            document.body.dataset.scrollLockY = '';
+            window.scrollTo(0, prevY);
+            document.removeEventListener('wheel', preventScroll, { passive: false });
+            document.removeEventListener('touchmove', preventScroll, { passive: false });
+        }
+
+        window.openModesSheet = () => openSheet('modesSheetOverlay');
+        window.closeModesSheet = () => closeSheet('modesSheetOverlay');
+        window.openShareSheet = () => openSheet('shareSheetOverlay');
+        window.closeShareSheet = () => closeSheet('shareSheetOverlay');
+        window.openCustomizeSheet = () => openSheet('customizeSheetOverlay');
+        window.closeCustomizeSheet = () => closeSheet('customizeSheetOverlay');
+
+        // --- MODES LOGIC ---
+        function updateModesUI() {
+            const isQiyam = document.body.classList.contains('qiyam-mode');
+            const isFocus = document.body.classList.contains('focus-mode');
+            const isOled = document.body.classList.contains('oled-mode');
+            
+            const qiyamToggle = document.getElementById('qiyamModeToggle');
+            const focusToggle = document.getElementById('focusModeToggle');
+            const oledToggle = document.getElementById('oledModeToggle');
+            
+            if (qiyamToggle) qiyamToggle.checked = isQiyam;
+            if (focusToggle) focusToggle.checked = isFocus;
+            if (oledToggle) oledToggle.checked = isOled;
+        }
+
+        window.toggleQiyamMode = function () {
+            document.body.classList.toggle('qiyam-mode');
+            const isActive = document.body.classList.contains('qiyam-mode');
+            if (isActive) {
+                document.body.classList.add('night-mode-active');
+            }
+            updateModesUI();
+            savePreferences();
+        }
+
+        window.toggleFocusMode = function () {
+            document.body.classList.toggle('focus-mode');
+            updateModesUI();
+            savePreferences();
+        }
+
+        function toggleQiyamModeFromSheet() {
+            window.toggleQiyamMode();
+            setTimeout(() => {
+                const toggle = document.getElementById('qiyamModeToggle');
+                if (toggle) toggle.checked = document.body.classList.contains('qiyam-mode');
+            }, 50);
+        }
+
+        function toggleFocusModeFromSheet() {
+            window.toggleFocusMode();
+            setTimeout(() => {
+                const toggle = document.getElementById('focusModeToggle');
+                if (toggle) toggle.checked = document.body.classList.contains('focus-mode');
+            }, 50);
+        }
+
+        function toggleOledModeFromSheet() {
+            document.body.classList.toggle('oled-mode');
+            const isActive = document.body.classList.contains('oled-mode');
+            if (isActive) {
+                document.body.style.backgroundColor = 'black';
+                document.body.style.backgroundImage = 'none';
+                document.body.style.color = '#ffffff';
+            } else {
+                document.body.style.backgroundColor = '';
+                document.body.style.backgroundImage = '';
+                document.body.style.color = '';
+                applyCustomization();
+            }
+            updateModesUI();
+            savePreferences();
+            setTimeout(() => {
+                const toggle = document.getElementById('oledModeToggle');
+                if (toggle) toggle.checked = isActive;
+            }, 50);
+        }
+
+        // --- PREFERENCES ---
+        let currentTheme = localStorage.getItem('tasbihTheme') || 'original';
+        let currentFont = localStorage.getItem('tasbihFont') || 'Amiri';
+
+        const themesData = {
+            original: { primary: '#4ff0b7', bgGradient: '#020a0a', accent: 'linear-gradient(135deg, #4ff0b7, #2bb382)' },
+            emerald: { primary: '#4ff0b7', bgGradient: 'radial-gradient(circle at top right, #1a2f26 0%, #0f1419 100%)', accent: 'linear-gradient(135deg, #4ff0b7, #059669)' },
+            gold: { primary: '#ffd700', bgGradient: 'radial-gradient(circle at top right, #2e2408 0%, #0f1419 100%)', accent: 'linear-gradient(135deg, #ffd700, #d4af37)' },
+            purple: { primary: '#a78bfa', bgGradient: 'radial-gradient(circle at top right, #1e1b2e 0%, #0f1419 100%)', accent: 'linear-gradient(135deg, #a78bfa, #7c3aed)' },
+            blue: { primary: '#60a5fa', bgGradient: 'radial-gradient(circle at top right, #121e2e 0%, #0f1419 100%)', accent: 'linear-gradient(135deg, #60a5fa, #2563eb)' },
+            rose: { primary: '#f472b6', bgGradient: 'radial-gradient(circle at top right, #2e121e 0%, #0f1419 100%)', accent: 'linear-gradient(135deg, #f472b6, #db2777)' },
+            cyan: { primary: '#22d3ee', bgGradient: 'radial-gradient(circle at top right, #0e2b33 0%, #0f1419 100%)', accent: 'linear-gradient(135deg, #22d3ee, #0891b2)' },
+            sunset: { primary: '#fb923c', bgGradient: 'radial-gradient(circle at top right, #2e1a12 0%, #0f1419 100%)', accent: 'linear-gradient(135deg, #fb923c, #ea580c)' },
+            midnight: { primary: '#94a3b8', bgGradient: 'linear-gradient(to bottom, #0f172a, #000000)', accent: 'linear-gradient(135deg, #94a3b8, #475569)' }
+        };
+
+        function savePreferences() {
+            const prefs = {
+                theme: currentTheme,
+                font: currentFont,
+                oledMode: document.body.classList.contains('oled-mode'),
+            };
+            localStorage.setItem('royalTasbihPrefs', JSON.stringify(prefs));
+        }
+
+        function changeFont(fontName) {
+            currentFont = fontName;
+            localStorage.setItem('tasbihFont', fontName);
+            document.body.style.setProperty('--main-font', fontName);
+            document.documentElement.style.setProperty('--main-font', fontName);
+            document.body.style.fontFamily = `'${fontName}', serif`;
+            updateCustomizeUI();
+            savePreferences();
+        }
+
+        function changeTheme(themeKey) {
+            currentTheme = themeKey;
+            localStorage.setItem('tasbihTheme', themeKey);
+            const theme = themesData[themeKey];
+            if (theme) {
+                document.documentElement.style.setProperty('--primary', theme.primary);
+                document.documentElement.style.setProperty('--primary-dim', theme.primary + '33');
+                document.documentElement.style.setProperty('--accent-gradient', theme.accent);
+                if (!document.body.classList.contains('oled-mode') && document.body.style.backgroundColor !== 'black') {
+                    document.body.style.background = theme.bgGradient;
+                }
+            }
+            updateCustomizeUI();
+            savePreferences();
+        }
+
+        function updateCustomizeUI() {
+            document.querySelectorAll('.font-card').forEach(el => el.classList.remove('active'));
+            const activeFontCard = document.querySelector(`.font-card[data-font="${currentFont}"]`);
+            if (activeFontCard) activeFontCard.classList.add('active');
+
+            document.querySelectorAll('.palette-card').forEach(el => el.classList.remove('active'));
+            const activeThemeCard = document.querySelector(`.palette-card[data-theme="${currentTheme}"]`);
+            if (activeThemeCard) activeThemeCard.classList.add('active');
+        }
+
+        function applyCustomization() {
+            const saved = localStorage.getItem('royalTasbihPrefs');
+            let savedFont = 'Amiri', savedTheme = 'original', savedOled = false;
+            
+            if (saved) {
+                const prefs = JSON.parse(saved);
+                savedFont = prefs.font || 'Amiri';
+                savedTheme = prefs.theme || 'original';
+                savedOled = prefs.oledMode || false;
+            } else {
+                savedFont = localStorage.getItem('tasbihFont') || 'Amiri';
+                savedTheme = localStorage.getItem('tasbihTheme') || 'original';
+            }
+
+            changeFont(savedFont);
+            changeTheme(savedTheme);
+
+            if (savedOled) {
+                document.body.classList.add('oled-mode');
+                document.body.style.backgroundColor = 'black';
+                document.body.style.backgroundImage = 'none';
+                document.body.style.color = '#ffffff';
+            } else {
+                document.body.classList.remove('oled-mode');
+                document.body.style.backgroundColor = '';
+                document.body.style.backgroundImage = '';
+                document.body.style.color = '';
+            }
+            updateModesUI();
+        }
+
+        // --- SIDEBAR TOGGLE ---
+        window.toggleSidebar = function () {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const overlay = document.querySelector('.sidebar-overlay');
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                if (sidebar.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            } else {
+                sidebar.classList.toggle('collapsed');
+                if (mainContent) mainContent.classList.toggle('expanded');
+            }
+        }
+
+        // Achievement system removed for lightweight version
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', applyCustomization);
+        
+        // Collapsible Panel Logic
+        window.togglePanel = function(panelId) {
+            const panel = document.getElementById(panelId);
+            const title = panel.previousElementSibling;
+            panel.classList.toggle('collapsed');
+            title.classList.toggle('collapsed');
+        }
+    </script>
+    <script src="../assets/js/app-core.js"></script>
+    <script src="../assets/js/pages/tasbih.js"></script>
+    <script>
+        // التأكد من توفر الدالة
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.copyHeroDhikr !== 'function') {
+                console.error('copyHeroDhikr function not loaded!');
+            }
+        });
+    </script>
+</body>
+</html>

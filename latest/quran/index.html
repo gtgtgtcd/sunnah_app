@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#020a0a">
+    <meta name="description" content="المصحف الشريف الإلكتروني - تجربة قراءة ملكية مع تفسير وتلاوة">
+    <meta name="keywords" content="القرآن الكريم, المصحف الشريف, تفسير, تلاوة, قراءة القرآن">
+    <meta name="author" content="Royal Quran Team">
+
+    <title>المصحف الشريف - Sunnah Pro</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+
+    <!-- Local Fonts -->
+    <style>
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Reem Kufi';
+            src: url('../assets/fonts/fonts/reem-kufi/ReemKufi-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Amiri Quran';
+            src: url('../assets/fonts/fonts/amiri-quran/AmiriQuran-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* Fix for diacritics coloring - force all text to use CSS color */
+        .ayah-text {
+            -webkit-text-fill-color: currentColor;
+            text-fill-color: currentColor;
+        }
+    </style>
+
+    <link rel="stylesheet" href="../assets/css/pages/dashboard/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+    <link rel="stylesheet" href="../assets/css/pages/quran/quran.css">
+    <link rel="stylesheet" href="../assets/css/pages/quran/tour.css">
+
+    <link rel="stylesheet" href="../assets/css/pages/quran/quran-features.css">
+    <link rel="stylesheet" href="../assets/css/pages/quran/notes-editor.css">
+    <link rel="stylesheet" href="../assets/css/pages/quran/ramadan-khatma.css">
+
+    <!-- Lottie Web - Local Version -->
+    <script src="../assets/lottie/lottie.min.js"></script>
+</head>
+
+<body>
+
+    <div id="brightness-overlay"></div>
+
+    <div id="notification-toast" class="royal-toast">
+        <div class="toast-icon-box">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="toast-body">
+            <span id="notification-text">تم حفظ مكان التوقف</span>
+        </div>
+        <div class="toast-decor"></div>
+    </div>
+
+    <div id="lottie-celebration"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 25000;">
+    </div>
+
+    <div class="search-modal" id="search-modal">
+        <div class="search-header">
+            <i class="fas fa-search" style="color: var(--royal-gold);"></i>
+            <input type="text" class="search-input" id="search-input" placeholder="ابحث في المصحف الشريف..."
+                onkeypress="if(event.key === 'Enter') Engine.performSearch()">
+            <i class="fas fa-times search-close"
+                onclick="document.getElementById('search-modal').classList.remove('visible')"></i>
+        </div>
+        <div class="search-results" id="search-results">
+            <div style="text-align:center; color:#666; margin-top:50px; font-family:'Reem Kufi';">اكتب كلمة للبحث
+                عنها...</div>
+        </div>
+    </div>
+
+    <div class="search-modal" id="searchModal">
+        <div class="search-header-modal">
+            <div class="modal-title-row">
+                <h3>بحث في القرآن الكريم</h3>
+                <i class="fas fa-times search-close" onclick="toggleSearchModal()"></i>
+            </div>
+            <div class="search-input-group">
+                <input type="text" class="search-input-modal" id="modalSearchInput"
+                    placeholder="اكتب الآية أو الكلمة (بدون تشكيل)..." oninput="handleSearchInput(this.value)">
+                <button class="search-action-btn" id="searchActionBtn" onclick="performSearchFromModal()">ابحث</button>
+            </div>
+        </div>
+        <div class="search-results-modal" id="modalSearchResults">
+            <div style="text-align:center; color:#555; margin-top:50px; font-family:'Amiri';">
+                <i class="fas fa-search" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i><br>
+                محرك البحث جاهز.. ابدأ الكتابة
+            </div>
+        </div>
+    </div>
+
+    <div class="search-modal" id="reciter-modal">
+        <div class="search-header">
+            <i class="fas fa-microphone-alt" style="color: var(--royal-gold);"></i>
+            <input type="text" class="search-input" id="reciter-search-input" placeholder="ابحث عن اسم القارئ..."
+                oninput="Engine.filterReciters(this.value)">
+            <i class="fas fa-times search-close"
+                onclick="document.getElementById('reciter-modal').classList.remove('visible')"></i>
+        </div>
+        <div class="search-results" id="reciter-list-container"></div>
+    </div>
+
+    <div class="search-modal" id="translation-modal">
+        <div class="search-header">
+            <i class="fas fa-language" style="color: var(--royal-gold);"></i>
+            <input type="text" class="search-input" id="translation-search-input" placeholder="ابحث عن لغة..."
+                oninput="Engine.filterLanguages(this.value)">
+            <i class="fas fa-times search-close"
+                onclick="document.getElementById('translation-modal').classList.remove('visible')"></i>
+        </div>
+        <div class="search-results" id="translation-list-container">
+        </div>
+    </div>
+
+    <div class="speed-overlay" id="speed-overlay">
+        <i class="fas fa-kaaba fa-3x" style="color: var(--royal-gold); margin-bottom: 15px;"></i>
+        <div class="speed-text">جارِ الانتقال السريع...</div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="nav-links" id="surah-list">
+            <div class="dropdown-toggle-btn" id="globalNavToggle">
+                <span><i class="fas fa-bars-staggered" style="margin-left: 8px;"></i> القوائم الرئيسية</span>
+                <i class="fas fa-chevron-down toggle-icon" id="globalNavIcon"></i>
+            </div>
+
+            <div class="global-nav-links collapsed" id="globalNavLinks">
+                <a href="../Dashboard/index.html" class="nav-item">
+                    <img src="../assets/icon/sidebar/home.svg"
+                        style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                        alt="الرئيسية">
+                    <span>الرئيسية</span>
+                </a>
+                <a href="../tafsir/index.html" class="nav-item">
+                    <img src="../assets/icon/sidebar/tafsir.svg"
+                        style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                        alt="التفسير والتدبر">
+                    <span>التفسير والتدبر</span>
+                </a>
+                <a href="../hadith/index.html" class="nav-item">
+                    <img src="../assets/icon/sidebar/hadith.svg"
+                        style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                        alt="الحديث النبوي">
+                    <span>الحديث النبوي</span>
+                </a>
+                <a href="../azkar/index.html" class="nav-item">
+                    <img src="../assets/icon/sidebar/azkar.svg"
+                        style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                        alt="الأذكار">
+                    <span>الأذكار</span>
+                </a>
+                <a href="../listen/1.html" class="nav-item">
+                    <img src="../assets/icon/sidebar/listen.svg"
+                        style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                        alt="التلاوات القرآنية">
+                    <span>التلاوات القرآنية</span>
+                </a>
+                <a href="../radio/index.html" class="nav-item">
+                    <img src="../assets/icon/sidebar/radio.svg"
+                        style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                        alt="الراديو">
+                    <span>الراديو</span>
+                </a>
+            </div>
+
+            <div class="sidebar-search-container">
+                <div class="sidebar-search-box">
+                    <input type="text" class="sidebar-search-input" id="sidebarSearchInput"
+                        placeholder="ابحث عن سورة..." oninput="filterSurahs(this.value)">
+                    <i class="fas fa-search sidebar-search-icon"></i>
+                </div>
+            </div>
+
+            <div class="nav-label">فهرس سور القرآن الكريم</div>
+            <div id="surah-list-content"></div>
+        </div>
+    </div>
+
+    <div class="top-navbar">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <i class="fas fa-bars" id="menu-btn" style="color:#fff; font-size:20px; cursor:pointer;"></i>
+
+            <div class="brand-header">
+                <i class="fas fa-kaaba"></i> المصحف الملكي
+            </div>
+        </div>
+
+        <div class="page-info" id="header-info"></div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button id="bookmark-btn" onclick="Engine.goToBookmark()" title="الانتقال للمكان المحفوظ"
+                style="background:rgba(212,175,55,0.15); border:1px solid var(--royal-gold); color:var(--royal-gold); padding:8px 16px; border-radius:8px; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px; font-family:'Reem Kufi'; font-size:13px; white-space:nowrap; height:40px;"
+                onmouseover="this.style.background='rgba(212,175,55,0.25)'"
+                onmouseout="this.style.background='rgba(212,175,55,0.15)'">
+                <i class="fas fa-bookmark"></i>
+                <span class="bookmark-text">المحفوظ</span>
+            </button>
+
+            <div class="search-bar-btn" onclick="document.getElementById('navbarSearchInput').focus()"
+                style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); backdrop-filter:blur(10px); height:40px;">
+                <input type="text" id="navbarSearchInput" placeholder="بحث سريع..."
+                    style="background:transparent; border:none; color:#fff; font-family:'Amiri'; font-weight:bold; width:100%; outline:none;"
+                    oninput="handleNavbarSearch(this.value)">
+                <i class="fas fa-search" style="color:rgba(255,255,255,0.6);"></i>
+            </div>
+            <div class="nav-actions"></div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div id="quran-scroll-area"></div>
+
+        <button id="reset-deep-link-btn" onclick="resetDeepLink()" title="العودة للقراءة العادية"
+            style="display:none; position:fixed; bottom:30px; right:30px; z-index:1000; background:linear-gradient(135deg, rgba(212,175,55,0.95), rgba(169,140,44,0.95)); border:2px solid var(--royal-gold); color:#000; padding:14px 22px; border-radius:50px; font-family:'Reem Kufi'; font-size:14px; font-weight:bold; cursor:pointer; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow:0 8px 24px rgba(212,175,55,0.5); backdrop-filter:blur(10px);"
+            onmouseover="this.style.transform='scale(1.05) translateY(-2px)'; this.style.boxShadow='0 12px 32px rgba(212,175,55,0.7)';"
+            onmouseout="this.style.transform='scale(1) translateY(0)'; this.style.boxShadow='0 8px 24px rgba(212,175,55,0.5)';">
+            <i class="fas fa-undo-alt" style="margin-left:8px;"></i>
+            <span class="reset-btn-text">رجوع للوضع العادي</span>
+        </button>
+    </div>
+
+    <div class="restore-toast" id="restore-toast">
+        <div class="toast-content">
+            <i class="fas fa-bookmark" style="color: var(--royal-gold); font-size: 20px;"></i>
+            <div class="toast-text" id="toast-message">هل تود المتابعة؟</div>
+        </div>
+        <div class="toast-actions">
+            <button class="toast-btn btn-yes" onclick="Engine.restoreSession()">نعم، أكمل</button>
+            <button class="toast-btn btn-no" onclick="UI.hideToast()">لا</button>
+        </div>
+        <div class="toast-dont-show">
+            <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#999; cursor:pointer;">
+                <input type="checkbox" id="dont-show-restore-toast"
+                    style="cursor:pointer; accent-color:var(--royal-gold);"
+                    onchange="Engine.toggleRestoreToast(this.checked)">
+                <span>عدم الإظهار مرة أخرى</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- ==================== SETTINGS SHEET ==================== -->
+    <div class="bottom-sheet-overlay" id="settings-overlay">
+        <div class="bottom-sheet" id="settings-sheet-content">
+
+            <!-- Handle -->
+            <div
+                style="width: 100%; height: 20px; display: flex; align-items: center; justify-content: center; cursor: grab; flex-shrink: 0;">
+                <div style="width: 40px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 10px;"></div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="sheet-tab-bar" style="margin: 4px 15px 10px;">
+                <button class="sheet-tab active" onclick="switchSettingsTab('settings-tab', this)">
+                    <i class="fas fa-cog"></i>
+                    <span>الإعدادات</span>
+                </button>
+                <button class="sheet-tab" onclick="switchSettingsTab('tools-tab', this)">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    <span>أدوات ذكية</span>
+                </button>
+            </div>
+
+            <!-- ====== Tab 1: الإعدادات ====== -->
+            <div class="sheet-tab-content active" id="settings-tab"
+                style="padding: 0; overflow-y: auto; max-height: 60vh;">
+
+                <!-- Play Page -->
+                <div class="sheet-menu-item" onclick="Engine.playPage()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="sheet-item-icon"><i class="fas fa-play"></i></div>
+                        <div class="sheet-item-text">
+                            <span class="sheet-item-label">استماع للصفحة</span>
+                            <span class="sheet-item-desc">تشغيل الصوت من القارئ المحدد</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-left sheet-item-arrow"></i>
+                </div>
+
+                <!-- Focus Mode -->
+                <div class="sheet-menu-item" onclick="Engine.toggleFocusMode()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="sheet-item-icon"><i class="fas fa-eye-slash"></i></div>
+                        <div class="sheet-item-text">
+                            <span class="sheet-item-label">وضع التركيز</span>
+                            <span class="sheet-item-desc">إخفاء كل المشتتات للقراءة</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-left sheet-item-arrow"></i>
+                </div>
+
+                <!-- Translation -->
+                <div class="sheet-menu-item" onclick="Engine.toggleTranslation()">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="sheet-item-icon"><i class="fas fa-language"></i></div>
+                        <div class="sheet-item-text">
+                            <span class="sheet-item-label">عرض الترجمة</span>
+                            <span class="sheet-item-desc">ترجمة المعاني بلغات متعددة</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-left sheet-item-arrow"></i>
+                </div>
+
+                <!-- Divider -->
+                <div
+                    style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); margin: 6px 0;">
+                </div>
+
+                <!-- Reciter Section -->
+                <div
+                    style="padding: 8px 20px 4px; font-size: 11px; color: #555; font-weight: 600; letter-spacing: 0.5px;">
+                    صوت القارئ</div>
+                <div style="padding: 6px 20px 10px;">
+                    <div id="reciter-control-area"></div>
+                </div>
+
+                <!-- Divider -->
+                <div
+                    style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); margin: 4px 0;">
+                </div>
+
+                <!-- Brightness & Font -->
+                <div
+                    style="padding: 8px 20px 4px; font-size: 11px; color: #555; font-weight: 600; letter-spacing: 0.5px;">
+                    ضبط العرض</div>
+                <div style="padding: 6px 20px 12px;">
+                    <div class="slider-row"
+                        style="direction: ltr; display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                        <i class="fas fa-moon" style="font-size: 14px; color: #555;"></i>
+                        <input type="range" class="custom-range" min="0" max="0.8" step="0.05" value="0.8"
+                            oninput="Engine.setBrightness(this.value); Engine.updateSliderFill(this)">
+                        <i class="fas fa-sun" style="font-size: 18px; color: #888;"></i>
+                    </div>
+                    <div class="slider-row" style="direction: ltr; display: flex; align-items: center; gap: 15px;">
+                        <i class="fas fa-font" style="font-size: 12px; color: #555;"></i>
+                        <input type="range" class="custom-range" min="18" max="40" value="22"
+                            oninput="Engine.setFontSize(this.value); Engine.updateSliderFill(this)">
+                        <i class="fas fa-font" style="font-size: 22px; color: #888;"></i>
+                    </div>
+                </div>
+
+                <!-- Footer: Version only -->
+                <div style="text-align: center; padding: 10px 20px 14px; border-top: 1px solid rgba(255,255,255,0.04);">
+                    <div style="font-size: 11px; color: #444; font-family: 'Outfit', sans-serif;">v1.2.0 (Beta)</div>
+                </div>
+            </div>
+
+            <!-- ====== Tab 2: أدوات ذكية ====== -->
+            <div class="sheet-tab-content" id="tools-tab" style="padding: 0; overflow-y: auto; max-height: 60vh;">
+
+                <!-- Grid Container for Smart Tools -->
+                <div class="tools-grid-container">
+                    <!-- Share as Image -->
+                    <div class="sheet-menu-item tool-grid-item" onclick="Engine.shareVerseAsImage()">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="sheet-item-icon"><i class="fas fa-image"></i></div>
+                            <div class="sheet-item-text">
+                                <span class="sheet-item-label">مشاركة الآية كصورة</span>
+                                <span class="sheet-item-desc">تصميم فاخر جاهز للمشاركة</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left sheet-item-arrow"></i>
+                    </div>
+
+                    <!-- Ramadan Khatma System -->
+                    <div class="sheet-menu-item tool-grid-item" onclick="Engine.openRamadanKhatma()">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="sheet-item-icon" style="color:var(--royal-gold,#d4af37);"><i
+                                    class="fas fa-moon"></i></div>
+                            <div class="sheet-item-text">
+                                <span class="sheet-item-label" style="display:flex;align-items:center;gap:8px;">الختمات
+                                    الرمضانية <span
+                                        style="background:linear-gradient(135deg,#d4af37,#c9952a);color:#000;font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;">NEW</span></span>
+                                <span class="sheet-item-desc">نظام ذكي يعمل لك خطة ختمة كاملة</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left sheet-item-arrow"></i>
+                    </div>
+
+                    <!-- Personal Notes -->
+                    <div class="sheet-menu-item tool-grid-item" onclick="Engine.openVerseNotes()">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="sheet-item-icon"><i class="fas fa-pen-fancy"></i></div>
+                            <div class="sheet-item-text">
+                                <span class="sheet-item-label">ملاحظات شخصية</span>
+                                <span class="sheet-item-desc">اكتب تأملاتك وارجعلها في أي وقت</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left sheet-item-arrow"></i>
+                    </div>
+
+                    <!-- Copy Verse -->
+                    <div class="sheet-menu-item tool-grid-item" onclick="Engine.copyCurrentVerse()">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="sheet-item-icon"><i class="fas fa-copy"></i></div>
+                            <div class="sheet-item-text">
+                                <span class="sheet-item-label">نسخ الآية</span>
+                                <span class="sheet-item-desc">نسخ نص الآية للحافظة</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left sheet-item-arrow"></i>
+                    </div>
+                </div>
+
+
+
+                <!-- Footer: Version only -->
+                <div style="text-align: center; padding: 10px 20px 14px; border-top: 1px solid rgba(255,255,255,0.04);">
+                    <div style="font-size: 11px; color: #444; font-family: 'Outfit', sans-serif;">v1.2.0 (Beta)</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="bottom-sheet-overlay" id="tafsir-overlay">
+        <div class="bottom-sheet">
+            <div class="sheet-header" style="flex-wrap: wrap; gap: 10px;">
+                <div class="sheet-title"><i class="fas fa-book-open"></i> تفسير سريع</div>
+
+                <div class="font-controls desktop-only" style="margin-right: auto; margin-left: 15px;">
+                    <button class="font-btn" onclick="Engine.adjustTafsirFontSize(2)" title="تكبير النص">A+</button>
+                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.2); margin: 0 5px;"></div>
+                    <button class="font-btn" onclick="Engine.adjustTafsirFontSize(-2)" title="تصغير النص">A-</button>
+                </div>
+
+                <button class="sheet-close" onclick="UI.closeAllSheets()">&times;</button>
+            </div>
+
+            <div class="selected-verse-display" id="selected-verse-text"></div>
+
+            <div class="tafsir-controls-row">
+                <select class="lang-select" id="lang-select" onchange="UI.refreshTafsir()">
+                    <option value="ar-tafsir-muyassar">التفسير الميسر</option>
+                    <option value="ar-tafseer-al-qurtubi">تفسير القرطبي</option>
+                    <option value="ar-tafsir-al-saddi">تفسير السعدي</option>
+                    <option value="ar-tafsir-ibn-kathir">تفسير ابن كثير</option>
+                    <option value="ar-tafsir-al-baghawi">تفسير البغوي</option>
+                    <option value="ar-tafsir-al-tabari">تفسير الطبري</option>
+                    <option value="ar-tafsir-al-wasit">الوسيط (طنطاوي)</option>
+                    <option value="en-sahih-international">English (Sahih)</option>
+                </select>
+
+                <button class="btn-pill-premium" onclick="Engine.openFullTafsir()" title="التفسير الكامل">
+                    <img src="../assets/icon/sidebar/tafsir.svg"
+                        style="width: 16px; height: 16px; margin-right: 4px; filter: invert(1) grayscale(1) brightness(2);"
+                        alt="التفسير">
+                    <span>التفسير الكامل</span>
+                    <i class="fas fa-check-circle" style="color: #4ff0b7; font-size: 16px; margin-right: -4px;"></i>
+                </button>
+            </div>
+
+            <div class="tafsir-text" id="tafsir-content">
+                <i class="fas fa-circle-notch fa-spin"></i> جارِ التحميل...
+            </div>
+
+            <div class="action-buttons-row">
+                <button class="action-btn-large btn-play" onclick="Engine.playSelectedVerse()">
+                    <i class="fas fa-play"></i> استماع للآية
+                </button>
+                <button class="action-btn-large btn-copy" onclick="Engine.copyAyah()">
+                    <i class="fas fa-copy"></i> نسخ
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- ====== Royal Mini Audio Player V2 ====== -->
+    <div id="quran-mini-player" class="quran-mini-player hidden">
+        <!-- شريط التقدم -->
+        <div class="qmp-progress-container" id="qmp-progress-container">
+            <div class="qmp-progress-bar" id="qmp-progress-bar"></div>
+        </div>
+
+        <div class="qmp-content">
+            <!-- معلومات القارئ (قابلة للضغط لتغيير القارئ) -->
+            <div class="qmp-info" onclick="Engine.openReciterModal()" title="تغيير القارئ">
+                <div class="qmp-img-wrapper">
+                    <img id="qmp-reciter-img" class="qmp-reciter-img" src="" alt="" onerror="this.style.display='none'">
+                    <div class="qmp-img-overlay"><i class="fas fa-exchange-alt"></i></div>
+                </div>
+                <div class="qmp-text">
+                    <div class="qmp-name-row">
+                        <span id="qmp-reciter-name" class="qmp-reciter-name">القارئ</span>
+                    </div>
+                    <span id="qmp-verse-info" class="qmp-verse-info">الآية</span>
+                </div>
+            </div>
+
+            <!-- أزرار التحكم الرئيسية -->
+            <div class="qmp-main-controls">
+                <button class="qmp-ctrl-btn small" onclick="Engine.playPreviousVerse()" title="الآية السابقة">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+                <button id="qmp-play-btn" class="qmp-ctrl-btn big" onclick="Engine.togglePlayPause()">
+                    <i class="fas fa-pause"></i>
+                </button>
+                <button class="qmp-ctrl-btn small" onclick="Engine.playNextVerseManual()" title="الآية التالية">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+            </div>
+
+            <!-- أدوات إضافية -->
+            <div class="qmp-actions">
+                <button class="qmp-action-btn loop" onclick="Engine.cycleLoopMode()" id="qmp-loop-btn"
+                    title="تكرار الآية">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="qmp-action-btn speed" onclick="Engine.cyclePlaybackSpeed()"
+                    id="qmp-speed-btn">1x</button>
+                <button class="qmp-action-btn close" onclick="Engine.stopAndClosePlayer()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <div id="tour-spotlight"></div>
+    <div id="tour-tooltip">
+        <div class="tour-header">
+            <div class="tour-title"><i class="fas fa-crown"></i> <span>المرشد الملكي</span></div>
+            <div class="tour-step-count" id="tour-counter">1/8</div>
+        </div>
+        <div class="tour-desc" id="tour-desc">الوصف</div>
+        <div class="tour-actions">
+            <button class="tour-btn-secondary" id="tour-skip-btn">تخطي</button>
+            <button class="tour-btn" id="tour-btn">التالي</button>
+        </div>
+    </div>
+    <div id="tour-hint">تلميح: اضغط هنا</div>
+    <div id="tour-arrow-guide"><i class="fas fa-arrow-up"></i></div>
+
+    <script src="../assets/js/pages/quran-lang-engine.js"></script>
+    <script src="../assets/js/pages/tour.js"></script>
+    <script src="../assets/js/app-core.js"></script>
+    <script src="../assets/js/data/khatma-content.js"></script>
+    <script src="../assets/js/data/quran-mapping.js"></script>
+    <script src="../assets/js/pages/quran.js"></script>
+    <script type="module">
+        import { initSupabase, onAuthStateChange, renderUserProfile, renderLoginButton } from '../assets/js/auth.js';
+        import { initProfileSystem } from '../assets/js/components/profile-manager.js';
+
+        const SUPABASE_URL = 'https://kstknnfyesrthyjlrlle.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdGtubmZ5ZXNydGh5amxybGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NzUyMDksImV4cCI6MjA3OTQ1MTIwOX0.PQRPsv0l9-b7wwwKnnHBJGY6PO0JarcVpihULMOhAeE';
+
+        const supabaseClient = initSupabase(SUPABASE_URL, SUPABASE_KEY);
+        window.supabase = { createClient: () => supabaseClient };
+
+        async function initAuthSystem() {
+            // تحديث الهيدر فقط (الصفحة مفيهاش قائمة جانبية)
+            onAuthStateChange((user) => {
+                if (user) {
+                    initProfileSystem(user);
+                } else {
+                    initProfileSystem(null);
+                }
+            });
+
+            // التحقق المبدئي عند تحميل الصفحة
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                initProfileSystem(session.user);
+            } else {
+                initProfileSystem(null);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initAuthSystem);
+    </script>
+
+</body>
+
+</html>

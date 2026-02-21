@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>الأذكار والأدعية - Sunnah Pro</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+
+    <link href="../assets/fonts/fontawesome/css/all.min.css" rel="stylesheet">
+    <script src="../assets/js/libs/hls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Local Fonts -->
+    <style>
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Amiri Quran';
+            src: url('../assets/fonts/fonts/amiri-quran/AmiriQuran-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Reem Kufi';
+            src: url('../assets/fonts/fonts/reem-kufi/ReemKufi-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Scheherazade New';
+            src: url('../assets/fonts/fonts/scheherazad/ScheherazadeNew-4.400/ScheherazadeNew-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Scheherazade New';
+            src: url('../assets/fonts/fonts/scheherazad/ScheherazadeNew-4.400/ScheherazadeNew-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+    </style>
+
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+    <link rel="stylesheet" href="../assets/css/pages/dashboard/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/pages/azkar/azkar.css">
+</head>
+
+<body>
+
+    <div class="bg-pattern"></div>
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div id="sidebar-container"></div>
+
+    <div class="top-navbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="app-logo" style="display: flex; align-items: center; gap: 5px;">
+                <i class="fas fa-kaaba" style="color: var(--primary); font-size: 24px;"></i>
+                <span class="desktop-logo-text" style="font-family: 'IBM Plex Sans Arabic'; font-size: 16px; font-weight: 700; color: #fff; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" data-full-text="الأذكار والأدعية" data-full-text-mobile="الأذكار">الأذكار والأدعية</span>
+                <span class="mobile-logo-text" style="font-family: 'IBM Plex Sans Arabic'; font-size: 16px; font-weight: 700; color: #fff; line-height: 1;">الأذكار</span>
+            </div>
+        </div>
+
+        <div class="header-right-actions" style="display: flex; align-items: center; gap: 20px;">
+            <div class="search-bar-btn" onclick="openSearchModal()">
+                <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                    <i class="fas fa-search" style="color: var(--royal-gold);"></i>
+                    <span style="font-size: 14px; color: #aaa; font-weight: normal;">بحث في الموسوعة الشاملة...</span>
+                </div>
+            </div>
+            <div class="nav-actions"></div>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div class="greeting-header">
+            <div class="greeting">
+                <h1>فاذكروني أذكركم</h1>
+                <p>بوابة الأذكار الشاملة والورد اليومي</p>
+            </div>
+            <div class="date-badge">
+                <i class="fas fa-calendar-alt"></i> ٩ جمادى الآخرة ١٤٤٧
+            </div>
+        </div>
+
+        <div class="azkar-tabs">
+            <div class="tab-btn active" onclick="switchTab('home', this)">الرئيسية</div>
+            <div class="tab-btn" onclick="switchTab('wird', this)">وردي اليومي</div>
+            <div class="tab-btn" onclick="switchTab('ayat', this)">آيات وتفسير</div>
+        </div>
+
+        <div id="home" class="tab-content active">
+
+            <!-- ══════════ البطاقتين الرئيسيتين: الصباح والمساء ══════════ -->
+            <div class="hero-grid">
+                <div class="hero-card morning" onclick="openZikr('morning')">
+                    <i class="fas fa-sun icon-bg"></i>
+                    <div class="hero-content">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                            <i class="fas fa-cloud-sun"></i><span style="font-weight: bold; font-size: 14px;">ابدأ يومك</span>
+                        </div>
+                        <h2 style="font-family: 'Reem Kufi', sans-serif; font-size: 28px; margin-bottom: 5px;">أذكار الصباح</h2>
+                        <p style="font-size: 14px; opacity: 0.9;">حصن نفسك مع بداية يوم جديد</p>
+                        <div class="play-btn"><i class="fas fa-arrow-left"></i></div>
+                    </div>
+                </div>
+
+                <div class="hero-card evening" onclick="openZikr('evening')">
+                    <i class="fas fa-moon icon-bg"></i>
+                    <div class="hero-content">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                            <i class="fas fa-star"></i><span style="font-weight: bold; font-size: 14px;">اختم يومك</span>
+                        </div>
+                        <h2 style="font-family: 'Reem Kufi', sans-serif; font-size: 28px; margin-bottom: 5px;">أذكار المساء</h2>
+                        <p style="font-size: 14px; opacity: 0.9;">طمأنينة وسكينة لليلتك</p>
+                        <div class="play-btn"><i class="fas fa-arrow-left"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ١: القرآن والشفاء ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-book-open"></i> القرآن والشفاء
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('roqya')">
+                    <div class="cat-icon" style="color: #2ecc71;"><i class="fas fa-shield-halved"></i></div>
+                    <h3 class="cat-title">الرُّقية</h3>
+                    <p class="cat-sub">الشرعية الشاملة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('quranic_prayers')">
+                    <div class="cat-icon" style="color: #d4af37;"><i class="fas fa-book-quran"></i></div>
+                    <h3 class="cat-title">أدعية</h3>
+                    <p class="cat-sub">من القرآن الكريم</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('prophets_suplications')">
+                    <div class="cat-icon" style="color: #f39c12;"><i class="fas fa-star"></i></div>
+                    <h3 class="cat-title">الأنبياء</h3>
+                    <p class="cat-sub">أدعية مأثورة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('sickness')">
+                    <div class="cat-icon" style="color: #e74c3c;"><i class="fas fa-heart-pulse"></i></div>
+                    <h3 class="cat-title">المرضى</h3>
+                    <p class="cat-sub">الشفاء والعيادة</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٢: الصلاة والمسجد ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-mosque"></i> الصلاة والمسجد
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('adhan')">
+                    <div class="cat-icon" style="color: #d35400;"><i class="fas fa-broadcast-tower"></i></div>
+                    <h3 class="cat-title">الأذان</h3>
+                    <p class="cat-sub">عند السماع</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('ablution_after')">
+                    <div class="cat-icon" style="color: #4da8da;"><i class="fas fa-hand-holding-water"></i></div>
+                    <h3 class="cat-title">الوضوء</h3>
+                    <p class="cat-sub">الطهارة والنقاء</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('mosque_enter')">
+                    <div class="cat-icon" style="color: #16a085;"><i class="fas fa-mosque"></i></div>
+                    <h3 class="cat-title">المسجد</h3>
+                    <p class="cat-sub">الدخول والخروج</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('prayer')">
+                    <div class="cat-icon" style="color: #3498db;"><i class="fas fa-pray"></i></div>
+                    <h3 class="cat-title">الصلاة</h3>
+                    <p class="cat-sub">أذكار داخل الصلاة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('salam')">
+                    <div class="cat-icon" style="color: #9b59b6;"><i class="fas fa-hands-praying"></i></div>
+                    <h3 class="cat-title">السلام</h3>
+                    <p class="cat-sub">بعد المكتوبة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('istikhara')">
+                    <div class="cat-icon" style="color: #d4af37;"><i class="fas fa-compass"></i></div>
+                    <h3 class="cat-title">الاستخارة</h3>
+                    <p class="cat-sub">التوكل على الله</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٣: تفاصيل الصلاة ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-pray"></i> تفاصيل الصلاة
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('adhan')">
+                    <div class="cat-icon" style="color: #e67e22;"><i class="fas fa-broadcast-tower"></i></div>
+                    <h3 class="cat-title">أذكار الأذان</h3>
+                    <p class="cat-sub">إجابة المؤذن</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('istiftah')">
+                    <div class="cat-icon" style="color: #3498db;"><i class="fas fa-pray"></i></div>
+                    <h3 class="cat-title">الاستفتاح</h3>
+                    <p class="cat-sub">بداية الصلاة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('ruku')">
+                    <div class="cat-icon" style="color: #2ecc71;"><i class="fas fa-praying-hands"></i></div>
+                    <h3 class="cat-title">الركوع</h3>
+                    <p class="cat-sub">تسبيح الركوع</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('rising_from_ruku')">
+                    <div class="cat-icon" style="color: #1abc9c;"><i class="fas fa-child-reaching"></i></div>
+                    <h3 class="cat-title">الرفع من الركوع</h3>
+                    <p class="cat-sub">التحميد</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('sujood')">
+                    <div class="cat-icon" style="color: #9b59b6;"><i class="fas fa-praying-hands"></i></div>
+                    <h3 class="cat-title">السجود</h3>
+                    <p class="cat-sub">تسبيح السجود</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('sitting_between_sujood')">
+                    <div class="cat-icon" style="color: #e74c3c;"><i class="fas fa-praying-hands"></i></div>
+                    <h3 class="cat-title">بين السجدتين</h3>
+                    <p class="cat-sub">طلب المغفرة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('sajdah_tilawah')">
+                    <div class="cat-icon" style="color: #d4af37;"><i class="fas fa-book-quran"></i></div>
+                    <h3 class="cat-title">سجود التلاوة</h3>
+                    <p class="cat-sub">عند الآية</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('tashahhud')">
+                    <div class="cat-icon" style="color: #f39c12;"><i class="fas fa-hand-pointer"></i></div>
+                    <h3 class="cat-title">التشهد</h3>
+                    <p class="cat-sub">التحيات</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('witr_qunut')">
+                    <div class="cat-icon" style="color: #8e44ad;"><i class="fas fa-hands-praying"></i></div>
+                    <h3 class="cat-title">قنوت الوتر</h3>
+                    <p class="cat-sub">دعاء الوتر</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٤: الحياة اليومية ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-sun"></i> الحياة اليومية
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('waking_up')">
+                    <div class="cat-icon" style="color: #f1c40f;"><i class="fas fa-sun"></i></div>
+                    <h3 class="cat-title">الاستيقاظ</h3>
+                    <p class="cat-sub">بداية اليوم</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('sleep')">
+                    <div class="cat-icon" style="color: #2c3e50;"><i class="fas fa-bed"></i></div>
+                    <h3 class="cat-title">النوم</h3>
+                    <p class="cat-sub">راحة السكينة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('clothes')">
+                    <div class="cat-icon" style="color: #9b59b6;"><i class="fas fa-tshirt"></i></div>
+                    <h3 class="cat-title">اللباس</h3>
+                    <p class="cat-sub">الثوب الجديد</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('food')">
+                    <div class="cat-icon" style="color: #e67e22;"><i class="fas fa-utensils"></i></div>
+                    <h3 class="cat-title">الطعام</h3>
+                    <p class="cat-sub">آداب المائدة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('home')">
+                    <div class="cat-icon" style="color: #27ae60;"><i class="fas fa-home"></i></div>
+                    <h3 class="cat-title">المنزل</h3>
+                    <p class="cat-sub">الدخول والخروج</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('toilet')">
+                    <div class="cat-icon" style="color: #7f8c8d;"><i class="fas fa-restroom"></i></div>
+                    <h3 class="cat-title">الخلاء</h3>
+                    <p class="cat-sub">الاستعاذة</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٥: اللباس والزينة ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-tshirt"></i> اللباس والزينة
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('general_manners')">
+                    <div class="cat-icon" style="color: #9b59b6;"><i class="fas fa-tshirt"></i></div>
+                    <h3 class="cat-title">لبس الثوب</h3>
+                    <p class="cat-sub">الحمد والثناء</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('new_clothes')">
+                    <div class="cat-icon" style="color: #e74c3c;"><i class="fas fa-tshirt"></i></div>
+                    <h3 class="cat-title">لبس جديد</h3>
+                    <p class="cat-sub">دعاء الجديد</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('undressing')">
+                    <div class="cat-icon" style="color: #7f8c8d;"><i class="fas fa-tshirt"></i></div>
+                    <h3 class="cat-title">وضع الثوب</h3>
+                    <p class="cat-sub">عند الخلع</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٦: مشاعر ومواقف ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-heart"></i> مشاعر ومواقف
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('sadness')">
+                    <div class="cat-icon" style="color: #34495e;"><i class="fas fa-cloud-rain"></i></div>
+                    <h3 class="cat-title">الهم والحزن</h3>
+                    <p class="cat-sub">السكينة والرضا</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('distress')">
+                    <div class="cat-icon" style="color: #e74c3c;"><i class="fas fa-hands-holding-circle"></i></div>
+                    <h3 class="cat-title">الكرب</h3>
+                    <p class="cat-sub">الاستعانة بالله</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('travel')">
+                    <div class="cat-icon" style="color: #00d2d3;"><i class="fas fa-plane-departure"></i></div>
+                    <h3 class="cat-title">السفر</h3>
+                    <p class="cat-sub">الركوب والعودة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('market')">
+                    <div class="cat-icon" style="color: #d4af37;"><i class="fas fa-shopping-basket"></i></div>
+                    <h3 class="cat-title">السوق</h3>
+                    <p class="cat-sub">دخول الأسواق</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('anger')">
+                    <div class="cat-icon" style="color: #c0392b;"><i class="fas fa-face-angry"></i></div>
+                    <h3 class="cat-title">الغضب</h3>
+                    <p class="cat-sub">الاستعاذة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('happy_event')">
+                    <div class="cat-icon" style="color: #27ae60;"><i class="fas fa-face-smile"></i></div>
+                    <h3 class="cat-title">أمر يسرّه</h3>
+                    <p class="cat-sub">الحمد لله</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('wonder')">
+                    <div class="cat-icon" style="color: #f39c12;"><i class="fas fa-exclamation"></i></div>
+                    <h3 class="cat-title">التعجب</h3>
+                    <p class="cat-sub">سبحان الله</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٧: الحماية والتحصين ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-shield-halved"></i> الحماية والتحصين
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('devil')">
+                    <div class="cat-icon" style="color: #e74c3c;"><i class="fas fa-shield-halved"></i></div>
+                    <h3 class="cat-title">طرد الشيطان</h3>
+                    <p class="cat-sub">الاستعاذة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('devils_plot')">
+                    <div class="cat-icon" style="color: #8e44ad;"><i class="fas fa-brain"></i></div>
+                    <h3 class="cat-title">وسوسة الإيمان</h3>
+                    <p class="cat-sub">دفع الشك</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('enemy')">
+                    <div class="cat-icon" style="color: #2c3e50;"><i class="fas fa-shield"></i></div>
+                    <h3 class="cat-title">لقاء العدو</h3>
+                    <p class="cat-sub">طلب النصر</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('dajjal')">
+                    <div class="cat-icon" style="color: #c0392b;"><i class="fas fa-shield"></i></div>
+                    <h3 class="cat-title">الدجال</h3>
+                    <p class="cat-sub">العصمة منه</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٨: الطبيعة والأجواء ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-cloud-sun-rain"></i> الطبيعة والأجواء
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('rain')">
+                    <div class="cat-icon" style="color: #3498db;"><i class="fas fa-cloud-rain"></i></div>
+                    <h3 class="cat-title">نزول المطر</h3>
+                    <p class="cat-sub">صيباً نافعاً</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('thunder')">
+                    <div class="cat-icon" style="color: #f1c40f;"><i class="fas fa-bolt"></i></div>
+                    <h3 class="cat-title">دعاء الرعد</h3>
+                    <p class="cat-sub">يسبح الرعد بحمده</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('wind')">
+                    <div class="cat-icon" style="color: #1abc9c;"><i class="fas fa-wind"></i></div>
+                    <h3 class="cat-title">دعاء الريح</h3>
+                    <p class="cat-sub">اللهم إني أسألك خيرها</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('crescent')">
+                    <div class="cat-icon" style="color: #d4af37;"><i class="fas fa-moon"></i></div>
+                    <h3 class="cat-title">رؤية الهلال</h3>
+                    <p class="cat-sub">بداية الشهر</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ٩: الذكر والتسبيح ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-hands-praying"></i> الذكر والتسبيح
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('tasbeeh')">
+                    <div class="cat-icon" style="color: #d4af37;"><i class="fas fa-ring"></i></div>
+                    <h3 class="cat-title">التسبيح والتهليل</h3>
+                    <p class="cat-sub">الباقيات الصالحات</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('prophets_duas')">
+                    <div class="cat-icon" style="color: #27ae60;"><i class="fas fa-praying-hands"></i></div>
+                    <h3 class="cat-title">الصلاة على النبي</h3>
+                    <p class="cat-sub">فضل الصلاة</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ١٠: الجنازة والعزاء ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-dove"></i> الجنازة والعزاء
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('burial')">
+                    <div class="cat-icon" style="color: #7f8c8d;"><i class="fas fa-procedures"></i></div>
+                    <h3 class="cat-title">إغماض الميت</h3>
+                    <p class="cat-sub">عند الوفاة</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('after_burial')">
+                    <div class="cat-icon" style="color: #34495e;"><i class="fas fa-dungeon"></i></div>
+                    <h3 class="cat-title">إدخال القبر</h3>
+                    <p class="cat-sub">الدفن</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('graves_visit')">
+                    <div class="cat-icon" style="color: #2c3e50;"><i class="fas fa-map-location-dot"></i></div>
+                    <h3 class="cat-title">زيارة القبور</h3>
+                    <p class="cat-sub">الدعاء للأموات</p>
+                </div>
+            </div>
+
+            <!-- ══════════ القسم ١١: آداب متنوعة ══════════ -->
+            <div class="section-header">
+                <i class="fas fa-list-check"></i> آداب متنوعة
+            </div>
+            <div class="azkar-cat-grid">
+                <div class="azkar-cat-card" onclick="openZikr('night_waking_dhikr')">
+                    <div class="cat-icon" style="color: #2c3e50;"><i class="fas fa-bed"></i></div>
+                    <h3 class="cat-title">التقلب ليلاً</h3>
+                    <p class="cat-sub">الاستيقاظ المؤقت</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('paying_debt')">
+                    <div class="cat-icon" style="color: #d4af37;"><i class="fas fa-coins"></i></div>
+                    <h3 class="cat-title">قضاء الدين</h3>
+                    <p class="cat-sub">الاستعانة بالسداد</p>
+                </div>
+                <div class="azkar-cat-card" onclick="openZikr('sneezing')">
+                    <div class="cat-icon" style="color: #e67e22;"><i class="fas fa-head-side-cough"></i></div>
+                    <h3 class="cat-title">العطاس</h3>
+                    <p class="cat-sub">الحمد والتشميت</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="wird" class="tab-content">
+            <div class="wird-wrapper">
+                <div class="wird-header">
+                    <div>
+                        <span style="color: var(--primary); font-weight: bold; font-size: 12px;">ورد القرآن</span>
+                        <h2 style="font-family: 'Amiri', serif; font-size: 24px; color: #fff; margin: 5px 0;">سورة البقرة</h2>
+                        <p style="color: var(--text-muted); font-size: 14px;">أكملت 45% من وردك اليومي</p>
+                    </div>
+                    <div style="width: 50px; height: 50px; background: rgba(79, 240, 183, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 20px;">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                </div>
+                <div class="wird-progress">
+                    <div class="wird-fill"></div>
+                </div>
+            </div>
+
+            <div class="wird-wrapper" style="border-color: var(--gold); background: var(--bg-surface);">
+                <div style="text-align: center; color: var(--gold); margin-bottom: 15px;">
+                    <i class="fas fa-scroll"></i> <span style="font-family: 'Amiri', serif; font-weight: bold;">حديث اليوم</span>
+                </div>
+                <p style="font-family: 'Scheherazade New', serif; font-size: 20px; line-height: 1.8; color: #fff; text-align: center;">
+                    « مَنْ يُرِدِ اللَّهُ بِهِ خَيْرًا يُفَقِّهْهُ فِي الدِّينِ »
+                </p>
+                <div style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px;">رواه البخاري</div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+                <h3 style="font-family: 'Amiri', serif; font-size: 20px; color: #fff;">جلسة التلاوة</h3>
+                <p style="color: var(--text-muted); font-size: 13px;">وردك: ٢٠ آيات من سورة البقرة</p>
+            </div>
+
+            <div class="quran-sheet">
+                <div class="islamic-frame">
+                    <div class="islamic-frame-inner">
+                        <div class="quran-text">
+                            الٓمٓ <span class="ayah-symbol">٢</span>
+                            ذَٰلِكَ ٱلْكِتَـٰبُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ <span class="ayah-symbol">٣</span>
+                            ٱلَّذِينَ يُؤْمِنُونَ بِٱلْغَيْبِ وَيُقِيمُونَ ٱلصَّلَوٰةَ وَمِمَّا رَزَقْنَـٰهُمْ يُنفِقُونَ <span class="ayah-symbol">٤</span>
+                            وَٱلَّذِينَ يُؤْمِنُونَ بِمَآ أُنزِلَ إِلَيْكَ وَمَآ أُنزِلَ مِن قَبْلِكَ وَبِٱلْـَٔاخِرَةِ هُمُ يُوقِنُونَ <span class="ayah-symbol">٥</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="finish-btn" onclick="finishWird()">
+                <i class="fas fa-check-circle" style="margin-left: 10px;"></i>
+                أتممت وردي اليومي
+            </button>
+        </div>
+
+        <div id="ayat" class="tab-content">
+            <div class="wird-wrapper" style="text-align: center; padding: 25px;">
+                <div style="font-family: 'Amiri Quran', serif; font-size: 26px; line-height: 2.2; color: #fff; margin-bottom: 25px;">
+                    ۞ ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ... ۞
+                </div>
+                <div style="background: rgba(255,255,255,0.05); border-right: 4px solid var(--primary); padding: 15px; border-radius: 8px; text-align: right;">
+                    <h4 style="color: var(--primary); font-family: 'Amiri', serif; margin-bottom: 8px; font-size: 16px;">التفسير الميسر</h4>
+                    <p style="color: var(--text); line-height: 1.7; font-size: 14px;">الله هو الإله الحق الواحد، الحي الذي لا يموت، القيوم الذي قام بنفسه وقام على كل شيء، لا يغلبه نعاس ولا نوم...</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mobile-nav">
+        <div class="nav-btn-mobile" onclick="window.location.href='../Dashboard/index.html'"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+        <div class="nav-btn-mobile" onclick="window.location.href='../quran/index.html'"><i class="fas fa-quran"></i><span>المصحف</span></div>
+        <div class="nav-btn-mobile active"><i class="fas fa-praying-hands"></i><span>الأذكار</span></div>
+        <div class="nav-btn-mobile"><i class="fas fa-cog"></i><span>الإعدادات</span></div>
+    </div>
+
+    <div class="celebration-overlay" id="celebrationOverlay">
+        <div class="success-card">
+            <div style="width: 70px; height: 70px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #000; margin: 0 auto 15px; box-shadow: 0 0 30px var(--primary);">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 style="font-family: 'Amiri', serif; color: #fff; margin-bottom: 8px; font-size: 22px;">تقبل الله طاعتك!</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">لقد أتممت وردك اليومي بنجاح.</p>
+            <button onclick="closeCelebration()" style="background: transparent; border: 1px solid var(--border); color: #fff; padding: 8px 25px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 14px;">
+                العودة للأذكار
+            </button>
+        </div>
+    </div>
+
+    <div id="searchModal" class="search-modal" style="display: none;" onclick="if(event.target == this) closeSearchModal()">
+        <div class="search-header-modal">
+            <div class="modal-title-row">
+                <h3>بحث في الموسوعة الشاملة (135 قسم)</h3>
+                <i class="fas fa-times search-close" onclick="closeSearchModal()"></i>
+            </div>
+            <div class="search-input-group">
+                <input type="text" class="search-input-modal" id="modalSearchInput" placeholder="ابحث في الأذكار، الرقية، أو السفر..." autocomplete="off">
+                <button class="search-action-btn" id="searchActionBtn" onclick="azkarSearch?.selectResult(azkarSearch.currentResults[0]?.id)">ابحث</button>
+            </div>
+        </div>
+        <div class="search-results-modal" id="modalResultsBody">
+            <div style="text-align:center; color:var(--text-muted); margin-top:50px; font-family:'Amiri';">
+                <i class="fas fa-search" style="font-size: 2rem; opacity: 0.5; margin-bottom: 10px; display:block; margin-left: auto; margin-right: auto;"></i>
+                ابحث في أكثر من 340 ذكر ودعاء أوفلاين
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/libs/minisearch.js"></script>
+    <script src="../assets/js/pages/azkar-search.js"></script>
+
+    <script>
+        // ================= دوال النوافذ والمشغل =================
+        function openSearchModal() {
+            if (typeof openAzkarSearchModal === 'function') {
+                openAzkarSearchModal();
+            } else {
+                const modal = document.getElementById('searchModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    setTimeout(() => modal.classList.add('visible'), 10);
+                }
+            }
+        }
+
+        function closeSearchModal() {
+            if (typeof closeAzkarSearchModal === 'function') {
+                closeAzkarSearchModal();
+            } else {
+                const modal = document.getElementById('searchModal');
+                if (modal) {
+                    modal.classList.remove('visible');
+                    setTimeout(() => modal.style.display = 'none', 300);
+                }
+            }
+        }
+
+        function openZikr(category) {
+            localStorage.setItem('selected_cat', category);
+            var path = window.location.pathname;
+            if (!path.endsWith('/') && !path.endsWith('.html')) {
+                window.location.href = path + '/azkar_player.html?cat=' + category;
+            } else {
+                window.location.href = 'azkar_player.html?cat=' + category;
+            }
+        }
+        window.openZikr = openZikr;
+
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+        window.switchTab = switchTab;
+
+        function finishWird() {
+            document.getElementById('celebrationOverlay').style.display = 'flex';
+        }
+        window.finishWird = finishWird;
+
+        function closeCelebration() {
+            document.getElementById('celebrationOverlay').style.display = 'none';
+            switchTab('home', document.querySelectorAll('.tab-btn')[0]);
+        }
+        window.closeCelebration = closeCelebration;
+
+        function checkResume() {
+            const savedProgress = localStorage.getItem('azkar_progress');
+
+            if (savedProgress) {
+                const data = JSON.parse(savedProgress);
+                const modal = document.getElementById('resumeModal');
+                const text = document.getElementById('resumeText');
+
+                text.innerText = `توقفت عند ${data.catTitle} - الذكر رقم ${data.index + 1}`;
+
+                setTimeout(() => {
+                    modal.classList.add('active');
+                }, 1000);
+            }
+        }
+
+        function confirmResume() {
+            localStorage.setItem('should_resume', 'true');
+            const saved = JSON.parse(localStorage.getItem('azkar_progress'));
+            openZikr(saved.catKey);
+        }
+        window.confirmResume = confirmResume;
+
+        function dismissResume() {
+            localStorage.removeItem('azkar_progress');
+            document.getElementById('resumeModal').classList.remove('active');
+        }
+        window.dismissResume = dismissResume;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            checkResume();
+        });
+    </script>
+
+    <div id="resumeModal" class="resume-notification">
+        <div class="resume-content">
+            <div class="resume-icon">
+                <i class="fas fa-history"></i>
+            </div>
+            <div class="resume-details">
+                <h4>لم تكمل وردك السابق</h4>
+                <p id="resumeText">توقفت عند أذكار الصباح...</p>
+            </div>
+        </div>
+        <div class="resume-actions">
+            <button class="btn-ignore" onclick="dismissResume()">تجاهل</button>
+            <button class="btn-resume" onclick="confirmResume()">متابعة <i class="fas fa-arrow-left"></i></button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initProfileSystem } from '../assets/js/components/profile-manager.js';
+        import { initSidebar } from '../assets/js/components/sidebar.js';
+        import { initSupabase, onAuthStateChange, renderUserProfile, renderLoginButton } from '../assets/js/auth.js';
+
+        const SUPABASE_URL = 'https://kstknnfyesrthyjlrlle.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdGtubmZ5ZXNydGh5amxybGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NzUyMDksImV4cCI6MjA3OTQ1MTIwOX0.PQRPsv0l9-b7wwwKnnHBJGY6PO0JarcVpihULMOhAeE';
+
+        const supabaseClient = initSupabase(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            initSidebar('azkar');
+            
+            // Initialize auth system which handles both header and sidebar profiles
+            await initAuthSystem();
+        });
+
+        // ==========================================
+        // ✅ CORE AUTH INTEGRATION (Same as dashboard)
+        // ==========================================
+        
+        async function initAuthSystem() {
+            // Set up the auth state change listener
+            onAuthStateChange((user) => {
+                if (user) {
+                    // تحديث القائمة الجانبية والهيدر مع بعض بنفس البيانات المباشرة
+                    renderUserProfile(user, 'sidebarProfile');
+                    initProfileSystem(user); 
+                } else {
+                    // تحديث القائمة الجانبية والهيدر في حالة الضيف
+                    renderLoginButton('sidebarProfile');
+                    initProfileSystem(null);
+                }
+            });
+
+            // Initialize current state on load
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                renderUserProfile(session.user, 'sidebarProfile');
+                initProfileSystem(session.user);
+            } else {
+                renderLoginButton('sidebarProfile');
+                initProfileSystem(null);
+            }
+        }
+    </script>
+    <script src="../assets/js/app-core.js"></script>
+</body>
+
+</html>

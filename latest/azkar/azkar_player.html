@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مشغل الأذكار الملون</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+    <meta name="theme-color" content="#020a0a">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=Outfit:wght@300;400;600;800&family=Reem+Kufi:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #020a0a;
+            --card-glass: linear-gradient(135deg, rgba(15, 58, 58, 0.9) 0%, rgba(2, 10, 10, 0.95) 100%);
+            --card-border: rgba(79, 240, 183, 0.15);
+            --primary: #d4af37;
+            --primary-glow: rgba(212, 175, 55, 0.3);
+            --text: #ffffff;
+            --text-secondary: #aaaaaa;
+            --success: #4ff0b7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: radial-gradient(circle at 50% 0%, #0f2e2e 0%, var(--bg-deep) 80%);
+            background-attachment: fixed;
+        }
+
+        .islamic-bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            z-index: -2;
+            transition: 0.5s;
+        }
+
+        .ambient-light {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at 50% 30%, var(--primary-glow) 0%, transparent 65%);
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.5s ease;
+        }
+
+        .top-bar {
+            height: 80px;
+            padding: 0 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .progress-indicators {
+            display: flex;
+            gap: 3px;
+            width: 100%;
+            height: 4px;
+            margin-top: 5px;
+            direction: rtl;
+        }
+
+        .indicator {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+            transform: scaleY(1.3);
+        }
+
+        .indicator.passed {
+            background: var(--success);
+            box-shadow: none;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 10px;
+            margin: -10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        .category-title {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 20px;
+            color: var(--text);
+            font-weight: bold;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .display-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px 20px 20px;
+            position: relative;
+        }
+
+        .chic-card {
+            width: 100%;
+            min-width: 350px;
+            max-width: 420px;
+            min-height: 550px;
+            height: calc(100vh - 120px);
+            max-height: calc(100vh - 120px);
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 35px;
+            position: relative;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.5s;
+        }
+
+        .ornament {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.8;
+            color: var(--primary);
+            transition: color 0.5s;
+        }
+
+        .ornament svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .o-tl { top: 20px; left: 20px; transform: rotate(0deg); }
+        .o-tr { top: 20px; right: 20px; transform: rotate(90deg); }
+        .o-bl { bottom: 20px; left: 20px; transform: rotate(-90deg); }
+        .o-br { bottom: 20px; right: 20px; transform: rotate(180deg); }
+
+        .zikr-content {
+            flex: 1;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 70px;
+            margin-bottom: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            overflow-y: auto;
+            z-index: 2;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+        }
+
+        .source-badge {
+            font-size: 13px;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Amiri', serif;
+            margin-bottom: 20px;
+            border: 1px solid var(--primary);
+            transition: color 0.5s, border-color 0.5s;
+        }
+
+        .zikr-text {
+            font-family: 'Amiri Quran', serif;
+            font-size: 26px;
+            line-height: 2.3;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .card-controls {
+            height: 110px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 0;
+            position: relative;
+            z-index: 5;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .percent-badge {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: 'Outfit';
+            z-index: 10;
+        }
+
+        .main-tap-btn {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+
+        .main-tap-btn:active {
+            transform: scale(0.95);
+        }
+
+        .counter-number {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            color: var(--text);
+            z-index: 2;
+        }
+
+        .progress-ring-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transform: rotate(-90deg);
+        }
+
+        .ring-circle-bg {
+            stroke: rgba(255, 255, 255, 0.05);
+        }
+
+        .ring-circle-fg {
+            stroke: var(--primary);
+            stroke-dasharray: 251;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.2s ease, stroke 0.5s;
+            filter: drop-shadow(0 0 6px var(--primary));
+        }
+
+        .nav-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s;
+        }
+
+        .show-success {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .zikr-content::-webkit-scrollbar { width: 5px; background-color: transparent; }
+        .zikr-content::-webkit-scrollbar-track { background-color: transparent; margin-block: 30px; }
+        .zikr-content::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 10px; transition: background 0.3s; }
+        .zikr-content::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.4); }
+
+        .desktop-layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            max-width: 1400px;
+        }
+
+        .side-panel {
+            display: none;
+            flex: 1;
+            height: calc(100vh - 140px);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            flex-direction: column;
+            transition: 0.3s;
+        }
+
+        @media (min-width: 1024px) {
+            .side-panel { display: flex; flex: 0 0 300px; }
+            .main-stage { flex: 1; width: auto; height: 100%; display: flex; align-items: center; justify-content: center; }
+            .chic-card { max-width: 100%; width: 95%; height: calc(100vh - 140px); box-shadow: 0 0 100px rgba(0, 0, 0, 0.8); border-radius: 40px; }
+            .zikr-text { font-size: 32px; max-width: 800px; line-height: 2.5; }
+        }
+
+        .right-panel { align-items: flex-start; }
+        .panel-title { color: var(--primary); font-family: 'Reem Kufi'; font-size: 20px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); width: 100%; }
+        .azkar-list-container { flex: 1; width: 100%; overflow-y: auto; padding-left: 10px; }
+
+        .azkar-list-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #ffffff;
+            font-family: 'Amiri', serif;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .azkar-list-item:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); transform: translateX(-5px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+        .azkar-list-item.active { background: var(--primary-glow); border-color: var(--primary); color: #fff; box-shadow: 0 0 15px var(--primary-glow); }
+        .list-count-badge { background: rgba(0, 0, 0, 0.3); color: var(--primary); font-family: 'Outfit', sans-serif; font-weight: bold; padding: 4px 12px; border-radius: 50px; font-size: 14px; border: 1px solid rgba(255, 255, 255, 0.1); min-width: 40px; text-align: center; }
+        .azkar-list-item.active .list-count-badge { background: var(--primary); color: #000; border-color: var(--primary); }
+
+        .left-panel { align-items: center; justify-content: center; text-align: center; }
+        .azkar-list-container::-webkit-scrollbar { width: 5px; }
+        .azkar-list-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        .zikr-content { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.2) transparent; }
+
+        @media (max-width: 480px) {
+            .card-controls { gap: 15px; }
+            .ornament { width: 35px; height: 35px; }
+            .o-bl { left: 10px; bottom: 10px; }
+            .o-br { right: 10px; bottom: 10px; }
+        }
+
+        .theme-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--primary); border: 1px solid var(--primary); transition: 0.3s; }
+        .theme-btn:active { transform: scale(0.95); }
+        .theme-menu { position: absolute; top: 50px; left: 0; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); padding: 10px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; flex-direction: column; gap: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); z-index: 100; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: 0.3s; }
+        .theme-menu.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255, 255, 255, 0.2); transition: transform 0.2s; }
+        .color-dot:hover { transform: scale(1.2); border-color: #fff; }
+
+        @media (max-width: 768px) {
+            .chic-card { 
+                width: 95% !important;
+                min-width: 340px !important;
+                max-width: 420px !important;
+                height: calc(100dvh - 140px) !important; 
+                max-height: 650px !important; 
+                min-height: 550px !important;
+                margin: 10px auto 20px auto !important;
+                background: linear-gradient(135deg, rgba(15, 58, 58, 0.95) 0%, rgba(2, 10, 10, 0.98) 100%) !important; 
+                border-radius: 40px !important;
+            }
+            .copy-btn { padding: 8px 16px !important; font-size: 12px !important; gap: 6px !important; }
+            .copy-btn span { display: none !important; }
+        }
+
+        .copy-controls { display: flex; justify-content: center; margin-top: 15px; padding: 0 20px; }
+        .copy-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px; color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px); }
+        .copy-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+        .copy-btn:active { transform: translateY(0); scale: 0.98; }
+        .copy-btn.copied { background: var(--primary); color: var(--bg-deep); border-color: var(--primary); }
+        .copy-btn i { font-size: 16px; }
+    </style>
+</head>
+
+<body>
+
+    <div class="islamic-bg-pattern" id="bgPattern"></div>
+    <div class="ambient-light"></div>
+
+    <div class="top-bar">
+        <div class="header-row">
+            <div class="back-btn" onclick="window.history.back()"><i class="fas fa-arrow-right"></i></div>
+            <div class="category-title" id="pageTitle">...</div>
+
+            <div style="position: relative;">
+                <div class="theme-btn" onclick="toggleThemeMenu()"><i class="fas fa-palette"></i></div>
+
+                <div class="theme-menu" id="themeMenu">
+                    <div class="color-dot" style="background: #d4af37;" onclick="setTheme('#d4af37')" title="ذهبي ملكي"></div>
+                    <div class="color-dot" style="background: #10b981;" onclick="setTheme('#10b981')" title="زمردي"></div>
+                    <div class="color-dot" style="background: #3b82f6;" onclick="setTheme('#3b82f6')" title="أزرق ليلي"></div>
+                    <div class="color-dot" style="background: #94a3b8;" onclick="setTheme('#94a3b8')" title="فضي"></div>
+                    <div class="color-dot" style="background: #e11d48;" onclick="setTheme('#e11d48')" title="ياقوتي"></div>
+                </div>
+            </div>
+        </div>
+        <div class="progress-indicators" id="indicators"></div>
+    </div>
+
+    <div class="display-area">
+
+        <div class="desktop-layout">
+
+            <div class="side-panel right-panel">
+                <h3 class="panel-title">قائمة الأذكار</h3>
+                <div class="azkar-list-container" id="sideList"></div>
+            </div>
+
+            <div class="main-stage">
+                <div class="chic-card" id="mainCard">
+                    <div class="ornament o-tl">
+                        <svg viewBox="0 0 40 40">
+                            <path d="M0,40 L0,10 Q0,0 10,0 L40,0" fill="none" stroke="currentColor" stroke-width="2" />
+                            <rect x="5" y="5" width="6" height="6" transform="rotate(45 8 8)" fill="currentColor" opacity="0.6" />
+                        </svg>
+                    </div>
+                    <div class="ornament o-tr">
+                        <svg viewBox="0 0 40 40">
+                            <path d="M0,40 L0,10 Q0,0 10,0 L40,0" fill="none" stroke="currentColor" stroke-width="2" />
+                            <rect x="5" y="5" width="6" height="6" transform="rotate(45 8 8)" fill="currentColor" opacity="0.6" />
+                        </svg>
+                    </div>
+                    <div class="ornament o-bl">
+                        <svg viewBox="0 0 40 40">
+                            <path d="M0,40 L0,10 Q0,0 10,0 L40,0" fill="none" stroke="currentColor" stroke-width="2" />
+                            <rect x="5" y="5" width="6" height="6" transform="rotate(45 8 8)" fill="currentColor" opacity="0.6" />
+                        </svg>
+                    </div>
+                    <div class="ornament o-br">
+                        <svg viewBox="0 0 40 40">
+                            <path d="M0,40 L0,10 Q0,0 10,0 L40,0" fill="none" stroke="currentColor" stroke-width="2" />
+                            <rect x="5" y="5" width="6" height="6" transform="rotate(45 8 8)" fill="currentColor" opacity="0.6" />
+                        </svg>
+                    </div>
+
+                    <div class="percent-badge" id="percentBadge">0%</div>
+
+                    <div class="zikr-content" id="tapZone" onclick="handleTap()">
+                        <div style="color: var(--primary); opacity: 0.7; font-size: 14px; margin-bottom: 10px; transition: color 0.5s;">۞</div>
+                        <div class="source-badge" id="zikrSource">المصدر</div>
+                        <div class="zikr-text" id="zikrText">جاري التحميل...</div>
+                        <div style="color: var(--primary); opacity: 0.7; font-size: 14px; margin-top: 15px; transition: color 0.5s;">۞</div>
+                    </div>
+
+                    <div class="card-controls">
+                        <button class="nav-btn" onclick="prevZikr()"><i class="fas fa-chevron-right"></i></button>
+                        <div class="main-tap-btn" onclick="handleTap()">
+                            <span class="counter-number" id="countDisplay">0</span>
+                            <svg class="progress-ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-circle-bg" stroke-width="3" fill="transparent" r="42" cx="50" cy="50" />
+                                <circle class="ring-circle-fg" id="ringProgress" stroke-width="3" fill="transparent" r="42" cx="50" cy="50" />
+                            </svg>
+                        </div>
+                        <button class="nav-btn" onclick="nextZikr()"><i class="fas fa-chevron-left"></i></button>
+                    </div>
+
+                    <div class="copy-controls">
+                        <button class="copy-btn" onclick="copyCurrentZikr()" title="نسخ الذكر">
+                            <i class="fas fa-copy"></i>
+                            <span>نسخ الذكر</span>
+                        </button>
+                    </div>
+
+                    <div class="success-overlay" id="successOverlay">
+                        <div style="font-size: 50px; color: var(--success); margin-bottom: 20px;"><i class="fas fa-check-circle"></i></div>
+                        <h3 style="color: #fff; font-family: 'Amiri'; margin-bottom: 10px;">تقبل الله</h3>
+                        <p style="color: #999; font-size: 14px; margin-bottom: 25px;">انتهيت من أذكار هذه الفئة</p>
+                        <button onclick="window.history.back()" style="padding: 12px 35px; background: var(--success); border:none; border-radius: 25px; font-weight:bold; color: #000; cursor: pointer;">العودة للقائمة</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-panel left-panel" style="display: none;"></div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentCategory = null;
+        let currentIndex = 0;
+        let currentCount = 0;
+        let currentMax = 0;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const catKey = urlParams.get('cat') || localStorage.getItem('selected_cat') || 'morning';
+
+        function saveProgress() {
+            if (!currentCategory) return;
+            const progress = {
+                catKey: catKey,
+                catTitle: currentCategory.title,
+                index: currentIndex,
+                count: currentCount,
+                total: currentCategory.data.length,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('azkar_progress', JSON.stringify(progress));
+        }
+
+        function clearProgress() {
+            localStorage.removeItem('azkar_progress');
+        }
+
+        function init() {
+            const filePath = `json/${catKey}.json`;
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error("الملف غير موجود");
+                    return response.json();
+                })
+                .then(data => {
+                    currentCategory = data;
+                    setupPage();
+                })
+                .catch(error => {
+                    console.error('Error loading JSON:', error);
+                    document.getElementById('zikrText').innerHTML = `
+                        <div style="font-size:18px; color:#ff6b6b; padding:20px;">
+                            عذراً، لم يتم العثور على أذكار هذا القسم.<br>
+                            تأكد من وجود ملف <b>${filePath}</b>
+                        </div>`;
+                });
+        }
+
+        function setupPage() {
+            loadUserTheme();
+            
+            const iconToUse = currentCategory.icon || "fa-book-open";
+            document.getElementById('pageTitle').innerHTML = `<i class="fas ${iconToUse}"></i> ${currentCategory.title}`;
+
+            // === الاستقبال الذكي لنية البحث والقفز الفوري لنفس الذكر ===
+            const searchIntent = localStorage.getItem('search_selected_zikr');
+            const shouldResume = localStorage.getItem('should_resume');
+
+            if (searchIntent) {
+                const savedSearch = JSON.parse(searchIntent);
+                if (savedSearch && savedSearch.category === catKey) {
+                    loadZikr(savedSearch.index);
+                    localStorage.removeItem('search_selected_zikr'); 
+                } else {
+                    loadZikr(0);
+                }
+            } else if (shouldResume === 'true') {
+                const savedProgress = JSON.parse(localStorage.getItem('azkar_progress'));
+                if (savedProgress && savedProgress.catKey === catKey) {
+                    loadZikr(savedProgress.index, savedProgress.count);
+                    localStorage.removeItem('should_resume');
+                } else {
+                    loadZikr(0);
+                }
+            } else {
+                loadZikr(0);
+            }
+
+            const indicatorsContainer = document.getElementById('indicators');
+            indicatorsContainer.innerHTML = '';
+            currentCategory.data.forEach(() => {
+                const div = document.createElement('div');
+                div.className = 'indicator';
+                indicatorsContainer.appendChild(div);
+            });
+            buildSideList();
+            updateIndicators();
+        }
+
+        function applyThemeColor(colorHex) {
+            document.documentElement.style.setProperty('--primary', colorHex);
+            document.documentElement.style.setProperty('--primary-glow', colorHex + '40');
+            const encodedColor = colorHex.replace('#', '%23');
+            const svgPattern = `data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='${encodedColor}' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E`;
+            document.getElementById('bgPattern').style.backgroundImage = `url("${svgPattern}")`;
+        }
+
+        function loadZikr(idx, restoreCount = null) {
+            if (idx >= currentCategory.data.length) idx = 0;
+            
+            currentIndex = idx;
+            const zikr = currentCategory.data[currentIndex];
+
+            let zCount = parseInt(zikr.count);
+            if (isNaN(zCount) || zCount <= 0) zCount = 1;
+
+            currentCount = restoreCount !== null ? restoreCount : zCount;
+            currentMax = zCount;
+
+            const textEl = document.getElementById('zikrText');
+            textEl.style.opacity = 0;
+
+            setTimeout(() => {
+                textEl.innerHTML = zikr.zekr || zikr.text || '';
+                
+                const sourceEl = document.getElementById('zikrSource');
+                const sourceText = zikr.reference || zikr.source || zikr.description || '';
+                
+                if (sourceText) {
+                    sourceEl.style.display = 'block';
+                    sourceEl.innerText = sourceText;
+                } else {
+                    sourceEl.style.display = 'none';
+                }
+
+                textEl.style.opacity = 1;
+            }, 200);
+
+            const card = document.getElementById('mainCard');
+            card.style.transform = "scale(0.98)";
+            setTimeout(() => card.style.transform = "scale(1)", 200);
+
+            updateUI();
+            saveProgress();
+        }
+
+        function updateUI() {
+            document.getElementById('countDisplay').innerText = currentCount;
+            updateIndicators();
+            updateDesktopStats();
+
+            const totalZikr = currentCategory.data.length;
+            const currentZikrNum = currentIndex + 1;
+            document.getElementById('percentBadge').innerHTML = `${currentZikrNum} <span style="margin:0 4px; opacity:0.6; font-size: 11px;">من</span> ${totalZikr}`;
+
+            const ring = document.getElementById('ringProgress');
+            const circumference = 2 * Math.PI * 42;
+            ring.style.strokeDasharray = circumference;
+
+            if (currentMax > 0) {
+                const percent = (currentCount / currentMax);
+                const offset = circumference - (percent * circumference);
+                ring.style.strokeDashoffset = offset;
+            }
+
+            if (currentCount === 0) {
+                document.getElementById('countDisplay').innerHTML = '<i class="fas fa-check" style="color:var(--success); font-size: 24px;"></i>';
+                ring.style.stroke = 'var(--success)';
+                ring.style.filter = 'drop-shadow(0 0 8px var(--success))';
+            } else {
+                ring.style.stroke = 'var(--primary)';
+                ring.style.filter = 'drop-shadow(0 0 6px var(--primary))';
+            }
+        }
+
+        function updateIndicators() {
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((ind, i) => {
+                ind.classList.remove('active', 'passed');
+                if (i < currentIndex) ind.classList.add('passed');
+                else if (i === currentIndex) ind.classList.add('active');
+            });
+        }
+
+        function handleTap() {
+            if (currentCount > 0) {
+                currentCount--;
+                updateUI();
+                saveProgress();
+
+                if (currentCount === 0) {
+                    if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+                    setTimeout(nextZikr, 500);
+                }
+            }
+        }
+
+        function nextZikr() {
+            if (currentIndex < currentCategory.data.length - 1) {
+                loadZikr(currentIndex + 1);
+            } else if (currentCount === 0) {
+                showSuccess();
+            }
+        }
+
+        function prevZikr() {
+            if (currentIndex > 0) {
+                loadZikr(currentIndex - 1);
+            }
+        }
+
+        function showSuccess() {
+            clearProgress();
+            document.getElementById('successOverlay').classList.add('show-success');
+        }
+
+        function buildSideList() {
+            const listContainer = document.getElementById('sideList');
+            listContainer.innerHTML = ''; 
+
+            const totalAzkar = currentCategory.data.length;
+            const titleElement = document.querySelector('.panel-title');
+
+            titleElement.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                    <span>قائمة الأذكار</span>
+                    <span style="font-size:14px; background:var(--primary); color:#000; padding:2px 12px; border-radius:15px; font-family:'Outfit'; font-weight:bold;">${totalAzkar}</span>
+                </div>
+            `;
+
+            currentCategory.data.forEach((zikr, index) => {
+                const item = document.createElement('div');
+                item.className = 'azkar-list-item';
+                item.id = `side-item-${index}`;
+
+                const zText = zikr.zekr || zikr.text || '';
+                let shortText = zText.substring(0, 50) + (zText.length > 50 ? '...' : '');
+
+                item.innerHTML = `
+                    <span style="font-weight:500;">${shortText}</span>
+                    <span class="list-count-badge">${zikr.count || 1}</span>
+                `;
+
+                item.onclick = () => loadZikr(index);
+                listContainer.appendChild(item);
+            });
+        }
+
+        function updateDesktopStats() {
+            document.querySelectorAll('.azkar-list-item').forEach((item, index) => {
+                item.classList.remove('active', 'passed');
+                if (index === currentIndex) item.classList.add('active');
+                if (index < currentIndex) item.classList.add('passed');
+
+                if (index === currentIndex) {
+                    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        }
+
+        function toggleThemeMenu() {
+            document.getElementById('themeMenu').classList.toggle('active');
+        }
+
+        function setTheme(color) {
+            localStorage.setItem('user_theme', color);
+            applyThemeColor(color);
+            toggleThemeMenu();
+        }
+
+        function loadUserTheme() {
+            const savedColor = localStorage.getItem('user_theme') || '#d4af37';
+            applyThemeColor(savedColor);
+        }
+
+        init();
+
+        const card = document.getElementById('mainCard');
+        let startX = 0, startY = 0, isDragging = false, isScrolling = false, currentTranslate = 0;
+
+        card.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            isScrolling = false;
+            card.style.transition = 'none';
+        });
+
+        card.addEventListener('touchmove', (e) => {
+            if (!isDragging || isScrolling) return;
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            let diffX = currentX - startX;
+            const diffY = currentY - startY;
+
+            if (Math.abs(diffY) > Math.abs(diffX)) {
+                isScrolling = true;
+                return;
+            }
+
+            if (e.cancelable) e.preventDefault();
+
+            if (currentIndex === 0 && diffX < 0) diffX = diffX / 4;
+
+            currentTranslate = diffX;
+            card.style.transform = `translateX(${diffX}px)`;
+        });
+
+        card.addEventListener('touchend', () => {
+            isDragging = false;
+            isScrolling = false;
+            const threshold = 100;
+            card.style.transition = 'transform 0.3s ease-out';
+
+            if (currentTranslate > threshold) {
+                if (currentIndex < currentCategory.data.length - 1 || currentCount === 0) {
+                    card.style.transform = `translateX(120vw)`;
+                    setTimeout(() => {
+                        nextZikr();
+                        card.style.transition = 'none';
+                        card.style.transform = `translateX(-120vw)`;
+                        requestAnimationFrame(() => requestAnimationFrame(() => {
+                            card.style.transition = 'transform 0.3s ease-out';
+                            card.style.transform = `translateX(0)`;
+                        }));
+                    }, 300);
+                } else {
+                    card.style.transform = `translateX(0)`;
+                }
+            } else if (currentTranslate < -threshold) {
+                if (currentIndex > 0) {
+                    card.style.transform = `translateX(-120vw)`;
+                    setTimeout(() => {
+                        prevZikr();
+                        card.style.transition = 'none';
+                        card.style.transform = `translateX(120vw)`;
+                        requestAnimationFrame(() => requestAnimationFrame(() => {
+                            card.style.transition = 'transform 0.3s ease-out';
+                            card.style.transform = `translateX(0)`;
+                        }));
+                    }, 300);
+                } else {
+                    card.style.transform = `translateX(0)`;
+                }
+            } else {
+                card.style.transform = `translateX(0)`;
+            }
+            currentTranslate = 0;
+        });
+
+        function copyCurrentZikr() {
+            if (!currentCategory || !currentCategory.data[currentIndex]) return;
+            const zikr = currentCategory.data[currentIndex];
+            const textToCopy = zikr.zekr || zikr.text || '';
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showCopyFeedback();
+                }).catch(err => {
+                    fallbackCopyText(textToCopy);
+                });
+            } else {
+                fallbackCopyText(textToCopy);
+            }
+        }
+
+        function fallbackCopyText(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopyFeedback();
+            } catch (err) {
+                alert('فشل نسخ الذكر. يرجى النسخ يدوياً.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showCopyFeedback() {
+            const copyBtn = document.querySelector('.copy-btn');
+            const originalHTML = copyBtn.innerHTML;
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i><span>تم النسخ!</span>';
+            setTimeout(() => {
+                copyBtn.classList.remove('copied');
+                copyBtn.innerHTML = originalHTML;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

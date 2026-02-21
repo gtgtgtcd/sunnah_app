@@ -1,0 +1,919 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التلاوات القرآنية - Sunnah Pro</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+    <meta name="theme-color" content="#020a0a">
+
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+
+    <script src="../assets/js/libs/tailwind.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Amiri';
+            src: url('../assets/fonts/fonts/amiri/Amiri-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Reem Kufi';
+            src: url('../assets/fonts/fonts/reem-kufi/ReemKufi-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'IBM Plex Sans Arabic';
+            src: url('../assets/fonts/fonts/amiri/ibm/IBMPlexSansArabic-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'IBM Plex Sans Arabic';
+            src: url('../assets/fonts/fonts/amiri/ibm/IBMPlexSansArabic-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        /* === إصلاح الألوان للأيقونات (Filters) === */
+        /* هذه الفلاتر تحول اللون الأسود الافتراضي للـ SVG إلى الألوان المطلوبة */
+
+        .local-icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
+        }
+
+        /* 1. الأبيض (للنصوص والأزرار الغامقة) */
+        .icon-white {
+            filter: brightness(0) invert(1);
+        }
+
+        /* 2. الذهبي الملكي (#d4af37) */
+        .icon-gold {
+            filter: invert(81%) sepia(25%) saturate(1376%) hue-rotate(357deg) brightness(92%) contrast(89%);
+        }
+
+        /* 3. الأخضر الأساسي (#4ff0b7) */
+        .icon-accent {
+            filter: invert(79%) sepia(35%) saturate(674%) hue-rotate(88deg) brightness(101%) contrast(93%);
+        }
+
+        /* 4. الرمادي (للأيقونات غير النشطة) */
+        .icon-gray {
+            filter: invert(57%) sepia(13%) saturate(466%) hue-rotate(174deg) brightness(92%) contrast(87%);
+        }
+
+        /* 5. ألوان المشاعر (Moods) */
+        .icon-mood-comfort {
+            filter: invert(66%) sepia(61%) saturate(437%) hue-rotate(186deg) brightness(98%) contrast(93%);
+        }
+
+        /* أزرق */
+        .icon-mood-sad {
+            filter: invert(56%) sepia(31%) saturate(913%) hue-rotate(203deg) brightness(98%) contrast(91%);
+        }
+
+        /* نيلي */
+        .icon-mood-sleep {
+            filter: invert(74%) sepia(28%) saturate(4194%) hue-rotate(227deg) brightness(97%) contrast(96%);
+        }
+
+        /* بنفسجي */
+        .icon-mood-fear {
+            filter: invert(79%) sepia(23%) saturate(764%) hue-rotate(129deg) brightness(94%) contrast(87%);
+        }
+
+        /* تيل */
+
+        /* تحسينات إضافية */
+        .dropdown-toggle-btn img {
+            margin-left: 8px;
+        }
+
+        /* Style for the main menu button to match Tafsir page */
+        .dropdown-toggle-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d4af37;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 13px;
+            justify-content: space-between;
+            font-family: 'Reem Kufi', sans-serif;
+        }
+
+        /* Style for main menu button to use IBM Plex Sans Arabic font */
+        .main-menu-label {
+            font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 14px !important;
+        }
+
+        /* تطبيق خط Amiri على أسماء السور */
+        .surah-title {
+            font-family: 'Amiri', serif !important;
+            font-weight: 700 !important;
+        }
+
+        /* RTL Progress Bar Fix */
+        html[dir="rtl"] #progress-bar,
+        body[dir="rtl"] #progress-bar {
+            /* In RTL mode, start from the right side */
+            right: 0;
+            left: auto;
+        }
+
+        html[dir="rtl"] #progress-bar-mini,
+        body[dir="rtl"] #progress-bar-mini {
+            /* Mini progress bar RTL fix */
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        /* === منع تحديد النصوص أثناء السحب === */
+        body.noselect {
+            user-select: none;
+            -webkit-user-select: none;
+            /* للمتصفحات القديمة وسفاري */
+            cursor: grabbing !important;
+            /* إجبار شكل الماوس ليكون "ممسكاً" */
+        }
+
+        /* === تحسينات شريط التمرير الأصلي === */
+        #seek-bar-container {
+            overflow: visible !important;
+            cursor: pointer;
+        }
+
+        /* جعل الدائرة ظاهرة دائماً بحجم طبيعي */
+        #seek-knob {
+            transform: translate(50%, -50%) scale(1) !important;
+            opacity: 1 !important;
+            transition: right 0.1s ease-out, transform 0.2s ease-out;
+        }
+
+        /* عند السحب: تكبير بسيط جداً */
+        #seek-bar-container.dragging #seek-knob {
+            transition: none !important;
+            transform: translate(50%, -50%) scale(1.1) !important;
+            border-color: #d4af37;
+            /* تغيير لون الحدود للذهبي عند السحب */
+        }
+
+        /* حركة الشريط */
+        #progress-bar {
+            transition: width 0.1s ease-out;
+        }
+
+        #seek-bar-container.dragging #progress-bar {
+            transition: none !important;
+        }
+
+        .dropdown-toggle-btn span {
+            color: #d4af37;
+        }
+
+        /* Responsive layout for hero actions */
+        .hero-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .hero-actions-top-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-hero-full-width {
+            width: 100%;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-actions-top-row {
+                flex-wrap: wrap;
+            }
+
+            .btn-hero-primary,
+            .btn-hero-secondary:not(.btn-hero-full-width) {
+                flex: 1;
+                min-width: calc(50% - 7.5px);
+                /* Two buttons per row with gap consideration */
+            }
+
+            .btn-hero-full-width {
+                margin-top: 0;
+            }
+        }
+
+        #globalNavToggle.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        quran: {
+                            base: '#020a0a',
+                            surface: '#0d1616',
+                            sidebar: '#000000',
+                            accent: '#4ff0b7',
+                            accentDim: 'rgba(79, 240, 183, 0.15)',
+                            gold: '#d4af37',
+                            goldDim: 'rgba(212, 175, 55, 0.1)',
+                        },
+                        'royal-gold': '#d4af37',
+                        'primary': '#4ff0b7'
+                    },
+                    fontFamily: {
+                        quranText: ['Amiri', 'serif'],
+                        kufi: ['Reem Kufi', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'glass-gradient': 'linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%)',
+                        'glow-radial': 'radial-gradient(circle at center, rgba(79, 240, 183, 0.15) 0%, transparent 70%)',
+                    },
+                    boxShadow: {
+                        'glow-strong': '0 0 30px -5px rgba(79, 240, 183, 0.4)',
+                        'card-hover': '0 20px 40px -10px rgba(0,0,0,0.5)',
+                    },
+                    animation: {
+                        'wave': 'wave 1.2s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        wave: {
+                            '0%, 100%': { height: '20%' },
+                            '50%': { height: '100%' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="../assets/css/pages/listen/listen.css">
+    <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+    <link rel="stylesheet" href="../assets/css/pages/dashboard/dashboard.css">
+</head>
+
+<body
+    class="bg-quran-base text-white font-sans antialiased overflow-x-hidden selection:bg-quran-accent selection:text-quran-base relative overflow-hidden">
+
+    <div id="ambient-background"></div>
+
+    <div class="search-modal" id="reciter-modal">
+        <div class="search-header">
+            <i class="fas fa-microphone-alt" style="color: var(--royal-gold);"></i>
+            <input type="text" class="search-input" id="reciter-search-input" placeholder="ابحث عن اسم القارئ..."
+                oninput="Engine.filterReciters(this.value)">
+            <i class="fas fa-times search-close"
+                onclick="document.getElementById('reciter-modal').classList.remove('visible')"></i>
+        </div>
+        <div class="search-results" id="reciter-list-container"></div>
+    </div>
+
+    <div class="layout-wrapper flex min-h-screen transition-all duration-500">
+
+        <aside id="sidebar"
+            class="sidebar-bg w-[280px] fixed right-0 top-[60px] h-[calc(100vh-60px)] z-[1600] flex flex-col shadow-2xl transition-transform duration-300 transform lg:translate-x-0 translate-x-full overflow-hidden">
+            <nav class="flex-1 overflow-y-auto pt-5 pb-4 px-3 space-y-0 no-scrollbar"
+                style="overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
+
+                <div class="!mb-1">
+                    <div onclick="toggleGlobalNav()" class="dropdown-toggle-btn" id="globalNavToggle">
+                        <span class="main-menu-label"><i class="fas fa-bars-staggered" style="margin-left: 8px;"></i>
+                            القوائم الرئيسية</span>
+                        <i class="fas fa-chevron-down toggle-icon" id="globalNavIcon"></i>
+                    </div>
+                    <div id="globalNavLinks" class="global-nav-links collapsed">
+                        <a href="../Dashboard/index.html" class="nav-item">
+                            <img src="../assets/icon/sidebar/home.svg"
+                                style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                                alt="الرئيسية">
+                            <span>الرئيسية</span>
+                        </a>
+                        <a href="../quran/index.html" class="nav-item">
+                            <img src="../assets/icon/sidebar/quran.svg"
+                                style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                                alt="القرآن الكريم">
+                            <span>القرآن الكريم</span>
+                        </a>
+                        <a href="../hadith/index.html" class="nav-item">
+                            <img src="../assets/icon/sidebar/hadith.svg"
+                                style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                                alt="الحديث النبوي">
+                            <span>الحديث النبوي</span>
+                        </a>
+                        <a href="../azkar/index.html" class="nav-item">
+                            <img src="../assets/icon/sidebar/azkar.svg"
+                                style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                                alt="الأذكار">
+                            <span>الأذكار</span>
+                        </a>
+                        <a href="../tafsir/index.html" class="nav-item">
+                            <img src="../assets/icon/sidebar/tafsir.svg"
+                                style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                                alt="التفسير">
+                            <span>التفسير</span>
+                        </a>
+                        <a href="../radio/index.html" class="nav-item">
+                            <img src="../assets/icon/sidebar/radio.svg"
+                                style="width: 20px; height: 20px; vertical-align:middle; margin-left:8px; filter: invert(1) grayscale(1) brightness(2);"
+                                alt="الراديو">
+                            <span>الراديو</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="surah-search-container" class="w-full !mt-0 !mb-10 relative transition-all duration-300">
+                    <input type="text" id="surah-search" oninput="filterSurahs(this.value)"
+                        placeholder="ابحث عن سورة..."
+                        class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pr-10 pl-3 text-sm text-white focus:border-quran-accent/50 focus:outline-none font-kufi placeholder-gray-500 transition-all">
+                    <img src="../assets/icon/svg/magnifying-glass.svg"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 local-icon w-5 h-5 icon-gray">
+                </div>
+
+                <div class="flex items-center gap-3 !mb-3 px-1 sidebar-footer-text">
+                    <span class="text-[12px] text-gray-500 font-kufi tracking-wide whitespace-nowrap">فهرس سور القرآن
+                        الكريم</span>
+                    <div class="h-[1px] flex-1 bg-gradient-to-l from-white/10 to-transparent"></div>
+                </div>
+
+                <div id="surah-list-container" class="space-y-1 pb-2"></div>
+            </nav>
+        </aside>
+
+        <main
+            class="flex-1 lg:mr-[280px] relative w-full max-w-full h-screen overflow-y-auto overflow-x-hidden pt-[60px] z-10">
+            <header
+                class="glass-header fixed top-0 left-0 right-0 z-[2000] h-[60px] flex items-center justify-between px-4">
+                <div class="flex items-center gap-3">
+                    <button id="menu-btn" onclick="toggleSidebarLogic()"
+                        class="text-white text-xl hover:text-quran-accent transition-colors cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5">
+                        <img src="../assets/icon/svg/list.svg" class="local-icon icon-white">
+                    </button>
+                    <a href="#" class="flex items-center gap-2 group">
+                        <i class="fas fa-kaaba text-xl text-quran-gold group-hover:scale-110 transition-transform"></i>
+                        <span class="font-kufi text-lg font-bold text-white tracking-wide mt-1">التلاوات القرآنية</span>
+                    </a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 transition-all hover:border-quran-accent/30 group">
+                        <img src="../assets/icon/svg/corners-out.svg" class="local-icon w-4 h-4 icon-accent">
+                        <span class="text-xs font-kufi text-gray-300 group-hover:text-white">وضع الخشوع</span>
+                    </button>
+                    <div class="nav-actions"></div>
+                </div>
+            </header>
+
+            <div class="p-6 lg:p-8 !pb-80 lg:!pt-6">
+
+                <div class="hero-container" id="hero-card">
+                    <div class="hero-content">
+                        <div class="hero-label">تلاوة مختارة</div>
+                        <div class="hero-title" id="hero-reciter-name">مشاري راشد العفاسي</div>
+                        <div class="hero-subtitle">استمع لتلاوة خاشعة بأعلى جودة صوتية مع إمكانية التحكم الكامل في
+                            القراءة.</div>
+
+                        <div class="hero-actions">
+                            <div class="hero-actions-top-row">
+                                <button class="btn-hero-primary" onclick="Engine.playCurrentSurah()">
+                                    <i class="fas fa-play"></i> تشغيل الآن
+                                </button>
+                                <button class="btn-hero-secondary" onclick="Engine.openReciterModal()">
+                                    <i class="fas fa-microphone-alt"></i> تغيير القارئ
+                                </button>
+                                <button id="btn-bulk-download" class="btn-hero-secondary"
+                                    onclick="Engine.downloadFullQuran()" style="border-color: #4ff0b7; color: #4ff0b7;">
+                                    <i class="fas fa-cloud-download-alt"></i> تحميل المصحف كاملاً
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="bulk-progress-container"
+                            style="display: none; margin-top: 15px; width: 100%; max-width: 500px;">
+                            <div class="flex justify-between text-xs text-gray-400 mb-1 font-kufi">
+                                <span id="bulk-status-text">جاري تحضير القائمة...</span>
+                                <span id="bulk-count">0/114</span>
+                            </div>
+                            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div id="bulk-progress-bar" class="h-full bg-quran-accent transition-all duration-300"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-visual">
+                        <div class="hero-circle-glow"></div>
+                        <div
+                            class="w-[120px] h-[120px] aspect-square flex-shrink-0 rounded-full bg-gradient-to-b from-black/80 to-[#0a0f0f] border-4 border-quran-gold/40 shadow-[0_0_30px_rgba(212,175,55,0.2)] relative z-10 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden">
+                            <img id="hero-reciter-img" src="../assets/img/listen/covers/alafasy.webp" alt="القارئ"
+                                class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="filter-sentinel" class="absolute -mt-[90px] h-[90px] w-full pointer-events-none opacity-0">
+                </div>
+
+                <div id="sticky-filter-bar"
+                    class="relative z-30 my-10 transition-all duration-500 ease-in-out transform">
+
+                    <div id="filter-inner-container"
+                        class="glass-panel rounded-2xl p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-4 shadow-2xl shadow-black/50 backdrop-blur-xl transition-all duration-300 border border-white/5 relative !overflow-visible">
+
+                        <div
+                            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-quran-gold/20 to-transparent opacity-30">
+                        </div>
+
+                        <div class="w-full flex items-center justify-between relative z-10">
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="Engine.startVoiceSearch()"
+                                    class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all group border border-white/5"
+                                    title="بحث صوتي">
+                                    <img src="../assets/icon/svg/microphone.svg" class="local-icon icon-gray">
+                                </button>
+
+                                <button id="btn-live-radio" onclick="Engine.toggleRadio()"
+                                    class="flex items-center gap-2 px-3 py-1.5 md:py-2 rounded-full bg-red-900/20 border border-red-500/20 hover:bg-red-900/40 hover:border-red-500/50 transition-all group relative overflow-hidden h-9 md:h-10">
+                                    <div id="live-pulse"
+                                        class="w-1.5 h-1.5 rounded-full bg-red-500 hidden animate-ping"></div>
+                                    <i
+                                        class="fas fa-mosque text-red-400 text-xs md:text-base group-hover:text-red-300"></i>
+                                    <span
+                                        class="text-[10px] md:text-xs font-bold text-red-400 font-kufi group-hover:text-red-300 pt-0.5">مباشر</span>
+                                </button>
+                            </div>
+
+                            <div
+                                class="flex items-center gap-1.5 bg-black/30 rounded-xl px-2.5 py-1.5 border border-white/[0.06]">
+                                <button id="btn-filter-favorites" onclick="Engine.toggleFilter('favorites')"
+                                    class="filter-icon-btn w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all border border-white/5 relative"
+                                    title="المفضلة">
+                                    <i class="fas fa-heart text-[12px] md:text-[13px]"></i>
+                                </button>
+                                <button id="btn-filter-history" onclick="Engine.toggleFilter('history')"
+                                    class="filter-icon-btn w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all border border-white/5 relative"
+                                    title="آخر استماع">
+                                    <i class="fas fa-history text-[12px] md:text-[13px]"></i>
+                                </button>
+                                <button id="btn-filter-downloaded" onclick="Engine.toggleFilter('downloaded')"
+                                    class="filter-icon-btn w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all border border-white/5 relative"
+                                    title="المحمّلة">
+                                    <i class="fas fa-cloud-download-alt text-[12px] md:text-[13px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="w-full flex items-center gap-2 relative z-20 !overflow-visible border-t border-white/5 pt-2 md:pt-0 md:border-none">
+
+                            <button onclick="Engine.clearFilter()"
+                                class="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all border border-white/5 bg-white/5"
+                                title="إلغاء الفلتر">
+                                <img src="../assets/icon/svg/arrow-counter-clockwise.svg"
+                                    class="local-icon w-4 h-4 icon-gray">
+                            </button>
+
+                            <div class="relative group flex-1">
+                                <button id="mood-btn"
+                                    class="flex items-center justify-center gap-2 px-3 py-1.5 w-full rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs font-kufi hover:bg-white/10 hover:border-quran-accent/30 hover:text-white transition-all h-8 md:h-auto">
+                                    <img src="../assets/icon/svg/smiley-fill.svg" class="local-icon icon-accent">
+                                    <span class="pt-0.5 truncate">بماذا تشعر؟</span>
+                                    <img src="../assets/icon/svg/caret-down.svg" class="local-icon w-3 h-3 icon-gray">
+                                </button>
+
+                                <div id="mood-menu"
+                                    class="hidden absolute bottom-full right-0 mb-3 w-48 bg-[#0a0f0f] border border-white/10 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.9)] backdrop-blur-xl z-[9999] overflow-hidden origin-bottom-right">
+
+                                    <button onclick="Engine.filterByMood('comfort')"
+                                        class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-right border-b border-white/5 group/item">
+                                        <img src="../assets/icon/svg/heart-fill.svg"
+                                            class="local-icon w-5 h-5 icon-mood-comfort group-hover/item:scale-110 transition-transform"><span
+                                            class="text-xs font-kufi text-gray-300 group-hover/item:text-white transition-colors">طمأنينة</span>
+                                    </button>
+                                    <button onclick="Engine.filterByMood('sad')"
+                                        class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-right border-b border-white/5 group/item">
+                                        <img src="../assets/icon/svg/cloud-rain-fill.svg"
+                                            class="local-icon w-5 h-5 icon-mood-sad group-hover/item:scale-110 transition-transform"><span
+                                            class="text-xs font-kufi text-gray-300 group-hover/item:text-white transition-colors">مواساة</span>
+                                    </button>
+                                    <button onclick="Engine.filterByMood('sleep')"
+                                        class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-right border-b border-white/5 group/item">
+                                        <img src="../assets/icon/svg/moon-stars-fill.svg"
+                                            class="local-icon w-5 h-5 icon-mood-sleep group-hover/item:scale-110 transition-transform"><span
+                                            class="text-xs font-kufi text-gray-300 group-hover/item:text-white transition-colors">للنوم</span>
+                                    </button>
+                                    <button onclick="Engine.filterByMood('fear')"
+                                        class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 text-right group/item">
+                                        <img src="../assets/icon/svg/shield-check-fill.svg"
+                                            class="local-icon w-5 h-5 icon-mood-fear group-hover/item:scale-110 transition-transform"><span
+                                            class="text-xs font-kufi text-gray-300 group-hover/item:text-white transition-colors">سكينة</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button id="btn-time-aware"
+                                class="hidden flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-green-600/10 border border-emerald-500/30 text-emerald-400 text-xs font-kufi hover:brightness-125 transition-all shadow-[0_0_10px_rgba(79,240,183,0.1)] h-8 whitespace-nowrap">
+                                <img src="../assets/icon/svg/sun-fill.svg" class="local-icon w-4 h-4 icon-accent">
+                                <span id="time-aware-text" class="pt-0.5">أذكار الصباح</span>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="filter-status-banner"
+                    class="hidden mb-4 flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/5">
+                    <div class="flex items-center gap-2">
+                        <i id="filter-status-icon" class="fas fa-heart text-red-400 text-sm"></i>
+                        <span id="filter-status-text" class="text-xs md:text-sm font-kufi text-gray-300 pt-0.5">سورك
+                            المفضلة</span>
+                    </div>
+                    <button onclick="Engine.clearFilter()"
+                        class="text-[10px] md:text-xs font-kufi text-gray-500 hover:text-white transition-colors flex items-center gap-1 bg-white/5 px-2.5 py-1 rounded-full border border-white/5 hover:border-white/10">
+                        <i class="fas fa-times text-[9px]"></i>
+                        <span>إلغاء</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4" id="main-grid"
+                    dir="rtl">
+                    <!-- الكروت تتبنى ديناميكياً من listen.js -->
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <div id="global-player" class="fixed bottom-0 left-0 right-0 lg:right-[280px] z-50 transition-all duration-300">
+        <div
+            class="relative bg-[#080c0c]/[0.97] backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_-15px_rgba(0,0,0,1)]">
+
+            <!-- === شريط التقدم العلوي (Seek Bar) === -->
+            <div class="absolute top-0 left-0 right-0 h-[3px] bg-white/10 cursor-pointer group/seek overflow-visible"
+                id="seek-bar-container">
+                <div class="h-full bg-quran-accent shadow-[0_0_8px_rgba(79,240,183,0.4)] absolute top-0 right-0 rounded-l-full pointer-events-none transition-[width] duration-100"
+                    id="progress-bar" style="width: 0%"></div>
+                <div id="seek-knob"
+                    class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-quran-accent opacity-0 group-hover/seek:opacity-100 transition-all duration-200 cursor-grab active:cursor-grabbing z-[9999]">
+                </div>
+                <div class="absolute inset-0 -top-4 -bottom-4 z-10"></div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ========== تصميم الموبايل (صفين) ========== -->
+            <!-- ============================================ -->
+            <div class="md:hidden">
+                <!-- الصف الأول: صورة + اسم + أزرار -->
+                <div class="flex items-center gap-3 px-3 pt-[7px] pb-1">
+                    <div id="player-art-container"
+                        class="relative w-10 h-10 rounded-full bg-black/50 border border-white/10 overflow-hidden flex-shrink-0 animate-spin-slow shadow-md"
+                        style="animation-play-state: paused;">
+                        <img id="player-img" src=""
+                            class="w-full h-full object-cover opacity-0 transition-opacity duration-500">
+                        <div id="player-placeholder"
+                            class="absolute inset-0 flex items-center justify-center text-gray-600">
+                            <img src="../assets/icon/svg/music-note-fill.svg" class="local-icon icon-gray w-4 h-4">
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center min-w-0 flex-1">
+                        <h4 id="player-title"
+                            class="text-white font-quranText text-sm font-bold truncate leading-tight">
+                            اختر سورة للبدء</h4>
+                        <span id="player-reciter" class="text-[11px] text-gray-500 font-kufi truncate">القرآن
+                            الكريم</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <!-- زر الصوت مع شريط عمودي -->
+                        <div class="relative" id="mobile-volume-wrapper">
+                            <button id="btn-volume-mobile" onclick="Engine.toggleMobileVolume()"
+                                class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors active:scale-90">
+                                <i class="fas fa-volume-up text-[14px]" id="volume-icon-mobile"></i>
+                            </button>
+                            <!-- شريط الصوت العمودي (يطلع لفوق) -->
+                            <div id="mobile-volume-popup" class="hidden absolute bottom-full mb-3 z-[9999]"
+                                style="left: 50%; margin-left: -26px;">
+                                <div class="bg-[#0a0f0f]/95 backdrop-blur-xl border border-white/10 rounded-2xl py-3 shadow-[0_-8px_30px_rgba(0,0,0,0.8)] flex flex-col items-center gap-1.5"
+                                    style="width: 52px;">
+                                    <span id="mobile-volume-label"
+                                        class="text-[13px] font-mono text-white font-bold tabular-nums mb-3"
+                                        style="min-width: 36px; text-align: center;">100%</span>
+                                    <div class="relative w-[8px] h-[120px] bg-white/10 rounded-full"
+                                        id="mobile-volume-track" style="touch-action: none;">
+                                        <div class="absolute bottom-0 left-0 w-full bg-quran-accent rounded-full pointer-events-none"
+                                            id="mobile-volume-fill" style="height:100%"></div>
+                                        <div class="absolute w-4 h-4 bg-white rounded-full shadow-lg border-2 border-quran-accent pointer-events-none"
+                                            id="mobile-volume-knob" style="left: 0; margin-left: -4px; bottom: 100%;">
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-volume-off text-[10px] text-gray-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="Engine.playNext()"
+                            class="text-gray-400 hover:text-white transition-colors p-1.5 active:scale-90">
+                            <img src="../assets/icon/svg/skip-forward-fill.svg" class="local-icon icon-white w-4 h-4">
+                        </button>
+                        <button id="play-btn" onclick="Engine.togglePlay()"
+                            class="w-9 h-9 rounded-full bg-quran-accent text-quran-base flex items-center justify-center active:scale-90 transition-all shadow-[0_0_15px_rgba(79,240,183,0.25)] border border-quran-accent/50">
+                            <img src="../assets/icon/svg/play-fill.svg" class="local-icon w-4 h-4"
+                                style="filter: brightness(0);">
+                        </button>
+                        <button onclick="Engine.playPrev()"
+                            class="text-gray-400 hover:text-white transition-colors p-1.5 active:scale-90">
+                            <img src="../assets/icon/svg/skip-back-fill.svg" class="local-icon icon-white w-4 h-4">
+                        </button>
+                    </div>
+                </div>
+
+                <!-- الصف الثاني: أدوات + وقت -->
+                <div class="flex items-center justify-between px-3 pb-[6px] gap-2">
+                    <div class="flex items-center gap-0.5">
+                        <button id="btn-repeat" onclick="Engine.cycleRepeatMode()" title="تكرار"
+                            class="player-tool-btn">
+                            <i class="fas fa-sync-alt text-[13px]"></i>
+                            <span id="repeat-badge" class="tool-badge hidden">1</span>
+                        </button>
+                        <button id="btn-sleep" onclick="Engine.toggleSleepPopup()" title="مؤقت النوم"
+                            class="player-tool-btn">
+                            <i class="fas fa-moon text-[13px]"></i>
+                        </button>
+                        <button id="btn-speed" onclick="Engine.cycleSpeed()" title="سرعة التشغيل"
+                            class="player-tool-btn">
+                            <span class="speed-display" id="speed-label">1x</span>
+                        </button>
+                        <button id="btn-download-surah" onclick="Engine.downloadCurrentSurah()" title="تحميل السورة"
+                            class="player-tool-btn">
+                            <i class="fas fa-cloud-download-alt text-[13px]"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[10px] font-mono text-gray-500 tabular-nums">
+                        <span id="current-time" class="min-w-[32px] text-left">00:00</span>
+                        <div class="w-10 h-[2px] bg-white/10 rounded-full overflow-hidden">
+                            <div id="progress-bar-mini"
+                                class="h-full w-0 bg-gray-500/50 rounded-full transition-[width] duration-200"></div>
+                        </div>
+                        <span id="total-duration" class="min-w-[32px] text-right">00:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- ====== تصميم الديسكتوب (صف واحد أفقي) ====== -->
+            <!-- ============================================== -->
+            <div class="hidden md:flex items-center justify-between px-6 py-2.5">
+
+                <!-- القسم الأيمن: صورة + اسم السورة -->
+                <div class="flex items-center gap-3 min-w-0 w-[220px]">
+                    <div id="player-art-container-desktop"
+                        class="relative w-10 h-10 rounded-full bg-black/50 border border-white/10 overflow-hidden flex-shrink-0 animate-spin-slow shadow-md"
+                        style="animation-play-state: paused;">
+                        <img id="player-img-desktop" src=""
+                            class="w-full h-full object-cover opacity-0 transition-opacity duration-500">
+                        <div id="player-placeholder-desktop"
+                            class="absolute inset-0 flex items-center justify-center text-gray-600">
+                            <img src="../assets/icon/svg/music-note-fill.svg" class="local-icon icon-gray w-4 h-4">
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center min-w-0 flex-1">
+                        <h4 id="player-title-desktop"
+                            class="text-white font-quranText text-[15px] font-bold truncate leading-tight">
+                            اختر سورة للبدء</h4>
+                        <span id="player-reciter-desktop" class="text-[12px] text-gray-500 font-kufi truncate">القرآن
+                            الكريم</span>
+                    </div>
+                </div>
+
+                <!-- القسم الأوسط: الوقت + أزرار التحكم في صف واحد -->
+                <div class="flex items-center gap-3">
+                    <span id="current-time-desktop"
+                        class="text-[11px] font-mono text-gray-500 tabular-nums min-w-[36px] text-left">00:00</span>
+                    <button onclick="Engine.playNext()"
+                        class="text-gray-400 hover:text-white transition-colors p-1.5 active:scale-90">
+                        <img src="../assets/icon/svg/skip-forward-fill.svg" class="local-icon icon-white w-4 h-4">
+                    </button>
+                    <button id="play-btn-desktop" onclick="Engine.togglePlay()"
+                        class="w-10 h-10 rounded-full bg-quran-accent text-quran-base flex items-center justify-center active:scale-90 transition-all shadow-[0_0_12px_rgba(79,240,183,0.2)] border border-quran-accent/50 hover:shadow-[0_0_20px_rgba(79,240,183,0.35)]">
+                        <img src="../assets/icon/svg/play-fill.svg" class="local-icon w-4 h-4"
+                            style="filter: brightness(0);">
+                    </button>
+                    <button onclick="Engine.playPrev()"
+                        class="text-gray-400 hover:text-white transition-colors p-1.5 active:scale-90">
+                        <img src="../assets/icon/svg/skip-back-fill.svg" class="local-icon icon-white w-4 h-4">
+                    </button>
+                    <span id="total-duration-desktop"
+                        class="text-[11px] font-mono text-gray-500 tabular-nums min-w-[36px] text-right">00:00</span>
+                </div>
+
+                <!-- شريط التقدم المصغر مخفي - الرئيسي كفاية -->
+                <div class="hidden">
+                    <div id="progress-bar-mini-desktop" class="w-0"></div>
+                </div>
+
+                <!-- القسم الأيسر: الأدوات -->
+                <div class="flex items-center gap-1.5 justify-end flex-shrink-0 transition-all duration-300">
+                    <button id="btn-repeat-desktop" onclick="Engine.cycleRepeatMode()" title="تكرار"
+                        class="player-tool-btn !w-[36px] !h-[36px]">
+                        <i class="fas fa-sync-alt text-[14px]"></i>
+                        <span id="repeat-badge-desktop" class="tool-badge hidden">1</span>
+                    </button>
+                    <button id="btn-sleep-desktop" onclick="Engine.toggleSleepPopup()" title="مؤقت النوم"
+                        class="player-tool-btn !w-[36px] !h-[36px]">
+                        <i class="fas fa-moon text-[14px]"></i>
+                    </button>
+                    <button id="btn-speed-desktop" onclick="Engine.cycleSpeed()" title="سرعة التشغيل"
+                        class="player-tool-btn !w-[36px] !h-[36px]">
+                        <span class="speed-display" id="speed-label-desktop">1x</span>
+                    </button>
+                    <button id="btn-download-surah-desktop" onclick="Engine.downloadCurrentSurah()" title="تحميل السورة"
+                        class="player-tool-btn !w-[36px] !h-[36px]">
+                        <i class="fas fa-cloud-download-alt text-[14px]"></i>
+                    </button>
+
+                    <!-- كنترول الصوت مع شريط أفقي -->
+                    <div class="volume-control-wrapper" id="volume-wrapper">
+                        <button class="player-tool-btn !w-[36px] !h-[36px] volume-btn" id="btn-volume-desktop"
+                            onclick="Engine.toggleMute()">
+                            <i class="fas fa-volume-up text-[14px]" id="volume-icon-desktop"></i>
+                        </button>
+                        <div class="volume-slider-track" id="volume-track">
+                            <div class="volume-slider-fill" id="volume-fill" style="width: 100%"></div>
+                            <div class="volume-slider-knob" id="volume-knob" style="left: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الخط المضيء العلوي -->
+            <div
+                class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-quran-accent/30 to-transparent">
+            </div>
+        </div>
+
+        <!-- Hidden mobile play button for backward compatibility -->
+        <button id="play-btn-mobile" onclick="Engine.togglePlay()" class="hidden"></button>
+        <audio id="audio-player" crossorigin="anonymous"></audio>
+    </div>
+
+
+    <!-- ======== نافذة مؤقت النوم الاحترافية ======== -->
+    <div class="sleep-popup-overlay" id="sleep-overlay" onclick="Engine.closeSleepPopup()"></div>
+    <div class="sleep-popup" id="sleep-popup">
+        <!-- الإطار اللي بيلف -->
+        <div class="sleep-popup-border"></div>
+
+        <!-- المحتوى -->
+        <div class="sleep-popup-inner">
+            <!-- الهيدر -->
+            <div class="sleep-popup-header">
+                <div class="sleep-popup-title">
+                    <i class="fas fa-moon"></i>
+                    <span>مؤقت النوم</span>
+                </div>
+                <div class="sleep-popup-close" onclick="Engine.closeSleepPopup()">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+
+            <!-- خيارات الوقت -->
+            <div class="sleep-options-grid" id="sleep-options">
+                <button class="sleep-option-btn" onclick="Engine.setSleepTimer(15)" data-minutes="15">
+                    <span class="sleep-option-time">١٥</span>
+                    <span class="sleep-option-label">دقيقة</span>
+                </button>
+                <button class="sleep-option-btn" onclick="Engine.setSleepTimer(30)" data-minutes="30">
+                    <span class="sleep-option-time">٣٠</span>
+                    <span class="sleep-option-label">دقيقة</span>
+                </button>
+                <button class="sleep-option-btn" onclick="Engine.setSleepTimer(45)" data-minutes="45">
+                    <span class="sleep-option-time">٤٥</span>
+                    <span class="sleep-option-label">دقيقة</span>
+                </button>
+                <button class="sleep-option-btn" onclick="Engine.setSleepTimer(60)" data-minutes="60">
+                    <span class="sleep-option-time">٦٠</span>
+                    <span class="sleep-option-label">دقيقة</span>
+                </button>
+            </div>
+
+            <!-- عرض العد التنازلي (مخفي لحد ما المستخدم يختار) -->
+            <div class="sleep-active-display hidden" id="sleep-active-display">
+                <div class="countdown-big" id="sleep-countdown-big">00:00</div>
+                <div class="countdown-label">متبقي على الإيقاف التلقائي</div>
+            </div>
+
+            <!-- زر إلغاء -->
+            <button class="sleep-cancel-btn" id="sleep-cancel-btn" onclick="Engine.cancelSleepTimer()">
+                <i class="fas fa-times-circle"></i>
+                <span>إلغاء المؤقت</span>
+            </button>
+        </div>
+    </div>
+
+
+    <script src="../assets/js/app-core.js"></script>
+    <script src="../assets/js/search/reciter-search.js"></script>
+    <script src="../assets/js/pages/duration-loader.js"></script>
+    <script src="../assets/js/pages/listen.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => { Engine.initVolumeSlider(); Engine.initMobileVolumeSlider(); Engine.initMoodMenu(); });</script>
+    <script type="module">
+        import { initSupabase, onAuthStateChange, renderUserProfile, renderLoginButton } from '../assets/js/auth.js';
+        import { initProfileSystem } from '../assets/js/components/profile-manager.js';
+
+        const SUPABASE_URL = 'https://kstknnfyesrthyjlrlle.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdGtubmZ5ZXNydGh5amxybGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NzUyMDksImV4cCI6MjA3OTQ1MTIwOX0.PQRPsv0l9-b7wwwKnnHBJGY6PO0JarcVpihULMOhAeE';
+
+        const supabaseClient = initSupabase(SUPABASE_URL, SUPABASE_KEY);
+        window.supabase = { createClient: () => supabaseClient };
+
+        async function initAuthSystem() {
+            // تحديث الهيدر فقط (الصفحة مفيهاش قائمة جانبية)
+            onAuthStateChange((user) => {
+                if (user) {
+                    initProfileSystem(user);
+                } else {
+                    initProfileSystem(null);
+                }
+            });
+
+            // التحقق المبدئي عند تحميل الصفحة
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                initProfileSystem(session.user);
+            } else {
+                initProfileSystem(null);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initAuthSystem);
+    </script>
+
+    <div id="floating-download-widget"
+        class="fixed top-4 left-4 z-[999] transition-all duration-500 transform translate-y-[-150%] flex items-center gap-3">
+
+        <div class="relative w-16 h-16 flex items-center justify-center">
+            <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#333" stroke-width="6" />
+                <circle id="widget-progress-ring" cx="50" cy="50" r="45" fill="none" stroke="var(--color-accent)"
+                    stroke-width="6" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283"
+                    class="transition-all duration-300" />
+            </svg>
+
+            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-black shadow-lg z-10">
+                <img id="widget-reciter-img" src="" class="w-full h-full object-cover">
+            </div>
+        </div>
+
+        <div class="bg-black/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-xl">
+            <div class="text-[10px] text-gray-400 font-kufi mb-0.5">جاري التحميل...</div>
+            <div id="widget-surah-name" class="text-xs text-white font-bold font-kufi">سورة الفاتحة</div>
+            <div id="widget-percent-text" class="text-[10px] text-[var(--color-accent)] font-mono mt-1">0%</div>
+        </div>
+    </div>
+</body>
+
+</html>

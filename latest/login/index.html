@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunnah Pro - تسجيل الدخول</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ================= VARIABLES ================= */
+        :root {
+            --bg-deep: #020a0a;
+            --bg-surface: #0d1f1f;
+            --primary: #4ff0b7;
+            --primary-dark: #2dd498;
+            --gold: #d4af37;
+            --text: #ffffff;
+            --text-muted: #8899a6;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 0%, #1a4d4d 0%, #020a0a 60%);
+        }
+
+        /* ================= HEADER ================= */
+        header {
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 200;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* ================= CONTAINER (The Box) ================= */
+        .container {
+            background: var(--bg-surface);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 0 1px var(--border);
+            position: relative;
+            overflow: hidden;
+            width: 1100px;
+            max-width: 95%;
+            min-height: 650px;
+            /* ارتفاع ثابت لضمان عدم قص المحتوى */
+        }
+
+        /* ================= FORMS AREA ================= */
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+            width: 50%;
+            /* كل فورم يأخذ نصف المساحة */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+        }
+
+        /* Sign In Form (Default Left) */
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        /* Sign Up Form (Default Right - Hidden) */
+        .sign-up-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* === ANIMATION LOGIC (The Fix) === */
+
+        /* Move Sign In to the Right and Hide */
+        .container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* Move Sign Up to the Right (Into View) and Show */
+        .container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        @keyframes show {
+
+            0%,
+            49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+
+        /* ================= FORM STYLES ================= */
+        form {
+            width: 100%;
+            max-width: 380px;
+            /* تحديد عرض الفورم ليكون في المنتصف */
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .social-btn:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+
+        .input-box input:focus {
+            border-color: var(--primary);
+            background: rgba(79, 240, 183, 0.05);
+        }
+
+        .input-box input:focus+i {
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 10px 20px rgba(79, 240, 183, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(79, 240, 183, 0.4);
+        }
+
+        .separator {
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 12px;
+            position: relative;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .separator::before {
+            left: 0;
+        }
+
+        .separator::after {
+            right: 0;
+        }
+
+        /* ================= OVERLAY (THE MOVING PART) ================= */
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+            /* Fix: Ensure border radius matches container */
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        /* Move Overlay to Left */
+        .container.right-panel-active .overlay-container {
+            transform: translateX(-100%);
+            border-radius: 30px 0 0 30px;
+            /* Adjust radius on movement */
+        }
+
+        .overlay {
+            background: linear-gradient(135deg, #0f3a3a 0%, #040f0f 100%);
+            background-image: url("https://www.transparenttextures.com/patterns/arabesque.png"), linear-gradient(135deg, #0f3a3a 0%, #040f0f 100%);
+            background-blend-mode: overlay;
+            background-repeat: repeat;
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            /* Double width to hold both panels */
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        /* OVERLAY PANELS */
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            /* Each panel is 50% of the 200% overlay (so 100% of visible area) */
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* Left Panel (Shows during Sign Up) */
+        /* IMPORTANT FIX: Was -20%, causing cutoff. Now logic is simpler. */
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .container.right-panel-active .overlay-left {
+            transform: translateX(0);
+        }
+
+        /* Right Panel (Shows during Sign In) */
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .container.right-panel-active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        /* Overlay Text */
+        .overlay-panel h2 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .overlay-panel p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #d1d5db;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-ghost:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .floating-3d {
+            font-size: 70px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            filter: drop-shadow(0 10px 20px rgba(79, 240, 183, 0.3));
+            animation: float 5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .arabic-quote {
+            font-family: 'Amiri', serif;
+            font-size: 20px;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-quran"></i>
+            <span>Quran Pro</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#" class="btn-help"
+                style="border: 1px solid var(--border); padding: 8px 20px; border-radius: 20px;">Help</a>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container" id="container">
+
+        <!-- Sign Up Form (Right Side when Active) -->
+        <div class="form-container sign-up-container">
+            <form action="#">
+                <h1>Create Account</h1>
+                <p class="subtitle">Start your spiritual journey today</p>
+
+                <div class="social-login">
+                    <div class="social-btn"><i class="fab fa-google"></i></div>
+                    <div class="social-btn"><i class="fab fa-apple"></i></div>
+                    <div class="social-btn"><i class="fab fa-facebook-f"></i></div>
+                </div>
+
+                <p class="separator">or use your email</p>
+
+                <div class="input-box"><input type="text" placeholder="Full Name" /><i class="fas fa-user"></i></div>
+                <div class="input-box"><input type="email" placeholder="Email" /><i class="fas fa-envelope"></i></div>
+                <div class="input-box"><input type="password" placeholder="Password" /><i class="fas fa-lock"></i></div>
+
+                <button class="btn-primary">Sign Up</button>
+            </form>
+        </div>
+
+        <!-- Sign In Form (Left Side Default) -->
+        <div class="form-container sign-in-container">
+            <form action="#">
+                <h1>Welcome Back</h1>
+                <p class="subtitle">Please login to your account</p>
+
+                <div class="social-login">
+                    <div class="social-btn"><i class="fab fa-google"></i></div>
+                    <div class="social-btn"><i class="fab fa-apple"></i></div>
+                </div>
+
+                <p class="separator">or login with email</p>
+
+                <div class="input-box"><input type="email" placeholder="Email" /><i class="fas fa-envelope"></i></div>
+                <div class="input-box"><input type="password" placeholder="Password" /><i class="fas fa-lock"></i></div>
+
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="#" style="font-size: 12px; color: var(--text-muted); text-decoration: none;">Forgot
+                        Password?</a>
+                </div>
+
+                <button class="btn-primary">Sign In</button>
+            </form>
+        </div>
+
+        <!-- Overlay Container (Moves Left/Right) -->
+        <div class="overlay-container">
+            <div class="overlay">
+
+                <!-- Left Panel (Visible during Sign Up) -->
+                <div class="overlay-panel overlay-left">
+                    <i class="fas fa-kaaba floating-3d"></i>
+                    <div class="arabic-quote">وَاعْتَصِمُوا بِحَبْلِ اللَّهِ جَمِيعًا</div>
+                    <h2>One Ummah</h2>
+                    <p>Already have an account? <br>Login with your personal info to continue.</p>
+                    <button class="btn-ghost" id="signIn">Sign In</button>
+                </div>
+
+                <!-- Right Panel (Visible during Sign In) -->
+                <div class="overlay-panel overlay-right">
+                    <i class="fas fa-book-quran floating-3d"></i>
+                    <div class="arabic-quote">اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ</div>
+                    <h2>Quran Pro</h2>
+                    <p>Join us today and explore the largest library <br>of Quranic resources.</p>
+                    <button class="btn-ghost" id="signUp">Sign Up</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initSupabase, loginWithGoogle, onAuthStateChange, getCurrentUser } from '../assets/js/auth.js';
+
+        const SUPABASE_URL = 'https://kstknnfyesrthyjlrlle.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdGtubmZ5ZXNydGh5amxybGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NzUyMDksImV4cCI6MjA3OTQ1MTIwOX0.PQRPsv0l9-b7wwwKnnHBJGY6PO0JarcVpihULMOhAeE';
+
+        initSupabase(SUPABASE_URL, SUPABASE_KEY);
+
+        // UI Logic
+        const signUpBtn = document.getElementById('signUp');
+        const signInBtn = document.getElementById('signIn');
+        const container = document.getElementById('container');
+
+        signUpBtn.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInBtn.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+
+        // Auth Logic
+        // Check if already logged in
+        getCurrentUser().then(user => {
+            if (user) {
+                window.location.href = '../Dashboard/index.html';
+            }
+        });
+
+        // Listen for changes
+        onAuthStateChange(user => {
+            if (user) {
+                window.location.href = '../Dashboard/index.html';
+            }
+        });
+
+        // Bind Google Buttons
+        window.handleGoogleLogin = function () {
+            // Redirect to Dashboard after login
+            const dashboardUrl = new URL('../Dashboard/index.html', window.location.href).href;
+            loginWithGoogle(dashboardUrl);
+        }
+
+        // Attach to buttons (Google icons)
+        document.querySelectorAll('.fa-google').forEach(icon => {
+            icon.parentElement.onclick = window.handleGoogleLogin;
+        });
+
+        // Handle Form Submits (Prevent default for now)
+        document.querySelectorAll('form').forEach(form => {
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                alert('يرجى استخدام تسجيل الدخول عبر Google حالياً');
+            };
+        });
+
+    </script>
+
+</body>
+
+</html>

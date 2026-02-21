@@ -1,0 +1,3528 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>التقويم الإسلامي الملكي - Sunnah Pro</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/icon/favicon.svg">
+    <link rel="shortcut icon" href="../assets/icon/favicon.ico">
+    <link rel="manifest" href="../assets/icon/site.webmanifest">
+    <meta name="theme-color" content="#020a0a">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Reem+Kufi:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+    <script src="../assets/lottie/lottie.min.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #020a0a;
+            --bg-surface: #0a1414;
+            --bg-card: rgba(12, 20, 20, 0.75);
+            --bg-card-hover: rgba(18, 30, 30, 0.85);
+            --sidebar-bg: #050f0f;
+            --primary: #4ff0b7;
+            --primary-dim: rgba(79, 240, 183, 0.08);
+            --primary-glow: rgba(79, 240, 183, 0.35);
+            --primary-strong: rgba(79, 240, 183, 0.5);
+            --royal-gold: #d4af37;
+            --gold: #d4af37; /* ضيف السطر ده ضروري عشان الكود يقرا اللون */
+            --royal-gold-dim: rgba(212, 175, 55, 0.12);
+            --royal-gold-glow: rgba(212, 175, 55, 0.4);
+            --accent-rose: #ff6b9d;
+            --accent-blue: #6bc5ff;
+            --accent-purple: #a78bfa;
+            --text: #e8edf5;
+            --text-muted: #7a8a9a;
+            --text-dim: #4a5568;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --border-gold: rgba(212, 175, 55, 0.25);
+            --header-height: 70px;
+            --sidebar-width: 280px;
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-full: 9999px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --shadow-glow-green: 0 0 30px rgba(79, 240, 183, 0.15);
+            --shadow-glow-gold: 0 0 30px rgba(212, 175, 55, 0.15);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-deep);
+            color: var(--text);
+            font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #666;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+
+        /* Firefox scrollbar */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #666 transparent;
+        }
+
+        /* ========== PARTICLE CANVAS ========== */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ========== LAYOUT ========== */
+        .main-content {
+            margin-right: var(--sidebar-width);
+            padding-top: var(--header-height);
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-content.expanded {
+            margin-right: 90px;
+        }
+
+        .main-container {
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Large Screens - Cap Size */
+        @media (min-width: 1920px) {
+            .main-container {
+                max-width: 1400px;
+                padding: 25px;
+            }
+
+            .mega-hero {
+                max-height: 420px;
+                min-height: 360px;
+            }
+
+            .hero-right {
+                padding: 40px 50px;
+            }
+
+            .hijri-date-mega {
+                font-size: 52px;
+            }
+
+            .hero-left {
+                width: 320px;
+                padding: 40px 35px;
+            }
+
+            .season-lottie {
+                width: 220px;
+                height: 220px;
+            }
+
+            .stat-value {
+                font-size: 26px;
+            }
+
+            .year-progress-pct {
+                font-size: 48px;
+            }
+        }
+
+        /* ========== TOP NAVBAR ========== */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background: rgba(2, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-toggle {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            position: relative;
+            z-index: 3000;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-brand-icon {
+            width: 38px;
+            height: 38px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .nav-brand-text {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .today-nav-btn {
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(79, 240, 183, 0.3);
+            background: rgba(79, 240, 183, 0.08);
+            color: var(--primary);
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .today-nav-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        /* === Mobile Header Optimizations === */
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 56px;
+            }
+            .top-navbar {
+                padding: 0 12px;
+            }
+            .menu-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            .nav-brand-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 18px;
+            }
+            .nav-brand-text {
+                font-size: 16px;
+                line-height: 1;
+            }
+            .countdown-section {
+                padding: 16px;
+            }
+            .countdown-event {
+                font-size: 22px;
+                margin-bottom: 16px;
+            }
+        }
+
+        /* ========== GLASS CARD ========== */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        /* ========== SCROLL REVEAL ========== */
+        .reveal-section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .reveal-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== TODAY EVENT BANNER ========== */
+        .today-event-banner {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(255, 107, 157, 0.05), rgba(0, 0, 0, 0.3));
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: var(--radius-xl);
+            display: none;
+            align-items: center;
+            gap: 20px;
+            padding: 22px 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            animation: bannerPulse 3s infinite alternate;
+        }
+
+        @keyframes bannerPulse {
+            0% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
+            }
+
+            100% {
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+            }
+        }
+
+        .today-event-banner::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.03));
+            pointer-events: none;
+        }
+
+        .banner-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--gold), #f0d060);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-size: 22px;
+            flex-shrink: 0;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+            animation: iconSpin 6s linear infinite;
+        }
+
+        @keyframes iconSpin {
+
+            0%,
+            100% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(5deg) scale(1.05);
+            }
+        }
+
+        .banner-title {
+            color: var(--gold);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-family: 'Reem Kufi';
+        }
+
+        .banner-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           ███████╗██╗     ██╗███████╗    ██╗  ██╗███████╗██████╗ ██████╗     ███████╗███████╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗
+           ╚══██╔══╝██║     ██║██╔════╝    ██║  ██║██╔════╝██╔══██╗██╔══██╗    ██╔════╝██╔════╝██╔════╝╚══██╔══╝██║██╔════╝ ████╗  ██║
+              ██║   ███████║█████╗        ███████║█████╗  ██████╔╝██║  ██║    ███████╗█████╗  ██║       ██║   ██║██║  ██║██╔██╗ ██║
+              ██║   ██╔══██║██╔══╝        ██╔══██║██╔══╝  ██╔══██╗██║  ██║    ╚════██║██╔══╝  ██║       ██║   ██║██║  ██║██║╚██╗██║
+              ██║   ██║  ██║███████╗    ██║  ██║███████╗██║  ██║╚██████╔╝    ███████║███████╗╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║
+              ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝     ╚══════╝╚══════╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+           ══════════════════════════════════════════════════════════════════ */
+
+        /* HERO CONTAINER - Dashboard Style */
+        .mega-hero {
+            position: relative;
+            border-radius: 25px;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            overflow: hidden;
+            min-height: 360px;
+            max-height: 440px;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #0f3a3a 0%, #020a0a 100%);
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Background Pattern */
+        .mega-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 1;
+            transform: rotate(-15deg);
+        }
+
+        /* Decorative Elements */
+        .hero-corner {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-color: var(--border);
+            z-index: 3;
+            transition: all 0.4s;
+        }
+
+        .hero-corner.top-right {
+            top: 20px;
+            right: 20px;
+            border-top: 2px solid;
+            border-right: 2px solid;
+            border-radius: 0 18px 0 0;
+        }
+
+        .hero-corner.top-left {
+            top: 20px;
+            left: 20px;
+            border-top: 2px solid;
+            border-left: 2px solid;
+            border-radius: 18px 0 0 0;
+        }
+
+        .hero-corner.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            border-bottom: 2px solid;
+            border-right: 2px solid;
+            border-radius: 0 0 18px 0;
+        }
+
+        .hero-corner.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            border-bottom: 2px solid;
+            border-left: 2px solid;
+            border-radius: 0 0 0 18px;
+        }
+
+        .mega-hero:hover .hero-corner {
+            width: 85px;
+            height: 85px;
+            border-color: var(--primary);
+        }
+
+        /* Hero Content Layout */
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            gap: 0;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           RIGHT SIDE - MAIN INFO SECTION
+           ══════════════════════════════════════════════════════════════════ */
+        .hero-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+            padding: 50px 60px;
+            background: linear-gradient(120deg, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+            position: relative;
+        }
+
+        .hero-right::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom,
+                    transparent,
+                    rgba(212, 175, 55, 0.15) 20%,
+                    rgba(212, 175, 55, 0.2) 50%,
+                    rgba(212, 175, 55, 0.15) 80%,
+                    transparent);
+        }
+
+        /* Greeting Section */
+        .greeting-line {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .greeting-emoji {
+            font-size: 32px;
+            animation: wave 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            20% {
+                transform: rotate(20deg);
+            }
+
+            40% {
+                transform: rotate(-10deg);
+            }
+
+            60% {
+                transform: rotate(15deg);
+            }
+
+            80% {
+                transform: rotate(-5deg);
+            }
+        }
+
+        .greeting-text {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        /* Badges */
+        .hero-badge-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.4s;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 22px;
+            border-radius: var(--radius-full);
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .hero-badge:hover::before {
+            left: 100%;
+        }
+
+        .hero-badge.gold {
+            background: rgba(212, 175, 55, 0.12);
+            border: 1.5px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .hero-badge.gold:hover {
+            background: rgba(212, 175, 55, 0.18);
+            border-color: rgba(212, 175, 55, 0.45);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .hero-badge.green {
+            background: rgba(79, 240, 183, 0.1);
+            border: 1.5px solid rgba(79, 240, 183, 0.25);
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(79, 240, 183, 0.08);
+        }
+
+        .hero-badge.green:hover {
+            background: rgba(79, 240, 183, 0.15);
+            border-color: rgba(79, 240, 183, 0.4);
+            box-shadow: 0 6px 20px rgba(79, 240, 183, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .hero-badge i {
+            font-size: 14px;
+        }
+
+        /* Hijri Date - MAIN DISPLAY */
+        .hijri-date-mega {
+            font-family: 'Amiri', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            letter-spacing: -1px;
+            margin: 12px 0;
+            text-shadow:
+                0 2px 20px rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(212, 175, 55, 0.08);
+            opacity: 0;
+            animation: fadeInScale 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.6s;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .hijri-date-mega .hijri-num {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hijri-date-mega .hijri-num::after {
+            content: attr(data-num);
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: blur(20px);
+            opacity: 0.3;
+        }
+
+        /* Gregorian Date */
+        .gregorian-date-line {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 1.2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.8s;
+        }
+
+        .gregorian-date-line .sep {
+            width: 5px;
+            height: 5px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Day Name */
+        .hero-day-name {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            padding: 14px 0 0 0;
+            margin-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            width: fit-content;
+            text-shadow: 0 0 20px rgba(79, 240, 183, 0.3);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 1s;
+        }
+
+        .hero-day-name i {
+            color: var(--gold);
+            font-size: 20px;
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           LEFT SIDE - SEASON/VISUAL SECTION
+           ══════════════════════════════════════════════════════════════════ */
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 380px;
+            flex-shrink: 0;
+            padding: 50px 40px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.04) 0%, rgba(79, 240, 183, 0.02) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-left::before {
+            content: '🌙';
+            position: absolute;
+            left: -30px;
+            bottom: -30px;
+            font-size: 200px;
+            opacity: 0.02;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(2px);
+        }
+
+        /* Season Animation Container */
+        .season-lottie {
+            width: 260px;
+            height: 260px;
+            overflow: visible;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInScale 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.4s;
+        }
+
+        .season-lottie svg {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+            overflow: visible !important;
+            transform: scale(1.5) !important;
+            transform-origin: 50% 50% !important;
+            filter: drop-shadow(0 10px 40px rgba(212, 175, 55, 0.15));
+        }
+
+        /* Season Message */
+        .season-message {
+            font-family: 'Scheherazade New', serif;
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, #f0d060 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 1.2s;
+            /* Fallback for browsers that don't support text gradients */
+            color: var(--gold);
+        }
+
+        /* Ensure the message is visible even if animation fails */
+        .season-message.visible {
+            opacity: 1 !important;
+        }
+
+        /* Moon Visual (if needed as fallback) */
+        .moon-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .moon-orbit-ring {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 190px;
+            height: 190px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 50%;
+            animation: orbitSpin 25s linear infinite;
+        }
+
+        .moon-orbit-ring::after {
+            content: '✦';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: var(--gold);
+            animation: orbitSpin 25s linear infinite reverse;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        @keyframes orbitSpin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .moon-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: moonPulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes moonPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.85);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .moon-sphere {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            transition: all 0.8s ease;
+            box-shadow:
+                inset -30px -30px 60px rgba(0, 0, 0, 0.8),
+                0 0 30px rgba(212, 175, 55, 0.15),
+                0 0 80px rgba(212, 175, 55, 0.08);
+        }
+
+        .moon-phase-label {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            text-shadow: 0 0 20px rgba(79, 240, 183, 0.4);
+        }
+
+        .moon-day-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        /* ========== STATS ROW ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(79, 240, 183, 0.05));
+            opacity: 0;
+            transition: 0.4s;
+            z-index: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-card), 0 0 30px rgba(79, 240, 183, 0.2);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover .stat-icon-wrap {
+            transform: scale(1.1);
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        .stat-icon-wrap {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            position: relative;
+            z-index: 2;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-icon-wrap.green {
+            color: var(--primary);
+        }
+
+        .stat-icon-wrap.gold {
+            color: var(--gold);
+        }
+
+        .stat-icon-wrap.blue {
+            color: #38bdf8;
+        }
+
+        .stat-icon-wrap.rose {
+            color: #f472b6;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-label {
+            font-family: 'Amiri', serif;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===================================================================
+           ███████╗██╗     ██╗██████╗      ██████╗██╗      ██████╗ ██████╗██╗  ██╗
+           ██╔════╝██║     ██║██╔══██╗    ██╔════╝██║     ██╔═══██╗██╔════╝██║ ██╔╝
+           █████╗  ██║     ██║██████╔╝    ██║     ██║     ██║   ██║██║     █████╔╝ 
+           ██╔══╝  ██║     ██║██╔═══╝     ██║     ██║     ██║   ██║██║     ██╔═██╗ 
+           ██║     ███████╗██║██║         ╚██████╗███████╗╚██████╔╝╚██████╗██║  ██╗
+           ╚═╝     ╚══════╝╚═╝╚═╝          ╚═════╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝
+           =================================================================== */
+        .flip-countdown-section {
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            margin-bottom: 35px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(79, 240, 183, 0.06) 0%, transparent 60%),
+                var(--bg-card);
+            border: 1px solid rgba(79, 240, 183, 0.12);
+        }
+
+        .flip-countdown-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--gold), transparent);
+            opacity: 0.5;
+        }
+
+        .countdown-header {
+            margin-bottom: 30px;
+        }
+
+        .countdown-label-text {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 13px;
+            color: var(--primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .countdown-event-name {
+            font-family: 'Amiri', serif;
+            font-size: 34px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 25px rgba(79, 240, 183, 0.15);
+        }
+
+        .countdown-event-name i {
+            color: var(--gold);
+            margin-left: 12px;
+        }
+
+        .flip-clock {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            direction: ltr;
+        }
+
+        .flip-unit-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flip-card-container {
+            position: relative;
+            width: 90px;
+            height: 110px;
+            perspective: 600px;
+        }
+
+        .flip-card-top,
+        .flip-card-bottom {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .flip-card-top {
+            top: 0;
+            background: linear-gradient(180deg, rgba(20, 25, 25, 0.95), rgba(12, 16, 16, 0.95));
+            border-radius: 14px 14px 0 0;
+            border: 1px solid var(--border-light);
+            border-bottom: none;
+            align-items: flex-end;
+            padding-bottom: 0;
+            line-height: 110px;
+        }
+
+        .flip-card-bottom {
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(8, 12, 12, 0.95), rgba(5, 8, 8, 0.95));
+            border-radius: 0 0 14px 14px;
+            border: 1px solid var(--border-light);
+            border-top: none;
+            align-items: flex-start;
+            padding-top: 0;
+            line-height: 0;
+        }
+
+        /* Center line */
+        .flip-card-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 5;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Side notches */
+        .flip-card-container::before {
+            content: '';
+            position: absolute;
+            top: calc(50% - 4px);
+            left: -2px;
+            width: calc(100% + 4px);
+            height: 8px;
+            background: transparent;
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow:
+                inset 4px 0 0 var(--bg-deep),
+                inset -4px 0 0 var(--bg-deep);
+        }
+
+        /* Flip Animation Overlay */
+        .flip-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            z-index: 4;
+            transform-origin: bottom;
+            overflow: hidden;
+            border-radius: 14px 14px 0 0;
+            display: flex;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--gold);
+            background: linear-gradient(180deg, rgba(20, 25, 25, 0.95), rgba(12, 16, 16, 0.95));
+            border: 1px solid var(--border-light);
+            border-bottom: none;
+            align-items: flex-end;
+            line-height: 110px;
+            backface-visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .flip-overlay.flipping {
+            animation: flipDown 0.6s ease-in-out forwards;
+        }
+
+        @keyframes flipDown {
+            0% {
+                transform: rotateX(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: rotateX(-180deg);
+                opacity: 0;
+            }
+        }
+
+        .flip-label {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .flip-separator {
+            font-family: 'Outfit', sans-serif;
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--gold);
+            opacity: 0.4;
+            padding-bottom: 30px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 0.1;
+            }
+        }
+
+        .countdown-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-section::before {
+            content: '';
+            height: 0;
+            opacity: 0;
+            animation: none;
+        }
+
+        @keyframes countdownWave {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.3;
+            }
+
+            33% {
+                transform: scale(1.1) rotate(2deg);
+                opacity: 0.6;
+            }
+
+            66% {
+                transform: scale(0.95) rotate(-1deg);
+                opacity: 0.4;
+            }
+        }
+
+        .countdown-section::after {
+            content: '';
+            height: 0;
+            opacity: 0;
+        }
+
+        .countdown-title {
+            color: var(--primary);
+            font-family: 'Amiri', serif;
+            margin-bottom: 12px;
+            font-size: 14px;
+            opacity: 0.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-event {
+            font-family: 'Scheherazade New', serif;
+            font-size: 38px;
+            color: var(--text);
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(79, 240, 183, 0.15);
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-event i {
+            color: var(--gold);
+            margin-left: 10px;
+        }
+
+        .countdown-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px 28px;
+            min-width: 100px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .countdown-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.04), transparent);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .countdown-box:hover::before {
+            opacity: 1;
+        }
+
+        .countdown-box:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .countdown-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .countdown-value.tick {
+            animation: tickFlip 0.4s ease;
+        }
+
+        @keyframes tickFlip {
+            0% {
+                transform: translateY(-6px) scaleY(0.8);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translateY(2px) scaleY(1.05);
+            }
+
+            100% {
+                transform: translateY(0) scaleY(1);
+                opacity: 1;
+            }
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'Amiri', serif;
+        }
+
+        .countdown-divider {
+            font-size: 36px;
+            color: var(--gold);
+            opacity: 0.3;
+            align-self: flex-start;
+            padding-top: 18px;
+            font-weight: 300;
+        }
+
+        /* ========== CALENDAR + EVENTS LAYOUT ========== */
+        .calendar-events-layout {
+            display: grid;
+            grid-template-columns: 1fr 370px;
+            gap: 25px;
+        }
+
+        /* Calendar Card */
+        .calendar-card {
+            padding: 30px;
+        }
+
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cal-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .cal-nav-btn:hover {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+            box-shadow: var(--shadow-glow-gold);
+        }
+
+        .cal-month-info {
+            text-align: center;
+        }
+
+        .cal-month-hijri {
+            font-family: 'Amiri', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 2px;
+        }
+
+        .cal-month-greg {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .cal-type-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .cal-toggle-group {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            border: 1px solid var(--border-light);
+        }
+
+        .cal-toggle-btn {
+            padding: 7px 18px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .cal-toggle-btn:not(.active):hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .cal-toggle-btn.active {
+            background: linear-gradient(135deg, var(--royal-gold), #f0d060);
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 2px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .cal-weekday {
+            text-align: center;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 8px 0;
+            font-weight: 400;
+        }
+
+        .cal-weekday.friday {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .cal-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .cal-day {
+            aspect-ratio: 1;
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cal-day:not(.empty):hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--border-gold);
+            transform: scale(1.08);
+            z-index: 2;
+        }
+
+        /* Ripple */
+        .cal-day .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            transform: scale(0);
+            animation: rippleAnim 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleAnim {
+            to {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        .cal-day.today {
+            background: linear-gradient(135deg, rgba(79, 240, 183, 0.12), rgba(79, 240, 183, 0.04));
+            border: 1.5px solid var(--primary);
+            box-shadow: 0 0 20px rgba(79, 240, 183, 0.15);
+        }
+
+        .cal-day.today .day-num {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .cal-day.has-event {
+            background: rgba(212, 175, 55, 0.04);
+            border-color: rgba(212, 175, 55, 0.15);
+        }
+
+        .cal-day .event-dot-indicator {
+            width: 5px;
+            height: 5px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 6px;
+            box-shadow: 0 0 6px var(--gold);
+        }
+
+        .day-num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .day-sub {
+            font-family: 'Outfit', sans-serif;
+            font-size: 9px;
+            color: var(--text-dim);
+            margin-top: 1px;
+        }
+
+        .cal-day.friday .day-num {
+            color: var(--primary);
+        }
+
+        /* ========== EVENTS SIDEBAR ========== */
+        .events-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar .nav-item,
+        .nav-links .nav-item {
+            border-bottom: none !important;
+            box-shadow: none !important;
+            background-image: none !important;
+        }
+
+        .ev-card {
+            padding: 22px;
+        }
+
+        .ev-card-title {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ev-card-title i {
+            font-size: 16px;
+        }
+
+        .ev-card-title .title-icon-gold {
+            color: var(--gold);
+        }
+
+        .ev-card-title .title-icon-green {
+            color: var(--primary);
+        }
+
+        .ev-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            align-items: center;
+            transition: var(--transition-fast);
+            border: 1px solid transparent;
+            cursor: default;
+        }
+
+        .ev-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateX(-4px);
+            border-color: rgba(212, 175, 55, 0.12);
+        }
+
+        .ev-item.highlight-gold {
+            background: linear-gradient(100deg, rgba(212, 175, 55, 0.08), transparent);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+        }
+
+        .ev-item.highlight-green {
+            background: linear-gradient(100deg, rgba(79, 240, 183, 0.06), transparent);
+            border: 1px solid rgba(79, 240, 183, 0.15);
+        }
+
+        .ev-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .ev-icon.eid {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .ev-icon.ramadan {
+            color: var(--primary);
+            background: rgba(79, 240, 183, 0.1);
+        }
+
+        .ev-icon.special {
+            color: #a78bfa;
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        .ev-icon.hajj {
+            color: #f472b6;
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        .ev-icon.default {
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .ev-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ev-name {
+            font-family: 'Noto Naskh Arabic', serif;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: var(--text);
+        }
+
+        .ev-date {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .ev-countdown-badge {
+            font-family: 'Outfit', sans-serif;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            background: var(--royal-gold-dim);
+            color: var(--gold);
+            margin-top: 5px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .blessed-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+            transition: var(--transition-fast);
+        }
+
+        .blessed-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .blessed-item.is-today {
+            background: rgba(79, 240, 183, 0.06);
+            border: 1px solid rgba(79, 240, 183, 0.2);
+        }
+
+        .blessed-item.is-today .blessed-name {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .blessed-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blessed-name {
+            font-size: 13px;
+            color: var(--text);
+            font-family: 'Reem Kufi';
+        }
+
+        .blessed-status {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ========== DAY DETAIL MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-overlay.show .modal-content {
+            animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.85) translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(160deg, #0d1818, #080e0e);
+            border: 1px solid var(--border-gold);
+            border-radius: var(--radius-xl);
+            padding: 0;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .modal-header::before {
+            content: '✦';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 12px;
+            color: var(--gold);
+            opacity: 0.3;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            font-size: 14px;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 107, 157, 0.15);
+            color: #f472b6;
+        }
+
+        .modal-hijri-date {
+            font-family: 'Amiri', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .modal-greg-date {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .modal-body {
+            padding: 25px 30px;
+        }
+
+        .modal-info-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .modal-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-info-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .modal-info-label {
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .modal-info-value {
+            font-size: 15px;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .modal-event-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(100deg, rgba(212, 175, 55, 0.1), transparent);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            margin-top: 15px;
+        }
+
+        .modal-event-badge i {
+            color: var(--gold);
+            font-size: 20px;
+        }
+
+        .modal-event-badge span {
+            font-family: 'Noto Naskh Arabic', serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        /* ========== SHIMMER LOADING ========== */
+        .shimmer {
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.03) 25%,
+                    rgba(255, 255, 255, 0.06) 50%,
+                    rgba(255, 255, 255, 0.03) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* ========== YEAR PROGRESS (REDESIGNED) ========== */
+        .year-progress-section {
+            margin-bottom: 35px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-surface);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .year-progress-section::before {
+            content: '';
+            height: 0;
+            opacity: 0;
+        }
+
+        .year-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .year-progress-main {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .year-progress-pct {
+            font-family: 'Outfit', sans-serif;
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--gold);
+            text-shadow: 0 0 18px rgba(212, 175, 55, 0.15);
+            line-height: 1;
+            min-width: 140px;
+        }
+
+        .year-progress-info {
+            flex: 1;
+        }
+
+        .year-progress-label {
+            font-family: 'Amiri', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .year-progress-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .year-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .year-stat i {
+            color: var(--gold);
+            font-size: 16px;
+        }
+
+        .year-stat strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .year-progress-bar-container {
+            width: 100%;
+        }
+
+        .year-progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .year-progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 1.2s ease;
+            position: relative;
+        }
+
+
+        .year-progress-fill::after {
+            content: '';
+            width: 0;
+            height: 0;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1100px) {
+            .main-content {
+                margin-right: 0;
+            }
+
+            .calendar-events-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .events-panel {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container { padding: 16px; }
+                    
+            .greeting-line, .hero-badge-row { display: none !important; }
+
+            .year-progress-months { font-size: 11px; gap: 4px; }
+
+            .mega-hero { flex-direction: column; height: auto !important; max-height: none !important; gap: 0; border-radius: 24px; overflow: hidden; padding: 0; }
+
+            .mega-hero::before { background-size: 60px 60px; animation: patternDrift 30s linear infinite; }
+
+            .mega-hero::after { display: none; }
+
+            .hero-content { flex-direction: column; gap: 0; }
+
+            .hero-right { order: 2; padding: 20px 25px; background: transparent; display: grid !important; grid-template-columns: 1fr auto; grid-template-areas: "hijri day" "greg day"; align-items: center; gap: 5px 15px; text-align: right; }
+
+            .hero-right::before { display: none; }
+
+            .greeting-line { display: none !important; }
+
+            .greeting-emoji { font-size: 28px; }
+
+            .greeting-text { font-size: 15px; }
+
+            .hero-badge-row { justify-content: center; gap: 10px; }
+
+            .hero-badge { padding: 7px 16px; font-size: 12px; }
+
+            .hero-badge i { font-size: 12px; }
+
+            .hijri-date-mega { grid-area: hijri; font-size: 26px !important; margin: 0; line-height: 1.2; align-self: end; }
+            .hijri-date-mega .hijri-num { background: none; -webkit-text-fill-color: initial; color: #ffffff; }
+
+            .gregorian-date-line { grid-area: greg; font-size: 13px; color: var(--text-muted); margin: 0; justify-content: flex-start; align-self: start; }
+
+            .hero-day-name { grid-area: day; margin: 0; padding: 10px 15px; border-top: none; border-right: 1px solid rgba(255, 255, 255, 0.08); width: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 18px; color: var(--primary); }
+
+            .hero-day-name i { font-size: 20px; margin-bottom: 2px; display: block; }
+
+            .hero-left { order: 1; width: 100%; padding: 25px 20px 20px 20px; border: none; background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%); min-height: auto; position: relative; }
+
+            .hero-left::before { font-size: 150px; left: 50%; bottom: -20px; transform: translateX(-50%); }
+            .hero-left::after { content: ''; position: absolute; bottom: 0; left: 15%; width: 70%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.5; }
+
+            .season-lottie { width: 160px; height: 160px; margin-bottom: 5px; }
+
+            .season-lottie svg { transform: scale(1.4) !important; }
+
+            .season-message { font-size: 22px; margin-top: 5px; line-height: 1.3; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+
+            .moon-container { width: 100px; height: 100px; margin-bottom: 12px; }
+
+            .moon-orbit-ring { width: 140px; height: 140px; top: -20px; left: -20px; }
+
+            .moon-orbit-ring::after { font-size: 10px; }
+
+            .moon-glow { width: 150px; height: 150px; }
+
+            .moon-phase-label { font-size: 16px; }
+
+            .moon-day-number { font-size: 12px; }
+
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+            .stat-value { font-size: 24px; }
+            .stats-grid .stat-card:nth-child(3),
+            .stats-grid .stat-card:nth-child(4) {
+                white-space: nowrap;
+            }
+            .stats-grid .stat-card:nth-child(3) .stat-value,
+            .stats-grid .stat-card:nth-child(4) .stat-value {
+                display: inline;
+                margin-bottom: 0;
+            }
+            .stats-grid .stat-card:nth-child(3) .stat-label,
+            .stats-grid .stat-card:nth-child(4) .stat-label {
+                display: inline;
+                margin-left: 8px;
+            }
+            .countdown-section .countdown-boxes { flex-wrap: nowrap; gap: 6px; justify-content: center; }
+            .countdown-section .countdown-box { min-width: 60px; padding: 8px 10px; border-radius: 14px; }
+            .countdown-section .countdown-value { font-size: 26px; margin-bottom: 4px; }
+            .countdown-section .countdown-label { font-size: 11px; }
+            .countdown-section .countdown-divider { font-size: 18px; align-self: center; padding-top: 0; }
+
+            .flip-clock { gap: 8px; }
+
+            .flip-card-container { width: 60px; height: 75px; }
+
+            .flip-card-top, .flip-card-bottom, .flip-overlay { font-size: 30px; }
+
+            .flip-card-top { line-height: 75px; }
+
+            .flip-separator { font-size: 28px; padding-bottom: 22px; }
+
+            .events-panel { grid-template-columns: 1fr; }
+
+            .year-progress-section { padding: 25px 20px; }
+
+            .year-progress-header { flex-direction: column; align-items: flex-start; }
+
+            .year-progress-main { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+            .year-progress-pct { font-size: 42px; min-width: auto; }
+
+            .year-progress-label { font-size: 16px; }
+
+            .year-progress-details { gap: 15px; }
+
+            .year-stat { font-size: 12px; text-align: center; }
+
+            .cal-weekdays, .cal-days { gap: 4px; }
+
+            .day-sub { display: none; }
+
+            .hero-corner { width: 50px; height: 50px; }
+
+            .hero-corner.top-right, .hero-corner.top-left { top: 15px; }
+
+            .hero-corner.bottom-right, .hero-corner.bottom-left { bottom: 15px; }
+
+            .hero-corner.top-right, .hero-corner.bottom-right { right: 15px; }
+
+            .hero-corner.top-left, .hero-corner.bottom-left { left: 15px; }
+        }
+
+        @media (max-width: 400px) {
+            .hijri-date-mega {
+                font-size: 36px;
+                margin: 12px 0 8px 0;
+            }
+
+            .gregorian-date-line {
+                font-size: 14px;
+            }
+
+            .hero-day-name {
+                font-size: 17px;
+            }
+
+            .season-lottie {
+                width: 180px;
+                height: 180px;
+            }
+
+            .season-message {
+                font-size: 23px;
+                /* Ensure visibility on mobile */
+                opacity: 1 !important;
+            }
+
+            .flip-card-container {
+                width: 55px;
+                height: 70px;
+            }
+
+            .flip-card-top,
+            .flip-card-bottom,
+            .flip-overlay {
+                font-size: 28px;
+            }
+
+            .flip-card-top {
+                line-height: 70px;
+            }
+
+            .hero-corner {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        @media (min-width: 1101px) and (max-width: 1700px) {
+            .mega-hero {
+                min-height: 320px;
+                max-height: 380px;
+            }
+            .hero-right {
+                padding: 30px 40px;
+            }
+            .hijri-date-mega {
+                font-size: 48px;
+                margin: 8px 0;
+            }
+            .hero-left {
+                width: 300px;
+                padding: 30px;
+            }
+            .season-lottie {
+                width: 180px;
+                height: 180px;
+            }
+            .stat-card {
+                padding: 18px 15px;
+            }
+            .stat-value {
+                font-size: 24px;
+            }
+        }
+        @media (min-width: 769px) {
+            .sidebar.collapsed {
+                width: 90px !important;
+            }
+            .sidebar.collapsed .nav-text,
+            .sidebar.collapsed span:not(.nav-brand-text) {
+                display: none !important;
+            }
+            .sidebar.collapsed .nav-item {
+                justify-content: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .sidebar.collapsed .sidebar-header,
+            .sidebar.collapsed .user-profile {
+                padding: 10px !important;
+                justify-content: center !important;
+            }
+            .sidebar.collapsed .user-profile h4 {
+                display: none !important;
+            }
+            .main-content.expanded {
+                margin-right: 90px !important;
+            }
+        }
+        @media (min-width: 992px) and (max-width: 1400px) {
+            .main-container {
+                max-width: 95% !important;
+                padding: 20px !important;
+            }
+            .mega-hero {
+                min-height: auto !important;
+                padding-bottom: 30px !important;
+            }
+            .hijri-date-mega {
+                font-size: 3rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particleCanvas"></canvas>
+
+    <div id="sidebar-container"></div>
+
+    <div class="top-navbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="nav-brand">
+                <div class="nav-brand-icon"><i class="fas fa-calendar-alt"></i></div>
+                <span class="nav-brand-text">التقويم الملكي</span>
+            </div>
+        </div>
+        <div class="nav-actions"></div>
+    </div>
+
+    <div class="main-content">
+        <main class="main-container">
+
+            <div class="today-event-banner" id="todayEventBanner">
+                <div class="banner-icon"><i class="fas fa-star"></i></div>
+                <div>
+                    <h2 class="banner-title" id="bannerTitle">اليوم مناسبة خاصة!</h2>
+                    <p class="banner-subtitle" id="bannerSubtitle"></p>
+                </div>
+            </div>
+
+            <section class="mega-hero reveal-section">
+                <div class="hero-corner top-right"></div>
+                <div class="hero-corner top-left"></div>
+                <div class="hero-corner bottom-right"></div>
+                <div class="hero-corner bottom-left"></div>
+
+                <div class="hero-content">
+                    <div class="hero-right">
+                        <div class="greeting-line">
+                            <span class="greeting-emoji" id="greetingEmoji">🌙</span>
+                            <span class="greeting-text" id="greetingText">مساء النور</span>
+                        </div>
+
+                        <div class="hero-badge-row">
+                            <span class="hero-badge gold">
+                                <i class="fas fa-calendar-alt"></i>
+                                التاريخ الهجري
+                            </span>
+                            <span class="hero-badge green" id="seasonBadge">
+                                <i class="fas fa-leaf"></i>
+                                <span id="seasonName">---</span>
+                            </span>
+                        </div>
+
+                        <h1 class="hijri-date-mega" id="hijriDateMain">
+                            <span class="shimmer" style="display:inline-block;width:300px;height:50px;"></span>
+                        </h1>
+
+                        <div class="gregorian-date-line">
+                            <span id="gregorianDateMain">--</span>
+                        </div>
+
+                        <div class="hero-day-name">
+                            <i class="fas fa-calendar-day"></i>
+                            <span id="dayName">---</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-left">
+                        <div id="seasonLottieContainer" class="season-lottie"></div>
+                        <div class="season-message" id="seasonMessage">...</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-grid reveal-section" style="transition-delay: 0.1s;">
+                <div class="stat-card glass-card">
+                    <div class="stat-icon-wrap green"><i class="fas fa-moon"></i></div>
+                    <div class="stat-value" data-target="0" id="hijriYear">---</div>
+                    <div class="stat-label">السنة الهجرية</div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon-wrap gold"><i class="fas fa-calendar-week"></i></div>
+                    <div class="stat-value" data-target="0" id="weekNumber">---</div>
+                    <div class="stat-label">رقم الأسبوع</div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon-wrap blue"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="stat-value" data-target="0" id="daysRemaining">---</div>
+                    <div class="stat-label">يوم متبقي للشهر</div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon-wrap rose"><i class="fas fa-star-and-crescent"></i></div>
+                    <div class="stat-value" data-target="0" id="nextEventDays">---</div>
+                    <div class="stat-label">يوم للمناسبة القادمة</div>
+                </div>
+            </section>
+
+            <section class="year-progress-section reveal-section" style="transition-delay: 0.15s;">
+                <div class="year-progress-header">
+                    <div class="year-progress-main">
+                        <div class="year-progress-pct" id="yearPct">0%</div>
+                        <div class="year-progress-info">
+                            <div class="year-progress-label">من السنة الهجرية <span id="yearHijriNum">1446</span></div>
+                            <div class="year-progress-details">
+                                <div class="year-stat">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span><strong id="daysPassed">0</strong> يوم مضى</span>
+                                </div>
+                                <div class="year-stat">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    <span><strong id="daysRemaining">354</strong> يوم متبقي</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="year-progress-bar-container">
+                    <div class="year-progress-track">
+                        <div class="year-progress-fill" id="yearProgressFill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="countdown-section glass-card reveal-section reveal-delay-2">
+                <p class="countdown-title">⏳ العد التنازلي للمناسبة القادمة</p>
+                <h2 class="countdown-event" id="countdownEventName">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </h2>
+                <div class="countdown-boxes">
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="countdownDays">00</div>
+                        <div class="countdown-label">يوم</div>
+                    </div>
+                    <span class="countdown-divider">:</span>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="countdownHours">00</div>
+                        <div class="countdown-label">ساعة</div>
+                    </div>
+                    <span class="countdown-divider">:</span>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="countdownMinutes">00</div>
+                        <div class="countdown-label">دقيقة</div>
+                    </div>
+                    <span class="countdown-divider">:</span>
+                    <div class="countdown-box">
+                        <div class="countdown-value" id="countdownSeconds">00</div>
+                        <div class="countdown-label">ثانية</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="calendar-events-layout reveal-section" style="transition-delay: 0.25s;">
+                <section class="calendar-card glass-card">
+                    <div class="cal-header">
+                        <button class="cal-nav-btn" onclick="changeMonth(-1)"><i
+                                class="fas fa-chevron-right"></i></button>
+                        <div class="cal-month-info">
+                            <h2 class="cal-month-hijri" id="calendarMonthHijri">...</h2>
+                            <p class="cal-month-greg" id="calendarMonthGregorian">...</p>
+                        </div>
+                        <button class="cal-nav-btn" onclick="changeMonth(1)"><i
+                                class="fas fa-chevron-left"></i></button>
+                    </div>
+
+                    <div class="cal-type-toggle">
+                        <div class="cal-toggle-group">
+                            <button class="cal-toggle-btn active" onclick="setCalendarType('hijri', this)">هجري</button>
+                            <button class="cal-toggle-btn" onclick="setCalendarType('gregorian', this)">ميلادي</button>
+                        </div>
+                    </div>
+
+                    <div class="cal-weekdays">
+                        <div class="cal-weekday">أحد</div>
+                        <div class="cal-weekday">إثنين</div>
+                        <div class="cal-weekday">ثلاثاء</div>
+                        <div class="cal-weekday">أربعاء</div>
+                        <div class="cal-weekday">خميس</div>
+                        <div class="cal-weekday friday">جمعة</div>
+                        <div class="cal-weekday">سبت</div>
+                    </div>
+
+                    <div class="cal-days" id="calendarDays">
+                        <div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>
+                        <div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>
+                        <div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>
+                        <div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>
+                        <div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>
+                        <div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>
+                        <div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>
+                    </div>
+                </section>
+
+                <aside class="events-panel">
+                    <div class="ev-card glass-card">
+                        <h3 class="ev-card-title">
+                            <i class="fas fa-star title-icon-gold"></i> المناسبات القادمة
+                        </h3>
+                        <div id="upcomingEvents"></div>
+                    </div>
+
+                    <div class="ev-card glass-card" style="border-color: rgba(79, 240, 183, 0.12);">
+                        <h3 class="ev-card-title">
+                            <i class="fas fa-heart title-icon-green"></i> الأيام المباركة
+                        </h3>
+                        <div id="blessedDays"></div>
+                    </div>
+
+
+                </aside>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="dayModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                <h2 class="modal-hijri-date" id="modalHijriDate">--</h2>
+                <p class="modal-greg-date" id="modalGregDate">--</p>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================
+        //  PARTICLE SYSTEM
+        // ==========================
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.4 + 0.05;
+                this.color = Math.random() > 0.5 ? '79, 240, 183' : '212, 175, 55';
+                this.pulse = Math.random() * Math.PI * 2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.pulse += 0.02;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                const o = this.opacity * (0.7 + Math.sin(this.pulse) * 0.3);
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.color}, ${o})`;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            const count = Math.min(60, Math.floor(window.innerWidth / 25));
+            particles = [];
+            for (let i = 0; i < count; i++) particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        // ==========================
+        //  SCROLL REVEAL
+        // ==========================
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-section').forEach(el => revealObserver.observe(el));
+
+        // ==========================
+        //  GLOBALS
+        // ==========================
+        let currentHijriDate = null;
+        let currentGregorianDate = new Date();
+        let calendarType = 'hijri';
+        let hijriMonthData = null;
+        let prevFlipValues = { d: '00', h: '00', m: '00', s: '00' };
+
+        const hijriMonths = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
+        const gregorianMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        const arabicDays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+
+        const islamicEventsDB = [
+            { month: 1, day: 1, name: 'رأس السنة الهجرية', icon: 'fa-moon', type: 'special' },
+            { month: 1, day: 9, name: 'صيام تاسوعاء', icon: 'fa-utensils', type: 'special' },
+            { month: 1, day: 10, name: 'يوم عاشوراء', icon: 'fa-heart', type: 'special' },
+            { month: 3, day: 12, name: 'المولد النبوي الشريف', icon: 'fa-star', type: 'special' },
+            { month: 7, day: 1, name: 'بداية شهر رجب', icon: 'fa-gem', type: 'special' },
+            { month: 7, day: 27, name: 'ليلة الإسراء والمعراج', icon: 'fa-cloud-moon', type: 'special' },
+            { month: 8, day: 1, name: 'بداية شهر شعبان', icon: 'fa-moon', type: 'special' },
+            { month: 8, day: 15, name: 'ليلة النصف من شعبان', icon: 'fa-moon', type: 'special' },
+            { month: 9, day: 1, name: 'بداية شهر رمضان المبارك', icon: 'fa-mosque', type: 'ramadan' },
+            { month: 9, day: 21, name: 'ليلة القدر المحتملة', icon: 'fa-star', type: 'ramadan' },
+            { month: 9, day: 23, name: 'ليلة القدر المحتملة', icon: 'fa-star', type: 'ramadan' },
+            { month: 9, day: 25, name: 'ليلة القدر المحتملة', icon: 'fa-star', type: 'ramadan' },
+            { month: 9, day: 27, name: 'ليلة القدر (الأرجح)', icon: 'fa-star', type: 'ramadan' },
+            { month: 9, day: 29, name: 'ليلة القدر المحتملة', icon: 'fa-star', type: 'ramadan' },
+            { month: 10, day: 1, name: 'عيد الفطر المبارك', icon: 'fa-gift', type: 'eid' },
+            { month: 10, day: 2, name: 'ثاني أيام عيد الفطر', icon: 'fa-gift', type: 'eid' },
+            { month: 10, day: 3, name: 'ثالث أيام عيد الفطر', icon: 'fa-gift', type: 'eid' },
+            { month: 12, day: 1, name: 'بداية ذي الحجة', icon: 'fa-kaaba', type: 'hajj' },
+            { month: 12, day: 8, name: 'يوم التروية', icon: 'fa-kaaba', type: 'hajj' },
+            { month: 12, day: 9, name: 'يوم عرفة', icon: 'fa-mountain-sun', type: 'hajj' },
+            { month: 12, day: 10, name: 'عيد الأضحى المبارك', icon: 'fa-cow', type: 'eid' },
+            { month: 12, day: 11, name: 'أيام التشريق', icon: 'fa-cow', type: 'eid' },
+            { month: 12, day: 12, name: 'أيام التشريق', icon: 'fa-cow', type: 'eid' },
+            { month: 12, day: 13, name: 'أيام التشريق', icon: 'fa-cow', type: 'eid' }
+        ];
+
+        // ==========================
+        //  GREETING BASED ON TIME
+        // ==========================
+        function setGreeting() {
+            const h = new Date().getHours();
+            const el = document.getElementById('greetingText');
+            const emoji = document.getElementById('greetingEmoji');
+            if (h >= 5 && h < 12) { el.textContent = 'صباح الخير'; emoji.textContent = '☀️'; }
+            else if (h >= 12 && h < 17) { el.textContent = 'مساء النور'; emoji.textContent = '⛅️'; }
+            else if (h >= 17 && h < 20) { el.textContent = 'مساء الخير'; emoji.textContent = '🌅'; }
+            else { el.textContent = 'طابت ليلتك'; emoji.textContent = '🌙'; }
+        }
+        setGreeting();
+
+        // ==========================
+        //  API
+        // ==========================
+        async function fetchTodayHijriDate() {
+            try {
+                const today = new Date();
+                const dd = String(today.getDate()).padStart(2, '0');
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const yyyy = today.getFullYear();
+                const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${dd}-${mm}-${yyyy}`);
+                const data = await response.json();
+                if (data.code === 200) {
+                    currentHijriDate = data.data.hijri;
+                    updateTodayDisplay();
+                    await fetchHijriMonth(currentHijriDate.month.number, currentHijriDate.year);
+                } else {
+                    // API returned error, use fallback
+                    console.warn('API returned error, using fallback');
+                    useFallbackDate();
+                }
+            } catch (error) {
+                console.error('Error fetching Hijri date:', error);
+                document.getElementById('hijriDateMain').textContent = 'تعذر الاتصال';
+                // Use fallback even when API fails
+                useFallbackDate();
+            }
+        }
+
+        function useFallbackDate() {
+            console.log('Using fallback date');
+            // Create a basic fallback Hijri date object
+            const today = new Date();
+            const fallbackHijri = {
+                day: today.getDate().toString(),
+                month: {
+                    number: (today.getMonth() % 12) + 1,
+                    ar: hijriMonths[(today.getMonth() % 12)],
+                    en: hijriMonths[(today.getMonth() % 12)]
+                },
+                year: "1446", // fallback year
+                weekday: {
+                    ar: "الأربعاء"
+                },
+                gregorian: {
+                    day: today.getDate(),
+                    month: {
+                        en: gregorianMonths[today.getMonth()]
+                    },
+                    year: today.getFullYear()
+                }
+            };
+            
+            currentHijriDate = fallbackHijri;
+            updateTodayDisplay();
+        }
+
+        async function fetchHijriMonth(month, year) {
+            try {
+                const response = await fetch(`https://api.aladhan.com/v1/hToGCalendar/${month}/${year}`);
+                const data = await response.json();
+                if (data.code === 200) {
+                    hijriMonthData = data.data;
+                    renderCalendar();
+                }
+            } catch (error) { console.error('Error fetching month:', error); }
+        }
+
+        // ==========================
+        //  DISPLAY
+        // ==========================
+        function updateTodayDisplay() {
+            if (!currentHijriDate) return;
+
+            const hijriDay = currentHijriDate.day;
+            const hijriMonth = currentHijriDate.month.ar;
+            const hijriYear = currentHijriDate.year;
+
+            document.getElementById('hijriDateMain').innerHTML =
+                `<span class="hijri-num">${hijriDay}</span> ${hijriMonth} <span class="hijri-num">${hijriYear}</span> هـ`;
+
+            const g = currentHijriDate.gregorian || {};
+            const gDay = g.day || currentGregorianDate.getDate();
+            const gMonthName = g.month?.en || '';
+            const gMonthAr = gregorianMonths[currentGregorianDate.getMonth()];
+            const gYear = g.year || currentGregorianDate.getFullYear();
+            document.getElementById('gregorianDateMain').innerHTML =
+                `${gDay} ${gMonthAr} ${gYear} م`;
+
+            const dayName = currentHijriDate.weekday?.ar || arabicDays[currentGregorianDate.getDay()];
+            document.getElementById('dayName').textContent = dayName;
+
+            updateMoonPhase(parseInt(hijriDay));
+
+            // Stats (with count-up)
+            animateValue('hijriYear', parseInt(hijriYear));
+            animateValue('weekNumber', getWeekNumber(currentGregorianDate));
+            const daysRemaining = 30 - parseInt(hijriDay);
+            animateValue('daysRemaining', Math.max(0, daysRemaining));
+
+            // Calendar header
+            document.getElementById('calendarMonthHijri').textContent = `${hijriMonth} ${hijriYear} هـ`;
+            document.getElementById('calendarMonthGregorian').textContent = `${gMonthAr} ${gYear} م`;
+
+            // Season
+            setSeason(currentHijriDate.month.number);
+
+            // Season animation and greeting
+            const currentMonthNum = currentHijriDate.month.number;
+            const nextMonthNum = (currentMonthNum % 12) + 1;
+            renderSeasonLottie(nextMonthNum);
+            const msgEl = document.getElementById('seasonMessage');
+            if (msgEl) {
+                msgEl.textContent = getComingMonthMessage(nextMonthNum);
+                // Ensure message is visible with fallback
+                msgEl.classList.add('visible');
+                // Fallback timeout in case animation doesn't trigger
+                setTimeout(() => {
+                    if (msgEl.style.opacity === '0') {
+                        msgEl.style.opacity = '1';
+                    }
+                }, 2000);
+            }
+
+            // Year progress
+            const monthNum = currentHijriDate.month.number;
+            const dayNum = parseInt(hijriDay);
+            const totalDays = 354;
+            const elapsedDays = (monthNum - 1) * 29.5 + dayNum;
+            const pct = Math.round((elapsedDays / totalDays) * 100);
+            document.getElementById('yearPct').textContent = pct + '%';
+            setTimeout(() => {
+                document.getElementById('yearProgressFill').style.width = pct + '%';
+            }, 500);
+            const monthsList = document.getElementById('yearMonthsList');
+            if (monthsList) {
+                monthsList.querySelectorAll('span').forEach((el, idx) => {
+                    el.classList.toggle('current', (idx + 1) === monthNum);
+                });
+            }
+
+            checkTodayEvent(currentHijriDate.month.number, parseInt(hijriDay));
+            loadUpcomingEvents(currentHijriDate.month.number, parseInt(hijriDay));
+            loadBlessedDays();
+        }
+
+        function renderSeasonLottie(nextMonthNum) {
+            const container = document.getElementById('seasonLottieContainer');
+            if (!container || typeof lottie === 'undefined') return;
+            container.innerHTML = '';
+
+            // اختيار الأنيميشن المناسب حسب الشهر
+            let animationPath = '../assets/lottie/ramadan.json'; // default
+
+            if (nextMonthNum === 9) {
+                // رمضان
+                animationPath = '../assets/lottie/ramadan.json';
+            } else if (nextMonthNum === 10) {
+                // عيد الفطر - شوال
+                animationPath = '../assets/lottie/ramadan.json';
+            } else if (nextMonthNum === 12) {
+                // ذو الحجة - موسم الحج
+                animationPath = '../assets/lottie/ramadan.json';
+            } else {
+                // باقي الشهور - استخدام ramadan.json (أو يمكن استخدام wait.json)
+                animationPath = '../assets/lottie/ramadan.json';
+            }
+
+            lottie.loadAnimation({
+                container,
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: animationPath,
+                rendererSettings: { preserveAspectRatio: 'xMidYMid meet' }
+            });
+        }
+
+        function getComingMonthMessage(monthNum) {
+            const msgs = {
+                1: 'عامٌ هجري جديد مبارك في محرم',
+                2: 'ثباتٌ ويقين في صفر',
+                3: 'نورُ المولد في ربيع الأول',
+                4: 'ربيعُ القلوب بالطاعات في ربيع الثاني',
+                5: 'تثبيتٌ على الطاعة في جمادى الأولى',
+                6: 'تمامُ الخير في جمادى الآخرة',
+                7: 'رجبُ مُحَرَّم… زِد حُرمةً وتعظيماً',
+                8: 'شعبانُ التهيؤُ لرفع الأعمال',
+                9: 'والله بعودة يا رمضان',
+                10: 'شوالُ عيدٌ وسرور',
+                11: 'ذو القعدة سكينةٌ وسكون',
+                12: 'ذو الحجة موسمُ حجٍ ونسكٍ مبارك'
+            };
+            return msgs[monthNum] || 'شهرٌ مبارك قادم إن شاء الله';
+        }
+        function setSeason(month) {
+            const seasonEl = document.getElementById('seasonName');
+            if ([9].includes(month)) seasonEl.textContent = 'شهر الصيام';
+            else if ([10].includes(month)) seasonEl.textContent = 'شهر العيد';
+            else if ([12].includes(month)) seasonEl.textContent = 'موسم الحج';
+            else if ([1, 2, 3].includes(month)) seasonEl.textContent = 'ربع أول';
+            else if ([4, 5, 6].includes(month)) seasonEl.textContent = 'ربع ثاني';
+            else if ([7, 8].includes(month)) seasonEl.textContent = 'الأشهر الحرم';
+            else seasonEl.textContent = 'ربع أخير';
+        }
+
+        // ==========================
+        //  MOON PHASE (ENHANCED)
+        // ==========================
+        function updateMoonPhase(day) {
+            const sphere = document.getElementById('moonPhase');
+            const label = document.getElementById('moonPhaseName');
+            const dayLabel = document.getElementById('moonDayNum');
+            if (!sphere) return;
+
+            let phaseName = '';
+            let bg = '';
+            let shadow = '';
+
+            if (day <= 2) {
+                phaseName = 'هلال جديد';
+                bg = 'linear-gradient(90deg, #0a0a0a 0%, #0a0a0a 85%, #b0b0b0 95%, #d0d0d0 100%)';
+                shadow = 'inset 8px 0 15px rgba(255,255,255,0.05)';
+            } else if (day <= 7) {
+                phaseName = 'تربيع أول';
+                bg = 'linear-gradient(90deg, #0a0a0a 0%, #0a0a0a 45%, #c0c0c0 55%, #e0e0e0 100%)';
+                shadow = 'inset 5px 0 20px rgba(255,255,255,0.1)';
+            } else if (day <= 10) {
+                phaseName = 'أحدب متزايد';
+                bg = 'linear-gradient(90deg, #0a0a0a 0%, #0a0a0a 25%, #c0c0c0 35%, #e8e8e8 100%)';
+                shadow = 'inset 3px 0 20px rgba(255,255,255,0.15)';
+            } else if (day <= 16) {
+                phaseName = 'بدر مكتمل ✨';
+                bg = 'radial-gradient(circle at 40% 35%, #f8f8f8 0%, #d0d0d0 40%, #a0a0a0 100%)';
+                shadow = '0 0 40px rgba(255,255,255,0.25), 0 0 80px rgba(255,255,255,0.1)';
+            } else if (day <= 22) {
+                phaseName = 'أحدب متناقص';
+                bg = 'linear-gradient(90deg, #e8e8e8 0%, #c0c0c0 65%, #0a0a0a 75%, #0a0a0a 100%)';
+                shadow = 'inset -3px 0 20px rgba(255,255,255,0.15)';
+            } else if (day <= 25) {
+                phaseName = 'تربيع أخير';
+                bg = 'linear-gradient(90deg, #e0e0e0 0%, #c0c0c0 45%, #0a0a0a 55%, #0a0a0a 100%)';
+                shadow = 'inset -5px 0 20px rgba(255,255,255,0.1)';
+            } else {
+                phaseName = 'هلال متناقص';
+                bg = 'linear-gradient(90deg, #d0d0d0 0%, #b0b0b0 5%, #0a0a0a 15%, #0a0a0a 100%)';
+                shadow = 'inset -8px 0 15px rgba(255,255,255,0.05)';
+            }
+
+            sphere.style.background = bg;
+            sphere.style.boxShadow = `${shadow}, inset -20px -20px 40px rgba(0,0,0,0.6)`;
+            if (label) label.textContent = phaseName;
+            if (dayLabel) dayLabel.textContent = `ليلة ${day} من الشهر`;
+        }
+
+        // ==========================
+        //  COUNT-UP ANIMATION
+        // ==========================
+        function animateValue(elementId, target) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const duration = 1500;
+            const start = 0;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(start + (target - start) * eased);
+                el.textContent = current;
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        function getWeekNumber(date) {
+            const firstDay = new Date(date.getFullYear(), 0, 1);
+            const pastDays = (date - firstDay) / 86400000;
+            return Math.ceil((pastDays + firstDay.getDay() + 1) / 7);
+        }
+
+        // ==========================
+        //  FLIP CLOCK
+        // ==========================
+        function updateFlipUnit(containerId, newValue) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const topSpan = container.querySelector('.flip-card-top span');
+            const bottomSpan = container.querySelector('.flip-card-bottom span');
+            const overlay = container.querySelector('.flip-overlay');
+            const overlaySpan = overlay.querySelector('span');
+
+            const currentVal = topSpan.textContent;
+            if (currentVal === newValue) return;
+
+            // Set overlay to OLD value and trigger flip
+            overlaySpan.textContent = currentVal;
+            overlay.classList.remove('flipping');
+            void overlay.offsetWidth; // force reflow
+            overlay.classList.add('flipping');
+
+            // Update values
+            topSpan.textContent = newValue;
+
+            setTimeout(() => {
+                bottomSpan.textContent = newValue;
+                overlay.classList.remove('flipping');
+            }, 600);
+        }
+
+        let countdownInterval;
+        function startCountdown(days) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            const target = new Date();
+            target.setDate(target.getDate() + days);
+            target.setHours(0, 0, 0, 0);
+
+            let lastS = -1;
+            function update() {
+                const diff = target - new Date();
+                if (diff <= 0) { clearInterval(countdownInterval); return; }
+
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+
+                const dEl = document.getElementById('countdownDays');
+                const hEl = document.getElementById('countdownHours');
+                const mEl = document.getElementById('countdownMinutes');
+                const sEl = document.getElementById('countdownSeconds');
+                if (dEl) dEl.textContent = d;
+                if (hEl) hEl.textContent = h.toString().padStart(2, '0');
+                if (mEl) mEl.textContent = m.toString().padStart(2, '0');
+                if (sEl) {
+                    if (s !== lastS) {
+                        sEl.classList.remove('tick');
+                        void sEl.offsetWidth;
+                        sEl.classList.add('tick');
+                        lastS = s;
+                    }
+                    sEl.textContent = s.toString().padStart(2, '0');
+                }
+            }
+            update();
+            countdownInterval = setInterval(update, 1000);
+        }
+
+        //  CALENDAR RENDERING
+        // ==========================
+        function renderCalendar() {
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+
+            if (!hijriMonthData || hijriMonthData.length === 0) {
+                calendarDays.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted)"><i class="fas fa-spinner fa-spin" style="margin-left:8px;"></i> جاري تحميل التقويم...</div>';
+                return;
+            }
+
+            const firstDayData = hijriMonthData[0];
+            const firstDate = new Date(firstDayData.gregorian.date.split('-').reverse().join('-'));
+            const startDay = firstDate.getDay();
+
+            for (let i = 0; i < startDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'cal-day empty';
+                calendarDays.appendChild(empty);
+            }
+
+            hijriMonthData.forEach((dayData, index) => {
+                const cell = document.createElement('div');
+                cell.className = 'cal-day';
+
+                const hijriDay = parseInt(dayData.hijri.day);
+                const gregorianDay = parseInt(dayData.gregorian.day);
+                const gDate = new Date(dayData.gregorian.date.split('-').reverse().join('-'));
+                const dayOfWeek = gDate.getDay();
+
+                // Today highlight
+                if (currentHijriDate &&
+                    hijriDay === parseInt(currentHijriDate.day) &&
+                    dayData.hijri.month.number === currentHijriDate.month.number &&
+                    dayData.hijri.year === currentHijriDate.year) {
+                    cell.classList.add('today');
+                }
+
+                // Friday
+                if (dayOfWeek === 5) cell.classList.add('friday');
+
+                // Event check
+                const event = islamicEventsDB.find(e =>
+                    e.month === dayData.hijri.month.number && e.day === hijriDay
+                );
+                if (event) {
+                    cell.classList.add('has-event');
+                }
+
+                // Content
+                if (calendarType === 'hijri') {
+                    cell.innerHTML = `
+                        <span class="day-num">${hijriDay}</span>
+                        <span class="day-sub">${gregorianDay}</span>
+                        ${event ? '<div class="event-dot-indicator"></div>' : ''}
+                    `;
+                } else {
+                    cell.innerHTML = `
+                        <span class="day-num">${gregorianDay}</span>
+                        <span class="day-sub">${hijriDay}</span>
+                        ${event ? '<div class="event-dot-indicator"></div>' : ''}
+                    `;
+                }
+
+                // Ripple effect on click
+                cell.addEventListener('click', function (e) {
+                    // Ripple
+                    const ripple = document.createElement('div');
+                    ripple.className = 'ripple';
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+
+                    // Open modal
+                    showDayModal(dayData);
+                });
+
+                // Stagger animation
+                cell.style.opacity = '0';
+                cell.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    cell.style.transition = 'opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    cell.style.opacity = '1';
+                    cell.style.transform = 'scale(1)';
+                }, index * 20);
+
+                calendarDays.appendChild(cell);
+            });
+        }
+
+        // ==========================
+        //  DAY DETAIL MODAL
+        // ==========================
+        function showDayModal(dayData) {
+            const modal = document.getElementById('dayModal');
+            const hDay = dayData.hijri.day;
+            const hMonthAr = dayData.hijri.month.ar;
+            const hYear = dayData.hijri.year;
+            const gDate = dayData.gregorian.date;
+            const gParts = gDate.split('-');
+            const gFormatted = `${gParts[0]} / ${gParts[1]} / ${gParts[2]}`;
+
+            document.getElementById('modalHijriDate').textContent = `${hDay} ${hMonthAr} ${hYear} هـ`;
+            document.getElementById('modalGregDate').textContent = gFormatted;
+
+            const gDateObj = new Date(gParts.reverse().join('-'));
+            const dayName = arabicDays[gDateObj.getDay()];
+            const hijriDay = parseInt(hDay);
+
+            // Moon phase for this day
+            let moonPhaseText = '';
+            if (hijriDay <= 2) moonPhaseText = 'هلال جديد 🌑';
+            else if (hijriDay <= 7) moonPhaseText = 'تربيع أول 🌓';
+            else if (hijriDay <= 14) moonPhaseText = 'أحدب متزايد 🌔';
+            else if (hijriDay <= 16) moonPhaseText = 'بدر مكتمل 🌕';
+            else if (hijriDay <= 22) moonPhaseText = 'أحدب متناقص 🌖';
+            else if (hijriDay <= 25) moonPhaseText = 'تربيع أخير 🌗';
+            else moonPhaseText = 'هلال متناقص 🌘';
+
+            // Check sunnah fasting
+            let fastingInfo = '';
+            const dayOfWeek = gDateObj.getDay();
+            if (dayOfWeek === 1) fastingInfo = '✅ يُستحب صيام الإثنين';
+            else if (dayOfWeek === 4) fastingInfo = '✅ يُستحب صيام الخميس';
+            if (hijriDay >= 13 && hijriDay <= 15) {
+                fastingInfo += (fastingInfo ? '<br>' : '') + '✅ من الأيام البيض';
+            }
+
+            // Check event
+            const event = islamicEventsDB.find(e =>
+                e.month === dayData.hijri.month.number && e.day === hijriDay
+            );
+
+            let bodyHTML = `
+                <div class="modal-info-row">
+                    <div class="modal-info-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div>
+                        <div class="modal-info-label">اليوم</div>
+                        <div class="modal-info-value">${dayName}</div>
+                    </div>
+                </div>
+                <div class="modal-info-row">
+                    <div class="modal-info-icon"><i class="fas fa-moon"></i></div>
+                    <div>
+                        <div class="modal-info-label">طور القمر</div>
+                        <div class="modal-info-value">${moonPhaseText}</div>
+                    </div>
+                </div>
+                <div class="modal-info-row">
+                    <div class="modal-info-icon"><i class="fas fa-hashtag"></i></div>
+                    <div>
+                        <div class="modal-info-label">ليلة</div>
+                        <div class="modal-info-value">الليلة ${hijriDay} من ${hMonthAr}</div>
+                    </div>
+                </div>
+            `;
+
+            if (fastingInfo) {
+                bodyHTML += `
+                    <div class="modal-info-row">
+                        <div class="modal-info-icon" style="color:var(--primary);"><i class="fas fa-utensils"></i></div>
+                        <div>
+                            <div class="modal-info-label">صيام مستحب</div>
+                            <div class="modal-info-value" style="color:var(--primary); font-size:13px;">${fastingInfo}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (event) {
+                bodyHTML += `
+                    <div class="modal-event-badge">
+                        <i class="fas ${event.icon}"></i>
+                        <span>${event.name}</span>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modalBody').innerHTML = bodyHTML;
+            modal.classList.add('show');
+
+            // Close on overlay click
+            modal.addEventListener('click', function handler(e) {
+                if (e.target === modal) {
+                    closeModal();
+                    modal.removeEventListener('click', handler);
+                }
+            });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('dayModal');
+            modal.querySelector('.modal-content').style.animation = 'modalOut 0.3s ease forwards';
+            setTimeout(() => {
+                modal.classList.remove('show');
+                modal.querySelector('.modal-content').style.animation = '';
+            }, 300);
+        }
+
+        // Modal out animation (add inline)
+        const modalOutStyle = document.createElement('style');
+        modalOutStyle.textContent = `
+            @keyframes modalOut {
+                from { opacity: 1; transform: scale(1); }
+                to { opacity: 0; transform: scale(0.9) translateY(20px); }
+            }
+        `;
+        document.head.appendChild(modalOutStyle);
+
+        // ==========================
+        //  EVENTS LOGIC
+        // ==========================
+        function checkTodayEvent(month, day) {
+            const todayEvent = islamicEventsDB.find(e => e.month === month && e.day === day);
+            const banner = document.getElementById('todayEventBanner');
+            if (todayEvent) {
+                document.getElementById('bannerTitle').textContent = todayEvent.name;
+                document.getElementById('bannerSubtitle').textContent =
+                    `اليوم ${day} ${hijriMonths[month - 1]} — مناسبة إسلامية مباركة ✨`;
+                banner.style.display = 'flex';
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+
+        function loadUpcomingEvents(currentMonth, currentDay) {
+            const container = document.getElementById('upcomingEvents');
+            container.innerHTML = '';
+            let upcoming = [];
+
+            islamicEventsDB.forEach(event => {
+                let daysUntil = calcDaysUntil(currentMonth, currentDay, event.month, event.day);
+                if (daysUntil > 0 && daysUntil <= 150) {
+                    upcoming.push({ ...event, daysUntil });
+                }
+            });
+
+            upcoming.sort((a, b) => a.daysUntil - b.daysUntil);
+
+            // Remove duplicates (same name)
+            const seen = new Set();
+            upcoming = upcoming.filter(e => {
+                if (seen.has(e.name)) return false;
+                seen.add(e.name);
+                return true;
+            });
+
+            if (upcoming.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:15px;color:var(--text-muted);font-size:13px;">لا توجد مناسبات قريبة</div>';
+                return;
+            }
+
+            upcoming.slice(0, 5).forEach((event, index) => {
+                const el = document.createElement('div');
+                el.className = `ev-item ${index === 0 ? 'highlight-gold' : ''}`;
+                el.innerHTML = `
+                    <div class="ev-icon ${event.type}"><i class="fas ${event.icon}"></i></div>
+                    <div class="ev-info">
+                        <h4 class="ev-name">${event.name}</h4>
+                        <p class="ev-date">${event.day} ${hijriMonths[event.month - 1]}</p>
+                        <span class="ev-countdown-badge">بعد ${event.daysUntil} يوم</span>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+
+            // Countdown for nearest
+            if (upcoming.length > 0) {
+                const nearest = upcoming[0];
+                document.getElementById('countdownEventName').innerHTML =
+                    `<i class="fas ${nearest.icon}"></i> <span>${nearest.name}</span>`;
+                animateValue('nextEventDays', nearest.daysUntil);
+                startCountdown(nearest.daysUntil);
+            }
+        }
+
+        function calcDaysUntil(curMonth, curDay, evMonth, evDay) {
+            let days = 0;
+            if (evMonth > curMonth || (evMonth === curMonth && evDay > curDay)) {
+                for (let m = curMonth; m < evMonth; m++) days += 30;
+                days += evDay - curDay;
+            } else {
+                for (let m = curMonth; m <= 12; m++) days += 30;
+                for (let m = 1; m < evMonth; m++) days += 30;
+                days += evDay - curDay;
+            }
+            return Math.max(0, days);
+        }
+
+        function loadBlessedDays() {
+            const container = document.getElementById('blessedDays');
+            container.innerHTML = '';
+            const today = currentGregorianDate.getDay();
+
+            const blessed = [
+                { name: 'صيام الإثنين', dayNum: 1, icon: 'fa-moon' },
+                { name: 'صيام الخميس', dayNum: 4, icon: 'fa-moon' },
+                { name: 'يوم الجمعة', dayNum: 5, icon: 'fa-mosque' }
+            ];
+
+            blessed.forEach(day => {
+                const daysUntil = (day.dayNum - today + 7) % 7;
+                const isToday = daysUntil === 0;
+                const status = isToday ? 'اليوم ✨' : `بعد ${daysUntil} يوم`;
+
+                container.innerHTML += `
+                    <div class="blessed-item ${isToday ? 'is-today' : ''}">
+                        <div class="blessed-left">
+                            <i class="fas ${day.icon}" style="color:var(--gold); font-size:14px;"></i>
+                            <span class="blessed-name">${day.name}</span>
+                        </div>
+                        <span class="blessed-status">${status}</span>
+                    </div>
+                `;
+            });
+
+            // White days
+            if (currentHijriDate) {
+                const d = parseInt(currentHijriDate.day);
+                let isWhite = d >= 13 && d <= 15;
+                let msg = isWhite ? 'اليوم ✨' : (d < 13 ? `باقي ${13 - d} يوم` : 'انتهت هذا الشهر');
+
+                container.innerHTML += `
+                    <div class="blessed-item ${isWhite ? 'is-today' : ''}" style="${isWhite ? 'border-color: var(--gold); background: var(--royal-gold-dim);' : ''}">
+                        <div class="blessed-left">
+                            <i class="fas fa-circle" style="color:#fff; font-size:10px;"></i>
+                            <span class="blessed-name" style="${isWhite ? 'color: var(--gold);' : ''}">الأيام البيض (13-15)</span>
+                        </div>
+                        <span class="blessed-status">${msg}</span>
+                    </div>
+                `;
+            }
+
+            // First 10 days of Dhul Hijjah
+            if (currentHijriDate) {
+                const m = currentHijriDate.month.number;
+                const d = parseInt(currentHijriDate.day);
+                if (m === 12 && d <= 10) {
+                    container.innerHTML += `
+                        <div class="blessed-item is-today" style="border-color: var(--gold); background: var(--royal-gold-dim);">
+                            <div class="blessed-left">
+                                <i class="fas fa-kaaba" style="color:var(--gold); font-size:14px;"></i>
+                                <span class="blessed-name" style="color:var(--gold);">العشر الأوائل من ذي الحجة</span>
+                            </div>
+                            <span class="blessed-status">اليوم ${d} ✨</span>
+                        </div>
+                    `;
+                } else if (m === 12 && d > 10) {
+                    // already passed
+                } else if (m < 12) {
+                    const daysLeft = (12 - m - 1) * 30 + (30 - d) + 1;
+                    container.innerHTML += `
+                        <div class="blessed-item">
+                            <div class="blessed-left">
+                                <i class="fas fa-kaaba" style="color:var(--gold); font-size:14px;"></i>
+                                <span class="blessed-name">العشر الأوائل من ذي الحجة</span>
+                            </div>
+                            <span class="blessed-status">بعد ~${daysLeft} يوم</span>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+
+
+        // ==========================
+        //  NAVIGATION
+        // ==========================
+        function changeMonth(direction) {
+            if (!currentHijriDate) return;
+            let newMonth = currentHijriDate.month.number + direction;
+            let newYear = parseInt(currentHijriDate.year);
+            if (newMonth > 12) { newMonth = 1; newYear++; }
+            else if (newMonth < 1) { newMonth = 12; newYear--; }
+
+            document.getElementById('calendarMonthHijri').textContent = `${hijriMonths[newMonth - 1]} ${newYear} هـ`;
+
+            // Shimmer while loading
+            const calDays = document.getElementById('calendarDays');
+            calDays.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                calDays.innerHTML += '<div class="shimmer" style="aspect-ratio:1;border-radius:10px;"></div>';
+            }
+
+            fetchHijriMonth(newMonth, newYear);
+            currentHijriDate.month.number = newMonth;
+            currentHijriDate.year = newYear.toString();
+        }
+
+        function goToToday() {
+            fetchTodayHijriDate();
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setCalendarType(type, btn) {
+            calendarType = type;
+            document.querySelectorAll('.cal-toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCalendar();
+        }
+
+        // ==========================
+        //  KEYBOARD SHORTCUTS
+        // ==========================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowRight') changeMonth(-1);
+            if (e.key === 'ArrowLeft') changeMonth(1);
+            if (e.key === 't' || e.key === 'T') goToToday();
+        });
+
+        // ==========================
+        //  INIT
+        // ==========================
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchTodayHijriDate();
+            // Fallback: ensure message appears even if API fails
+            setTimeout(() => {
+                if (!currentHijriDate) {
+                    console.log('No hijri date after timeout, using direct fallback');
+                    useFallbackDate();
+                }
+            }, 3000);
+        });
+
+        // ==========================
+        //  CALENDAR SIDEBAR FUNCTIONS
+        // ==========================
+        function showIslamicEvents() {
+            // Placeholder for Islamic events functionality
+            alert('عرض المناسبات الإسلامية - سيتم تنفيذها لاحقاً');
+        }
+
+        function showHijriConverter() {
+            // Placeholder for Hijri converter functionality
+            alert('تحويل التواريخ - سيتم تنفيذها لاحقاً');
+        }
+
+        function showPrayerTimes() {
+            // Placeholder for prayer times functionality
+            alert('مواقيت الصلاة - سيتم تنفيذها لاحقاً');
+        }
+
+        function filterCalendar(query) {
+            // Placeholder for calendar search functionality
+            console.log('بحث في التقويم:', query);
+        }
+
+    </script>
+
+    <script type="module">
+        import { initProfileSystem } from '../assets/js/components/profile-manager.js';
+        import { initSidebar } from '../assets/js/components/sidebar.js';
+        
+        // Initialize sidebar
+        initSidebar('calendar');
+        
+        // Initialize profile system
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initProfileSystem();
+        });
+    </script>
+</body>
+
+</html>
