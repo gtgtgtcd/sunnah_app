@@ -1,6 +1,6 @@
 {
-  "latest_version": "5.1.2",
-  "version_code": 5,
+  "latest_version": "10.1.2",
+  "version_code": 10,
   "release_notes": "تحديث ذكي للملفات بدون ضغط 🚀",
   "files_to_sync": [
     "index.html",
@@ -8,6 +8,7 @@
     "Dashboard/index.html"
   ]
 }
+
 
 
 
